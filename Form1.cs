@@ -13,6 +13,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class IBASICForm : Form
     {
+        // To keep track of where the current tab is
         customTab currentTab = new customTab();
         public IBASICForm()
         {
