@@ -14,11 +14,17 @@ namespace CS_IA_Ibasic_Intouch_Re
     public partial class IBASICForm : Form
     {
         // To keep track of where the current tab is
-        customTab currentTab = new customTab();
+        RichTextBox currentRtb = new RichTextBox();
         public IBASICForm()
         {
             InitializeComponent();
-            currentTab = customTab1;
+            currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+            currentRtb.AcceptsTab = true;
+            currentRtb.Dock = DockStyle.Fill;
+            //To allow both scrollbars
+            currentRtb.ScrollBars = RichTextBoxScrollBars.Both;
+            // To allow horizontal scroll bar to work by unlimiting the wordwrap
+            currentRtb.WordWrap = false;
         }
 
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
@@ -26,16 +32,27 @@ namespace CS_IA_Ibasic_Intouch_Re
             /// Zoomfactor cant be <= 0
             if (ZoomBar.Value > 0)
             {
-                currentTab.textbox.ZoomFactor = ZoomBar.Value;
+                currentRtb.ZoomFactor = ZoomBar.Value;
             }
 
         }
         private void New_Click(object sender, EventArgs e)
         {
-            currentTab = new customTab();
-            tabControl1.Controls.Add(currentTab);
+            TabPage newTab = new TabPage();
+            tabControl1.Controls.Add(newTab);
+            newTab.Controls.Add(new RichTextBox());
+            newTab.Text = "Untitled";
+            currentRtb = (RichTextBox)newTab.Controls[0];
             ///Make sure the user see the new tab
-            tabControl1.SelectedTab = currentTab;
+            tabControl1.SelectedTab = newTab;
+            ///  currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+            currentRtb.AcceptsTab = true;
+            currentRtb.Dock = DockStyle.Fill;
+            //To allow both scrollbars
+            currentRtb.ScrollBars = RichTextBoxScrollBars.Both;
+            // To allow horizontal scroll bar to work by unlimiting the wordwrap
+            currentRtb.WordWrap = false;
+
         }
 
         private void Open_Click(object sender, EventArgs e)
@@ -44,15 +61,12 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                currentTab = new customTab();
-                tabControl1.Controls.Add(currentTab);
-                ///Make sure the user see the new tab
-                tabControl1.SelectedTab = currentTab;
 
+                createNewTabPage();
                 // Open & read file
                 using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
                 {
-                    currentTab.textbox.Text = sr.ReadToEnd();
+                    currentRtb.Text = sr.ReadToEnd();
                     sr.Close();
                     this.Text = openFileDialog1.SafeFileName;
                 }
@@ -65,7 +79,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             if (saveFileDialog1.FileName != "")
             {
                 StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
-                CodeToBeSaved.Write(currentTab.textbox.Text);
+                CodeToBeSaved.Write(currentRtb.Text);
                 CodeToBeSaved.Close();
             }
             else
@@ -80,36 +94,54 @@ namespace CS_IA_Ibasic_Intouch_Re
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
-                CodeToBeSaved.Write(currentTab.textbox.Text);
+                CodeToBeSaved.Write(currentRtb.Text);
                 CodeToBeSaved.Close();
 
             }
         }
         private void Undo_Click(object sender, EventArgs e)
         {
-            currentTab.textbox.Undo();
+            currentRtb.Undo();
         }
 
         private void Redo_Click(object sender, EventArgs e)
         {
-            currentTab.textbox.Redo();
+            currentRtb.Redo();
         }
         private void Run_Click(object sender, EventArgs e)
         {
-            Compiler Icompiler = new Compiler(currentTab.textbox.Text);
+            Compiler Icompiler = new Compiler(currentRtb.Text);
             Icompiler.launchEXE();
+           
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
-            currentTab = (customTab)tabControl1.SelectedTab;
-            ///ZoomFactor cant be <= 0
+            currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+            //ZoomFactor cant be <= 0
             if (ZoomBar.Value > 0)
             {
-                currentTab.textbox.ZoomFactor = ZoomBar.Value;
+                currentRtb.ZoomFactor = ZoomBar.Value;
             }
         }
+        private void createNewTabPage()
+        {
+            TabPage newTab = new TabPage();
+            tabControl1.Controls.Add(newTab);
+            newTab.Controls.Add(new RichTextBox());
+            newTab.Text = "Untitled";
+            currentRtb = (RichTextBox)newTab.Controls[0];
+            ///Make sure the user see the new tab
+            tabControl1.SelectedTab = newTab;
+            ///  currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+            currentRtb.AcceptsTab = true;
+            currentRtb.Dock = DockStyle.Fill;
+            //To allow both scrollbars
+            currentRtb.ScrollBars = RichTextBoxScrollBars.Both;
+            // To allow horizontal scroll bar to work by unlimiting the wordwrap
+            currentRtb.WordWrap = false;
+        }
 
-
+  
     }
 }

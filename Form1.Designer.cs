@@ -1,4 +1,6 @@
 ﻿
+using System.Windows.Forms;
+
 namespace CS_IA_Ibasic_Intouch_Re
 {
     partial class IBASICForm
@@ -40,13 +42,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.RUN = new System.Windows.Forms.ToolStripMenuItem();
             this.LOGIN = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.customTab1 = new customTab();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.LineNumberBox = new System.Windows.Forms.RichTextBox();
             this.ZoomBar = new System.Windows.Forms.TrackBar();
             this.ErrorMsgBox = new System.Windows.Forms.RichTextBox();
@@ -73,8 +69,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.LOGIN});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.Size = new System.Drawing.Size(935, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(801, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -146,84 +143,47 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.tabPage1.Location = new System.Drawing.Point(0, 0);
             this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Text = "Untitled";
             this.tabPage1.Size = new System.Drawing.Size(200, 100);
             this.tabPage1.TabIndex = 0;
+            this.tabPage1.Controls.Add(new RichTextBox());
+
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(0, 0);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(200, 100);
-            this.tabPage2.TabIndex = 0;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Location = new System.Drawing.Point(0, 0);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(200, 100);
-            this.tabPage3.TabIndex = 0;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Location = new System.Drawing.Point(0, 0);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(200, 100);
-            this.tabPage4.TabIndex = 0;
+           
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.tabControl1.Controls.Add(customTab1);
-            this.tabControl1.Location = new System.Drawing.Point(32, 27);
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Location = new System.Drawing.Point(27, 23);
             this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(427, 412);
+            this.tabControl1.Size = new System.Drawing.Size(366, 357);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
-            // customTab1
-            // 
-            this.customTab1.Location = new System.Drawing.Point(4, 24);
-            this.customTab1.Name = "customTab1";
-            this.customTab1.Size = new System.Drawing.Size(419, 384);
-            this.customTab1.TabIndex = 0;
-            this.customTab1.Text = "Untitled";
-            this.customTab1.Visible = false;
-            // 
-            // tabPage5
-            // 
-            this.tabPage5.Location = new System.Drawing.Point(0, 0);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(200, 100);
-            this.tabPage5.TabIndex = 0;
-            // 
-            // tabPage6
-            // 
-            this.tabPage6.Location = new System.Drawing.Point(0, 0);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(200, 100);
-            this.tabPage6.TabIndex = 0;
+           
             // 
             // LineNumberBox
             // 
-            this.LineNumberBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.LineNumberBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.LineNumberBox.Location = new System.Drawing.Point(8, 51);
+            this.LineNumberBox.Location = new System.Drawing.Point(7, 44);
             this.LineNumberBox.Name = "LineNumberBox";
             this.LineNumberBox.ReadOnly = true;
             this.LineNumberBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.LineNumberBox.Size = new System.Drawing.Size(22, 388);
+            this.LineNumberBox.Size = new System.Drawing.Size(19, 337);
             this.LineNumberBox.TabIndex = 2;
             this.LineNumberBox.Text = "";
             // 
             // ZoomBar
             // 
             this.ZoomBar.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.ZoomBar.Location = new System.Drawing.Point(255, 445);
+            this.ZoomBar.Location = new System.Drawing.Point(219, 386);
             this.ZoomBar.Name = "ZoomBar";
-            this.ZoomBar.Size = new System.Drawing.Size(200, 45);
+            this.ZoomBar.Size = new System.Drawing.Size(171, 45);
             this.ZoomBar.TabIndex = 3;
             this.ZoomBar.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.ZoomBar.Value = 1;
@@ -231,10 +191,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // ErrorMsgBox
             // 
-            this.ErrorMsgBox.Location = new System.Drawing.Point(8, 496);
+            this.ErrorMsgBox.Location = new System.Drawing.Point(7, 430);
             this.ErrorMsgBox.Name = "ErrorMsgBox";
             this.ErrorMsgBox.ReadOnly = true;
-            this.ErrorMsgBox.Size = new System.Drawing.Size(451, 68);
+            this.ErrorMsgBox.Size = new System.Drawing.Size(387, 59);
             this.ErrorMsgBox.TabIndex = 4;
             this.ErrorMsgBox.Text = "";
             // 
@@ -242,9 +202,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.ErrorMsgLabel.AutoSize = true;
             this.ErrorMsgLabel.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.ErrorMsgLabel.Location = new System.Drawing.Point(12, 478);
+            this.ErrorMsgLabel.Location = new System.Drawing.Point(10, 414);
             this.ErrorMsgLabel.Name = "ErrorMsgLabel";
-            this.ErrorMsgLabel.Size = new System.Drawing.Size(103, 15);
+            this.ErrorMsgLabel.Size = new System.Drawing.Size(108, 13);
             this.ErrorMsgLabel.TabIndex = 5;
             this.ErrorMsgLabel.Text = "ERROR MESSAGES";
             // 
@@ -254,12 +214,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // IBASICForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.ClientSize = new System.Drawing.Size(935, 584);
+            this.ClientSize = new System.Drawing.Size(801, 506);
             this.Controls.Add(this.ErrorMsgLabel);
             this.Controls.Add(this.ErrorMsgBox);
             this.Controls.Add(this.ZoomBar);
@@ -290,13 +250,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private System.Windows.Forms.ToolStripMenuItem RUN;
         private System.Windows.Forms.ToolStripMenuItem LOGIN;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.TabPage tabPage6;
-        private customTab customTab1;
+        private System.Windows.Forms.TabControl tabControl1;     
         private System.Windows.Forms.RichTextBox LineNumberBox;
         private System.Windows.Forms.TrackBar ZoomBar;
         private System.Windows.Forms.RichTextBox ErrorMsgBox;

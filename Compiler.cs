@@ -14,7 +14,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private VBCodeProvider codeprovider;
         private CompilerParameters parameters;
         private string codeToCompile;
-        private CompilerResults results;
         private string output;
         private string ErrorMessage;
 
@@ -32,7 +31,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             ///Make sure to generate an EXE, not a DLL
             parameters.GenerateExecutable = true;
             parameters.OutputAssembly = output;
-            results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
+            CompilerResults results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
             if (results.Errors.Count > 0)
             {
 
