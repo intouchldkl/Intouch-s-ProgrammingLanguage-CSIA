@@ -13,7 +13,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class IBASICForm : Form
     {
-        // To keep track of where the current tab is
+        // To keep track of where the current textBox is as the tab changes
         RichTextBox currentRtb = new RichTextBox();
         public IBASICForm()
         {
