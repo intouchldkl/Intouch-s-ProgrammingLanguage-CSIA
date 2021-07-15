@@ -18,7 +18,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         public IBASICForm()
         {
             InitializeComponent();
-            tabPage1.Controls.Add(new RichTextBox());
+            RichTextBox RTB = new RichTextBox();
+            tabPage1.Controls.Add(RTB);
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             currentRtb.AcceptsTab = true;
             currentRtb.Dock = DockStyle.Fill;
@@ -28,6 +29,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.WordWrap = false;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
+            currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
         }
 
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
@@ -38,30 +40,12 @@ namespace CS_IA_Ibasic_Intouch_Re
                 ZoomBar.Value = 1;
             }
             currentRtb.ZoomFactor = ZoomBar.Value;
-            currentRtb.TextChanged += currentRtb_TextChanged;
-            currentRtb.VScroll += CurrentRtb_VScroll;
+            LineNumberBox.ZoomFactor = ZoomBar.Value;
 
         }
         private void New_Click(object sender, EventArgs e)
         {
-            TabPage newTab = new TabPage();
-            tabControl1.Controls.Add(newTab);
-            newTab.Controls.Add(new RichTextBox());
-            newTab.Text = "Untitled";
-            currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-            ///Make sure the user see the new tab
-            tabControl1.SelectedTab = newTab;
-            ///  currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-            currentRtb.AcceptsTab = true;
-            currentRtb.Dock = DockStyle.Fill;
-            //To allow both scrollbars
-            currentRtb.ScrollBars = RichTextBoxScrollBars.Both;
-            // To allow horizontal scroll bar to work by unlimiting the wordwrap
-            currentRtb.WordWrap = false;
-            AddLineNumbers();
-            currentRtb.TextChanged += currentRtb_TextChanged;
-            currentRtb.VScroll += CurrentRtb_VScroll;
-
+            createNewTabPage();
         }
 
         private void Open_Click(object sender, EventArgs e)
@@ -136,29 +120,31 @@ namespace CS_IA_Ibasic_Intouch_Re
                 ZoomBar.Value = 1;
             }
             currentRtb.ZoomFactor = ZoomBar.Value;
+            LineNumberBox.ZoomFactor = ZoomBar.Value;
             AddLineNumbers();
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
         }
         private void createNewTabPage()
         {
+            RichTextBox rtb = new RichTextBox();
+            rtb.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+            rtb.AcceptsTab = true;
+            rtb.Dock = DockStyle.Fill;
+            //To allow both scrollbars
+            rtb.ScrollBars = RichTextBoxScrollBars.Both;
+            // To allow horizontal scroll bar to work by unlimiting the wordwrap
+            rtb.WordWrap = false;
+            rtb.TextChanged += currentRtb_TextChanged;
+            rtb.VScroll += CurrentRtb_VScroll;
             TabPage newTab = new TabPage();
             tabControl1.Controls.Add(newTab);
-            newTab.Controls.Add(new RichTextBox());
+            newTab.Controls.Add(rtb);
             newTab.Text = "Untitled";
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             ///Make sure the user see the new tab
             tabControl1.SelectedTab = newTab;
-            ///  currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-            currentRtb.AcceptsTab = true;
-            currentRtb.Dock = DockStyle.Fill;
-            //To allow both scrollbars
-            currentRtb.ScrollBars = RichTextBoxScrollBars.Both;
-            // To allow horizontal scroll bar to work by unlimiting the wordwrap
-            currentRtb.WordWrap = false;
             AddLineNumbers();
-            currentRtb.TextChanged += currentRtb_TextChanged;
-            currentRtb.VScroll += CurrentRtb_VScroll;
         }
 
         private void CloseTabBut_Click(object sender, EventArgs e)
@@ -227,5 +213,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             AddLineNumbers();
         }
 
+     
     }
 }
