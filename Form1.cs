@@ -18,6 +18,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         public IBASICForm()
         {
             InitializeComponent();
+            tabPage1.Controls.Add(new RichTextBox());
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             currentRtb.AcceptsTab = true;
             currentRtb.Dock = DockStyle.Fill;
@@ -30,10 +31,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
         {
             /// Zoomfactor cant be <= 0
-            if (ZoomBar.Value > 0)
+            if (ZoomBar.Value <= 0)
             {
-                currentRtb.ZoomFactor = ZoomBar.Value;
+                ZoomBar.Value = 1;
             }
+            currentRtb.ZoomFactor = ZoomBar.Value;
 
         }
         private void New_Click(object sender, EventArgs e)
@@ -68,7 +70,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     currentRtb.Text = sr.ReadToEnd();
                     sr.Close();
-                    this.Text = openFileDialog1.SafeFileName;
+                   tabControl1.SelectedTab.Text = openFileDialog1.SafeFileName;
                 }
             }
         }
@@ -119,10 +121,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             //ZoomFactor cant be <= 0
-            if (ZoomBar.Value > 0)
+            if (ZoomBar.Value <= 0)
             {
-                currentRtb.ZoomFactor = ZoomBar.Value;
+                ZoomBar.Value = 1;
             }
+            currentRtb.ZoomFactor = ZoomBar.Value;
         }
         private void createNewTabPage()
         {
@@ -142,6 +145,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.WordWrap = false;
         }
 
-  
+        private void CloseTabBut_Click(object sender, EventArgs e)
+        {
+            if( tabControl1.Controls.Count > 1)
+            {
+                tabControl1.Controls.Remove(tabControl1.SelectedTab);
+            }
+        }
     }
 }

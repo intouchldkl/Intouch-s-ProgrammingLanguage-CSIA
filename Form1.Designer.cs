@@ -31,6 +31,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IBASICForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.NEW = new System.Windows.Forms.ToolStripMenuItem();
             this.OPEN = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +51,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.ErrorMsgLabel = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.CloseTabBut = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomBar)).BeginInit();
@@ -141,15 +145,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // tabPage1
             // 
-            this.tabPage1.Location = new System.Drawing.Point(0, 0);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Text = "Untitled";
-            this.tabPage1.Size = new System.Drawing.Size(200, 100);
+            this.tabPage1.Size = new System.Drawing.Size(358, 331);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Controls.Add(new RichTextBox());
-
-            // 
-           
+            this.tabPage1.Text = "Untitled";
             // 
             // tabControl1
             // 
@@ -163,8 +163,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.tabControl1.Size = new System.Drawing.Size(366, 357);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
-            // 
-           
             // 
             // LineNumberBox
             // 
@@ -212,6 +210,24 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "Xicon.png");
+            this.imageList1.Images.SetKeyName(1, "closeIcon.png");
+            // 
+            // CloseTabBut
+            // 
+            this.CloseTabBut.ImageKey = "closeIcon.png";
+            this.CloseTabBut.ImageList = this.imageList1;
+            this.CloseTabBut.Location = new System.Drawing.Point(7, 23);
+            this.CloseTabBut.Name = "CloseTabBut";
+            this.CloseTabBut.Size = new System.Drawing.Size(19, 24);
+            this.CloseTabBut.TabIndex = 6;
+            this.CloseTabBut.UseVisualStyleBackColor = true;
+            this.CloseTabBut.Click += new System.EventHandler(this.CloseTabBut_Click);
+            // 
             // IBASICForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -220,6 +236,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.ClientSize = new System.Drawing.Size(801, 506);
+            this.Controls.Add(this.CloseTabBut);
             this.Controls.Add(this.ErrorMsgLabel);
             this.Controls.Add(this.ErrorMsgBox);
             this.Controls.Add(this.ZoomBar);
@@ -257,5 +274,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private System.Windows.Forms.Label ErrorMsgLabel;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private ImageList imageList1;
+        private Button CloseTabBut;
     }
 }
