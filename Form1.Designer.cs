@@ -171,7 +171,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.LineNumberBox.Location = new System.Drawing.Point(7, 44);
             this.LineNumberBox.Name = "LineNumberBox";
             this.LineNumberBox.ReadOnly = true;
-            this.LineNumberBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.LineNumberBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.LineNumberBox.Size = new System.Drawing.Size(19, 337);
             this.LineNumberBox.TabIndex = 2;
             this.LineNumberBox.Text = "";
