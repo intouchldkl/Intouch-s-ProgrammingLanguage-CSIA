@@ -36,11 +36,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
         {
-            /// Zoomfactor cant be <= 0
-            if (ZoomBar.Value <= 0)
-            {
-                ZoomBar.Value = 1;
-            }
+ 
             currentRtb.ZoomFactor = ZoomBar.Value;
             LineNumberBox.ZoomFactor = ZoomBar.Value;
 
@@ -102,11 +98,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-            //ZoomFactor cant be <= 0
-            if (ZoomBar.Value <= 0)
-            {
-                ZoomBar.Value = 1;
-            }
             LineNumberBox.ZoomFactor = ZoomBar.Value;
             currentRtb.ZoomFactor = ZoomBar.Value;
             AddLineNumbers();
@@ -129,9 +120,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             tabControl1.Controls.Add(newTab);
             newTab.Controls.Add(rtb);
             newTab.Text = "Untitled";
+            tabControl1.SelectedTab = newTab;
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             ///Make sure the user see the new tab
-            tabControl1.SelectedTab = newTab;
             AddLineNumbers();
             currentRtb.ZoomFactor = ZoomBar.Value;
             LineNumberBox.ZoomFactor = ZoomBar.Value;

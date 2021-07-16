@@ -69,6 +69,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.Color.Lavender;
             this.menuStrip1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.NEW,
@@ -168,11 +169,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.LineNumberBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.LineNumberBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LineNumberBox.Location = new System.Drawing.Point(4, 25);
+            this.LineNumberBox.Location = new System.Drawing.Point(3, 25);
             this.LineNumberBox.Name = "LineNumberBox";
             this.LineNumberBox.ReadOnly = true;
             this.LineNumberBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.LineNumberBox.Size = new System.Drawing.Size(26, 380);
+            this.LineNumberBox.Size = new System.Drawing.Size(30, 379);
             this.LineNumberBox.TabIndex = 2;
             this.LineNumberBox.Text = "";
             // 
@@ -182,11 +183,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Location = new System.Drawing.Point(27, 4);
+            this.tabControl1.Location = new System.Drawing.Point(48, 4);
             this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(464, 401);
+            this.tabControl1.Size = new System.Drawing.Size(348, 400);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
@@ -194,7 +195,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(456, 375);
+            this.tabPage1.Size = new System.Drawing.Size(340, 374);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Untitled";
             // 
@@ -202,8 +203,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.ErrorMsgLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ErrorMsgLabel.AutoSize = true;
-            this.ErrorMsgLabel.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            this.ErrorMsgLabel.Location = new System.Drawing.Point(23, 32);
+            this.ErrorMsgLabel.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ErrorMsgLabel.Location = new System.Drawing.Point(23, 33);
             this.ErrorMsgLabel.Name = "ErrorMsgLabel";
             this.ErrorMsgLabel.Size = new System.Drawing.Size(108, 13);
             this.ErrorMsgLabel.TabIndex = 5;
@@ -212,18 +213,20 @@ namespace CS_IA_Ibasic_Intouch_Re
             // ErrorMsgBox
             // 
             this.ErrorMsgBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ErrorMsgBox.Location = new System.Drawing.Point(26, 60);
+            this.ErrorMsgBox.Location = new System.Drawing.Point(26, 61);
             this.ErrorMsgBox.Name = "ErrorMsgBox";
             this.ErrorMsgBox.ReadOnly = true;
-            this.ErrorMsgBox.Size = new System.Drawing.Size(377, 72);
+            this.ErrorMsgBox.Size = new System.Drawing.Size(377, 80);
             this.ErrorMsgBox.TabIndex = 4;
             this.ErrorMsgBox.Text = "";
             // 
             // ZoomBar
             // 
             this.ZoomBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ZoomBar.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.ZoomBar.Location = new System.Drawing.Point(228, 11);
+            this.ZoomBar.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ZoomBar.Location = new System.Drawing.Point(228, 12);
+            this.ZoomBar.Maximum = 6;
+            this.ZoomBar.Minimum = 1;
             this.ZoomBar.Name = "ZoomBar";
             this.ZoomBar.Size = new System.Drawing.Size(171, 45);
             this.ZoomBar.TabIndex = 3;
@@ -237,7 +240,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.CloseTabBut.ImageList = this.imageList1;
             this.CloseTabBut.Location = new System.Drawing.Point(3, 3);
             this.CloseTabBut.Name = "CloseTabBut";
-            this.CloseTabBut.Size = new System.Drawing.Size(27, 19);
+            this.CloseTabBut.Size = new System.Drawing.Size(30, 23);
             this.CloseTabBut.TabIndex = 6;
             this.CloseTabBut.UseVisualStyleBackColor = true;
             this.CloseTabBut.Click += new System.EventHandler(this.CloseTabBut_Click);
@@ -256,15 +259,16 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.splitContainer1.Panel1.Controls.Add(this.CloseTabBut);
             this.splitContainer1.Panel1.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel1.Controls.Add(this.LineNumberBox);
-            this.splitContainer1.Panel1MinSize = 120;
+            this.splitContainer1.Panel1MinSize = 150;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.ZoomBar);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgBox);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgLabel);
-            this.splitContainer1.Size = new System.Drawing.Size(494, 564);
-            this.splitContainer1.SplitterDistance = 408;
+            this.splitContainer1.Panel2MinSize = 135;
+            this.splitContainer1.Size = new System.Drawing.Size(395, 564);
+            this.splitContainer1.SplitterDistance = 407;
             this.splitContainer1.TabIndex = 7;
             // 
             // splitContainer2
@@ -278,10 +282,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Panel1MinSize = 500;
-            this.splitContainer2.Panel2MinSize = 331;
+            this.splitContainer2.Panel1MinSize = 400;
+            this.splitContainer2.Panel2MinSize = 420;
             this.splitContainer2.Size = new System.Drawing.Size(835, 567);
-            this.splitContainer2.SplitterDistance = 500;
+            this.splitContainer2.SplitterDistance = 400;
             this.splitContainer2.TabIndex = 8;
             // 
             // IBASICForm
@@ -290,7 +294,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.BackColor = System.Drawing.Color.LightSlateGray;
             this.ClientSize = new System.Drawing.Size(835, 593);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.menuStrip1);
