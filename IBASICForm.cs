@@ -15,6 +15,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         // To keep track of where the current textBox is as the tab changes
         RichTextBox currentRtb = new RichTextBox();
+    
         public IBASICForm()
         {
             InitializeComponent();
@@ -30,6 +31,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+           
         }
 
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
@@ -50,23 +52,14 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void Open_Click(object sender, EventArgs e)
         {
-            // Open file 
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-
-                createNewTabPage();
-                // Open & read file
-                using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
-                {
-                    currentRtb.Text = sr.ReadToEnd();
-                    sr.Close();
-                   tabControl1.SelectedTab.Text = openFileDialog1.SafeFileName;
-                }
-                AddLineNumbers();
+            createNewTabPage();
+            OpenForm openForm = new OpenForm(currentRtb, tabControl1.SelectedTab);
+            openForm.Show();
+            AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
                 currentRtb.VScroll += CurrentRtb_VScroll;
-            }
+            
+            
         }
         private void Save_Click(object sender, EventArgs e)
         {
@@ -85,15 +78,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void SaveAs_Click(object sender, EventArgs e)
         {
-            // Save file as 
+            SaveAsForm saveasform = new SaveAsForm(currentRtb);
+            saveasform.Show();
 
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
-                CodeToBeSaved.Write(currentRtb.Text);
-                CodeToBeSaved.Close();
-
-            }
+          
         }
         private void Undo_Click(object sender, EventArgs e)
         {
@@ -119,13 +107,13 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 ZoomBar.Value = 1;
             }
-            currentRtb.ZoomFactor = ZoomBar.Value;
             LineNumberBox.ZoomFactor = ZoomBar.Value;
+            currentRtb.ZoomFactor = ZoomBar.Value;
             AddLineNumbers();
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
         }
-        private void createNewTabPage()
+        public void createNewTabPage()
         {
             RichTextBox rtb = new RichTextBox();
             rtb.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
@@ -145,6 +133,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             ///Make sure the user see the new tab
             tabControl1.SelectedTab = newTab;
             AddLineNumbers();
+            currentRtb.ZoomFactor = ZoomBar.Value;
+            LineNumberBox.ZoomFactor = ZoomBar.Value;
         }
 
         private void CloseTabBut_Click(object sender, EventArgs e)
@@ -156,6 +146,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                 AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
                 currentRtb.VScroll += CurrentRtb_VScroll;
+                currentRtb.ZoomFactor = ZoomBar.Value;
+                LineNumberBox.ZoomFactor = ZoomBar.Value;
             }
         }
         public int getWidth()
@@ -181,6 +173,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void AddLineNumbers()
         {
+            currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             // create & set Point pt to (0,0)    
             Point pt = new Point(0, 0);
             // get First Index & First Line from richTextBox1    
@@ -193,7 +186,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             int Last_Index =currentRtb.GetCharIndexFromPosition(pt);
             int Last_Line = currentRtb.GetLineFromCharIndex(Last_Index);
             // set Center alignment to LineNumberTextBox    
-           LineNumberBox.SelectionAlignment = HorizontalAlignment.Center;
+            LineNumberBox.SelectionAlignment = HorizontalAlignment.Center;
             // set LineNumberTextBox text to null & width to getWidth() function value    
             LineNumberBox.Text = "";
             LineNumberBox.Width = getWidth();
@@ -202,6 +195,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 LineNumberBox.Text += i + 1 + "\n";
             }
+            LineNumberBox.ZoomFactor = ZoomBar.Value;
         }
 
         private void currentRtb_TextChanged(object sender, EventArgs e)
@@ -212,6 +206,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             AddLineNumbers();
         }
+       
 
      
     }
