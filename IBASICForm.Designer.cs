@@ -152,6 +152,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.LOGIN.Size = new System.Drawing.Size(54, 20);
             this.LOGIN.Text = "LOGIN";
             this.LOGIN.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.LOGIN.Click += new System.EventHandler(this.LOGIN_Click);
             // 
             // openFileDialog1
             // 
@@ -204,9 +205,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.ErrorMsgLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ErrorMsgLabel.AutoSize = true;
             this.ErrorMsgLabel.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ErrorMsgLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ErrorMsgLabel.Location = new System.Drawing.Point(23, 33);
             this.ErrorMsgLabel.Name = "ErrorMsgLabel";
-            this.ErrorMsgLabel.Size = new System.Drawing.Size(108, 13);
+            this.ErrorMsgLabel.Size = new System.Drawing.Size(122, 13);
             this.ErrorMsgLabel.TabIndex = 5;
             this.ErrorMsgLabel.Text = "ERROR MESSAGES";
             // 

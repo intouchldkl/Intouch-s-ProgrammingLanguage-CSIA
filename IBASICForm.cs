@@ -15,7 +15,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         // To keep track of where the current textBox is as the tab changes
         RichTextBox currentRtb = new RichTextBox();
-    
+        static GGDrive myDrive = new GGDrive();
         public IBASICForm()
         {
             InitializeComponent();
@@ -31,7 +31,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-           
         }
 
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
@@ -197,8 +196,21 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             AddLineNumbers();
         }
-       
 
-     
+        private void LOGIN_Click(object sender, EventArgs e)
+        {
+              if(LOGIN.Text == "LOGIN")
+                {
+                myDrive.Authentication();
+                LOGIN.Text = "LOGOUT";
+                }
+            else
+            {
+                myDrive.logout();
+                LOGIN.Text = "LOGIN";
+            }
+          
+
+        }
     }
 }

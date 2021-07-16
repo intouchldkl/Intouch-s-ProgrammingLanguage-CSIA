@@ -11,14 +11,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        /// 
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             IBASICForm IBASICform = new IBASICForm();
-            GGDrive ggdrive = new GGDrive();
-
             Application.Run(IBASICform);
 
             
