@@ -20,6 +20,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             InitializeComponent();
             this.currentRtb = currentRtb;
             this.tabPage = tabPage;
+         
+           
         }
 
         private void LocalDButton_Click(object sender, EventArgs e)
@@ -44,7 +46,8 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void DriveButton_Click(object sender, EventArgs e)
         {
-
+            RepositoryForm repos = new RepositoryForm();
+            repos.Show();
         }
     }
 }

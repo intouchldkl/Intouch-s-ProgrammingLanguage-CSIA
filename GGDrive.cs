@@ -21,7 +21,11 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         static GGDrive instance;
         private DriveService Service;
-        private FileDataStore token = new FileDataStore("MyTokenApp");
+        static string credPath = "token.json";
+        static FileDataStore token;
+        static UserCredential credential;
+        static GGDriveFile[] driveFiles;
+     
         public static GGDrive Instance
         {
             get { return instance ?? (instance = new GGDrive()); }
@@ -35,14 +39,13 @@ namespace CS_IA_Ibasic_Intouch_Re
             var CSecret = "_8vMgfs53veWJAU2IwMnjFxH";
             // Fromhttps://console.developers.google.com
             // Request the user to give us access, or use the Refresh Token that waspreviously stored in % AppData %
-            UserCredential credential;
 
          
             {
                 // The file token.json stores the user's access and refresh tokens, and is created
                 // automatically when the authorization flow completes for the first time.
-                string credPath = "token.json";
-                FileDataStore token = new FileDataStore(credPath, true);
+
+                token = new FileDataStore(credPath);
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     new ClientSecrets
                     {
@@ -58,7 +61,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
             // Create Drive API service.
-            var Service = new DriveService(new BaseClientService.Initializer()
+             Service = new DriveService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
                 ApplicationName = "IBASIC",
@@ -174,7 +177,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void logout()
         {
-            token.ClearAsync();
+            credential.RevokeTokenAsync(CancellationToken.None);
+            token.DeleteAsync<string>(credPath);
         }
         public void CreateFolder(string folderName, DriveService service)
         {
@@ -187,6 +191,32 @@ namespace CS_IA_Ibasic_Intouch_Re
             request.Fields = "id";
             var file = request.Execute();
 
+        }
+        public GGDriveFile[] retrieveFile()
+        {
+          
+            // Define parameters of request.
+            FilesResource.ListRequest listRequest = Service.Files.List();
+            listRequest.PageSize = 10;
+            listRequest.Fields = "nextPageToken, files(id, name,version,createdTime)";
+
+            // List files.
+            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
+            int i = 0;
+            if (files != null && files.Count > 0)
+            {
+                foreach(var file in files)
+                {
+                  driveFiles[i] = new GGDriveFile
+                  {
+                      Id = file.Id,
+                      Name = file.Name,
+                      Version = file.Version,
+                      createdTime = file.CreatedTime
+                  };
+                }
+            }
+            return driveFiles;
         }
     }
 }
