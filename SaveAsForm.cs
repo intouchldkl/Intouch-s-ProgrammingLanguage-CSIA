@@ -34,6 +34,9 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void button2_Click(object sender, EventArgs e)
         {
+            SaveToDriveForm SaveDriveForm = new SaveToDriveForm(currentRtb);
+            SaveDriveForm.Show();
+            Close();
 
         }
     }

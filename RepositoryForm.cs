@@ -12,16 +12,16 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class RepositoryForm : Form
     {
-        static GGDrive myDrive = new GGDrive();
         private GGDriveFile[] DriveFiles;
+        private string[] fileNames;
         public RepositoryForm()
         {
             InitializeComponent();
-            myDrive.Authentication();          
-            DriveFiles = myDrive.retrieveFile();
+            GGDrive.Instance.Authentication();          
+            DriveFiles = GGDrive.Instance.retrieveFile();
             for (int i = 0; i < DriveFiles.Length; i++)
             {
-                FilelistView.Items.Add(DriveFiles[i].Name);
+                ///FilelistView.Items.Add(DriveFiles[i].Name);
             }
         }
 

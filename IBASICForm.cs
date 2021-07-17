@@ -15,7 +15,6 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         // To keep track of where the current textBox is as the tab changes
         RichTextBox currentRtb = new RichTextBox();
-        static GGDrive myDrive = new GGDrive();
         public IBASICForm()
         {
             InitializeComponent();
@@ -201,12 +200,12 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
               if(LOGIN.Text == "LOGIN")
                 {
-                myDrive.Authentication();
+                GGDrive.Instance.Authentication();
                 LOGIN.Text = "LOGOUT";
                 }
             else
             {
-                myDrive.logout();
+                GGDrive.Instance.logout();
                 LOGIN.Text = "LOGIN";
             }
           

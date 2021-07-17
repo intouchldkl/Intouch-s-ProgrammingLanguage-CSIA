@@ -20,11 +20,12 @@ namespace CS_IA_Ibasic_Intouch_Re
     class GGDrive
     {
         static GGDrive instance;
-        private DriveService Service;
+        static DriveService Service;
         static string credPath = "token.json";
         static FileDataStore token;
         static UserCredential credential;
         static GGDriveFile[] driveFiles;
+        private string IBASICfolderid = "";
      
         public static GGDrive Instance
         {
@@ -102,7 +103,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                 Google.Apis.Drive.v3.Data.File();
                 body.Name = Path.GetFileName(FilePath);
                 //body.Description = "";
-                body.MimeType = GetMimeType(FilePath);
+                body.MimeType = "txt";
+                body.Parents = new List<string> { IBASICfolderid };
                 byte[] byteArray = System.IO.File.ReadAllBytes(FilePath);
                 MemoryStream stream = new MemoryStream(byteArray);
                 try
@@ -180,26 +182,32 @@ namespace CS_IA_Ibasic_Intouch_Re
             credential.RevokeTokenAsync(CancellationToken.None);
             token.DeleteAsync<string>(credPath);
         }
-        public void CreateFolder(string folderName, DriveService service)
+        public void CreateIBASICFolder(string folderName)
         {
             var fileMetadata = new Google.Apis.Drive.v3.Data.File()
             {
                 Name = folderName,
                 MimeType = "application/vnd.google-apps.folder"
             };
-            var request = service.Files.Create(fileMetadata);
+            var request = Service.Files.Create(fileMetadata);
             request.Fields = "id";
             var file = request.Execute();
+            IBASICfolderid = file.Id;
+            
 
+        }
+        public string getIBASICFolderId()
+        {
+            return IBASICfolderid;
         }
         public GGDriveFile[] retrieveFile()
         {
-          
+            Authentication();
             // Define parameters of request.
             FilesResource.ListRequest listRequest = Service.Files.List();
-            listRequest.PageSize = 10;
+          ///  listRequest.PageSize = 10;
             listRequest.Fields = "nextPageToken, files(id, name,version,createdTime)";
-
+            listRequest.Q = listRequest.Q = ("(" + "'" + IBASICfolderid + "'" + " in parents" + ")" + "");
             // List files.
             IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
             int i = 0;
@@ -217,6 +225,47 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
             return driveFiles;
+        }
+        public bool checkForIBasicFolder()
+        {
+            Authentication();
+            FilesResource.ListRequest listRequest = Service.Files.List();
+            listRequest.Fields = "nextPageToken, files(id, name)";
+
+            // List files.
+            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute()
+                .Files;
+            Console.WriteLine("Files:");
+            if (files != null && files.Count > 0)
+            {
+                foreach (var file in files)
+                {
+                    if(file.Name == "IBASIC-FOLDER")
+                    {
+                        IBASICfolderid = file.Id;
+                        return true;
+                        
+                    }
+                
+                }
+            }
+
+            return false;
+        }
+        public void saveFile(string filePath)
+        {
+            var fileMetadata = new Google.Apis.Drive.v3.Data.File();
+            fileMetadata.Name = Path.GetFileName(filePath);
+            
+            fileMetadata.Parents = new List<string> {getIBASICFolderId()};
+            fileMetadata.MimeType = "txt";
+            FilesResource.CreateMediaUpload request;
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                request = Service.Files.Create(fileMetadata, stream, "txt");
+                request.Fields = "id";
+                request.Upload();
+            }
         }
     }
 }
