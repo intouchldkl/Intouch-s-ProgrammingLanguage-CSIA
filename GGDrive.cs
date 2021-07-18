@@ -20,13 +20,15 @@ namespace CS_IA_Ibasic_Intouch_Re
     class GGDrive
     {
         static GGDrive instance;
-        static DriveService Service;
-        static string credPath = "token.json";
-        static FileDataStore token;
-        static UserCredential credential;
-        static GGDriveFile[] driveFiles;
+        private DriveService Service;
+        private string credPath = "token.json";
+        private FileDataStore token;
+        private UserCredential credential;
         private string IBASICfolderid = "";
-     
+        
+        /// <summary>
+        /// To make use of a singleton pattern and let instance be accessible to every forms and classes
+        /// </summary>
         public static GGDrive Instance
         {
             get { return instance ?? (instance = new GGDrive()); }
@@ -104,6 +106,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 body.Name = Path.GetFileName(FilePath);
                 //body.Description = "";
                 body.MimeType = "txt";
+                ///Make sure the file end up in the IBASICfolder
                 body.Parents = new List<string> { IBASICfolderid };
                 byte[] byteArray = System.IO.File.ReadAllBytes(FilePath);
                 MemoryStream stream = new MemoryStream(byteArray);
@@ -177,6 +180,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 Stream.WriteTo(file);
             }
         }
+        /// <summary>
+        /// Revoke and delete token.json to logout
+        /// </summary>
         public void logout()
         {
             credential.RevokeTokenAsync(CancellationToken.None);
@@ -205,23 +211,26 @@ namespace CS_IA_Ibasic_Intouch_Re
             Authentication();
             // Define parameters of request.
             FilesResource.ListRequest listRequest = Service.Files.List();
-          ///  listRequest.PageSize = 10;
+            ///Make sure it gets id,name,version and createdTime
             listRequest.Fields = "nextPageToken, files(id, name,version,createdTime)";
+            ///Make sure it retrieves from the right folder
             listRequest.Q = listRequest.Q = ("(" + "'" + IBASICfolderid + "'" + " in parents" + ")" + "");
             // List files.
             IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
-            int i = 0;
+
+            GGDriveFile[] driveFiles = new GGDriveFile[files.Count];
             if (files != null && files.Count > 0)
             {
-                foreach(var file in files)
+                for (int i = 0; i < files.Count; i++)
                 {
-                  driveFiles[i] = new GGDriveFile
-                  {
-                      Id = file.Id,
-                      Name = file.Name,
-                      Version = file.Version,
-                      createdTime = file.CreatedTime
-                  };
+                    var file = files[i];
+                    driveFiles[i] = new GGDriveFile
+                    {
+                        Id = file.Id,
+                        Name = file.Name,
+                        Version = file.Version,
+                        createdTime = file.CreatedTime
+                    };
                 }
             }
             return driveFiles;
@@ -235,7 +244,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             // List files.
             IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute()
                 .Files;
-            Console.WriteLine("Files:");
             if (files != null && files.Count > 0)
             {
                 foreach (var file in files)
@@ -252,20 +260,6 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             return false;
         }
-        public void saveFile(string filePath)
-        {
-            var fileMetadata = new Google.Apis.Drive.v3.Data.File();
-            fileMetadata.Name = Path.GetFileName(filePath);
-            
-            fileMetadata.Parents = new List<string> {getIBASICFolderId()};
-            fileMetadata.MimeType = "txt";
-            FilesResource.CreateMediaUpload request;
-            using (var stream = new FileStream(filePath, FileMode.Open))
-            {
-                request = Service.Files.Create(fileMetadata, stream, "txt");
-                request.Fields = "id";
-                request.Upload();
-            }
-        }
+      
     }
 }

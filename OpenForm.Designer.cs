@@ -100,7 +100,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.MaximumSize = new System.Drawing.Size(1000, 550);
             this.Name = "OpenForm";
             this.Text = "OpenForm";
-            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

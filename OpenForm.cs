@@ -47,7 +47,9 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void DriveButton_Click(object sender, EventArgs e)
         {
             RepositoryForm repos = new RepositoryForm();
+            Close();
             repos.Show();
+            
         }
     }
 }

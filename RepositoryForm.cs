@@ -17,12 +17,20 @@ namespace CS_IA_Ibasic_Intouch_Re
         public RepositoryForm()
         {
             InitializeComponent();
-            GGDrive.Instance.Authentication();          
-            DriveFiles = GGDrive.Instance.retrieveFile();
-            for (int i = 0; i < DriveFiles.Length; i++)
+            GGDrive.Instance.Authentication();
+         if(GGDrive.Instance.checkForIBasicFolder() == true)
             {
-                ///FilelistView.Items.Add(DriveFiles[i].Name);
+                if(GGDrive.Instance.retrieveFile() != null)
+                {
+                    DriveFiles = GGDrive.Instance.retrieveFile();
+                    for (int i = 0; i < DriveFiles.Length; i++)
+                    {
+                        FilelistView.Items.Add(DriveFiles[i].Name);
+                    }
+                }
+               
             }
+         
         }
 
        
