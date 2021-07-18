@@ -71,7 +71,6 @@
     <Compile Include="Compiler.cs" />
     <Compile Include="GGDrive.cs" />
     <Compile Include="GGDriveFile.cs" />
-    <Compile Include="GGFileVersion.cs" />
     <Compile Include="IBASICForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -260,6 +260,47 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             return false;
         }
+
+        public List<string> getDisplayFileNames()
+        {
+            GGDriveFile[] AllDriveFiles = retrieveFile();
+            var List = new List<String>();
+           /// string[] names = new string[AllDriveFiles.Length];
+            bool ValidName = true;
+            List.Add(AllDriveFiles[0].Name);
+            for(int i = 1; i < AllDriveFiles.Length; i++)
+            {
+                for(int z = 0; z < List.Count; z++)
+                {
+                    if(AllDriveFiles[i].Name == List[z])
+                    {
+                        ValidName = false;
+                    }
+                }
+                if(ValidName == true)
+                {
+                    List.Add(AllDriveFiles[i].Name);
+                }
+            }
+            return List;
+
+        }
+
+        public List<GGDriveFile> getVersionFiles(string Name)
+        {
+            GGDriveFile[] AllDriveFiles = retrieveFile();
+            ///GGDriveFile[] VersionFiles = new GGDriveFile[AllDriveFiles.Length];
+            var List = new List<GGDriveFile>();
+            for(int i = 0; i < AllDriveFiles.Length; i++)
+            {
+                if(AllDriveFiles[i].Name == Name)
+                {
+                    List.Add(AllDriveFiles[i]);
+                }
+            }
+            return List;
+        }
+
       
     }
 }

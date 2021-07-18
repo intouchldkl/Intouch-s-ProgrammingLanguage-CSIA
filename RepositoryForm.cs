@@ -13,26 +13,60 @@ namespace CS_IA_Ibasic_Intouch_Re
     public partial class RepositoryForm : Form
     {
         private GGDriveFile[] DriveFiles;
-        private string[] fileNames;
+       
         public RepositoryForm()
         {
             InitializeComponent();
             GGDrive.Instance.Authentication();
-         if(GGDrive.Instance.checkForIBasicFolder() == true)
-            {
-                if(GGDrive.Instance.retrieveFile() != null)
-                {
-                    DriveFiles = GGDrive.Instance.retrieveFile();
-                    for (int i = 0; i < DriveFiles.Length; i++)
-                    {
-                        FilelistView.Items.Add(DriveFiles[i].Name);
-                    }
-                }
-               
-            }
+            displayAllFiles();
+        
          
         }
 
-       
+        public void displayAllFiles()
+        {
+            
+            if (GGDrive.Instance.checkForIBasicFolder() == true)
+            {
+                if (GGDrive.Instance.retrieveFile() != null)
+                {
+                    var displayFileNames = GGDrive.Instance.getDisplayFileNames();
+                    foreach (var FileName in displayFileNames)
+                    {                     
+                        var LVI = new ListViewItem(FileName);
+                        FilelistView.Items.Add(LVI);
+                    }
+
+                }
+
+            }
+            
+
+
+        }
+
+     
+
+        private void FilelistView_Click(object sender, EventArgs e)
+        {
+            VersionListView.Clear();
+            displayVersionFiles();
+            
+        }
+        private void displayVersionFiles()
+        {
+            var AllVersionFiles = GGDrive.Instance.getVersionFiles((string)FilelistView.SelectedItems[0].Text); ; ;
+            int i = 1;
+            foreach (var version in AllVersionFiles)
+            {
+                string time = version.createdTime.ToString();
+                var row = new string[] { "Version " + i, time };
+                i++;
+                var LVI = new ListViewItem(row);
+                LVI.Text = LVI.Text + "     " + time;
+                LVI.Tag = version;
+                VersionListView.Items.Add(LVI);
+            }
+        }
     }
 }
