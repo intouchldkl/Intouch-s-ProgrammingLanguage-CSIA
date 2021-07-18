@@ -61,7 +61,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void displayVersionFiles()
         {
             string FileName = FilelistView.SelectedItems[0].Text;
-            var AllVersionFiles = GGDrive.Instance.getVersionFiles(FileName); ; ;
+            var AllVersionFiles = GGDrive.Instance.getVersionFiles(FileName); 
             int i = AllVersionFiles.Count;
             foreach (var version in AllVersionFiles)
             {
@@ -86,7 +86,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             GGDriveFile GFlie = (GGDriveFile)FilelistView.SelectedItems[0].Tag;
             string fileId = GFlie.Id;
 
-            openFileDialog1.FileName = GGDrive.Instance.DownloadGoogleFile(fileId);
+            openFileDialog1.FileName = GGDrive.Instance.DownloadGoogleFile(fileId); ;
             using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
             {
                 currentRtb.Text = sr.ReadToEnd();

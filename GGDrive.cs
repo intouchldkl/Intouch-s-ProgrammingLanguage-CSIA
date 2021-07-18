@@ -26,8 +26,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string credPath = "token.json";
         private FileDataStore token;
         private UserCredential credential;
-        private string IBASICfolderid = "";
-        private string Publishfolderid = "";
+        private string IBASICfolderid;
+        private string Publishfolderid;
         
         /// <summary>
         /// To make use of a singleton pattern and let instance be accessible to every forms and classes
@@ -307,7 +307,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             GGDriveFile[] AllDriveFiles = retrieveFile();
             var List = new List<GGDriveFile>();
-           /// string[] names = new string[AllDriveFiles.Length];
             bool ValidName = true;
             List.Add(AllDriveFiles[0]);
             for(int i = 1; i < AllDriveFiles.Length; i++)
@@ -323,6 +322,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     List.Add(AllDriveFiles[i]);
                 }
+                ValidName = true;
             }
             return List;
 
