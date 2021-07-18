@@ -96,7 +96,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.VersionListView.BackColor = System.Drawing.Color.LightSlateGray;
-            this.VersionListView.Font = new System.Drawing.Font("Constantia", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VersionListView.FullRowSelect = true;
             this.VersionListView.HideSelection = false;
             this.VersionListView.Location = new System.Drawing.Point(303, 114);

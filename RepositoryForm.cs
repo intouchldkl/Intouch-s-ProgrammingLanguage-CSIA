@@ -55,15 +55,16 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void displayVersionFiles()
         {
-            var AllVersionFiles = GGDrive.Instance.getVersionFiles((string)FilelistView.SelectedItems[0].Text); ; ;
-            int i = 1;
+            string FileName = FilelistView.SelectedItems[0].Text;
+            var AllVersionFiles = GGDrive.Instance.getVersionFiles(FileName); ; ;
+            int i = AllVersionFiles.Count;
             foreach (var version in AllVersionFiles)
             {
                 string time = version.createdTime.ToString();
                 var row = new string[] { "Version " + i, time };
-                i++;
+                i--;
                 var LVI = new ListViewItem(row);
-                LVI.Text = LVI.Text + "     " + time;
+                LVI.Text = FileName + "-" + LVI.Text + "     " + time;
                 LVI.Tag = version;
                 VersionListView.Items.Add(LVI);
             }
