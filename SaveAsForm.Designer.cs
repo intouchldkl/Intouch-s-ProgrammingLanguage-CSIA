@@ -32,7 +32,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.SaveAsLabel = new System.Windows.Forms.Label();
             this.LocalDBut = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.GDriveBut = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SaveAsLabel
@@ -60,18 +60,18 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.LocalDBut.UseVisualStyleBackColor = true;
             this.LocalDBut.Click += new System.EventHandler(this.LocalDBut_Click);
             // 
-            // button2
+            // GDriveBut
             // 
-            this.button2.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.button2.AutoSize = true;
-            this.button2.Font = new System.Drawing.Font("Constantia", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(451, 247);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(191, 75);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Google Drive";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.GDriveBut.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDriveBut.AutoSize = true;
+            this.GDriveBut.Font = new System.Drawing.Font("Constantia", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDriveBut.Location = new System.Drawing.Point(451, 247);
+            this.GDriveBut.Name = "GDriveBut";
+            this.GDriveBut.Size = new System.Drawing.Size(191, 75);
+            this.GDriveBut.TabIndex = 2;
+            this.GDriveBut.Text = "Google Drive";
+            this.GDriveBut.UseVisualStyleBackColor = true;
+            this.GDriveBut.Click += new System.EventHandler(this.GDrivebut_Click);
             // 
             // SaveAsForm
             // 
@@ -79,7 +79,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SlateGray;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.GDriveBut);
             this.Controls.Add(this.LocalDBut);
             this.Controls.Add(this.SaveAsLabel);
             this.MaximumSize = new System.Drawing.Size(1000, 550);
@@ -96,6 +96,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label SaveAsLabel;
         private System.Windows.Forms.Button LocalDBut;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button GDriveBut;
     }
 }

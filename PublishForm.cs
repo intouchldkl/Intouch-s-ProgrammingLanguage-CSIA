@@ -11,19 +11,30 @@ using System.IO;
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
-    public partial class SaveToDriveForm : Form
+    public partial class PublishForm : Form
     {
         RichTextBox currentRtb = new RichTextBox();
         TabPage tabPage = new TabPage();
-        public SaveToDriveForm(RichTextBox currentRtb,TabPage tabPage)
+        string outputFileName;
+        public PublishForm(RichTextBox currentRtb,TabPage tabPage)
         {
             InitializeComponent();
             this.currentRtb = currentRtb;
             this.tabPage = tabPage;
             FileNameBox.Text = tabPage.Text;
+            
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
+        private void OutputBut_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {          
+                outputFileName = openFileDialog1.FileName;
+                PublishBut.Enabled = true;
+            }
+        }
+
+        private void PublishBut_Click(object sender, EventArgs e)
         {
             if(FileNameBox.Text != "")
             {
@@ -31,20 +42,27 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     GGDrive.Instance.CreateIBASICFolder("IBASIC-FOLDER");
                 }
+                if (GGDrive.Instance.checkForPublishFolder() == false)
+                {
+                    GGDrive.Instance.CreatePublishFolder("IBASIC-FOLDER-PUBLISH");
+                }
 
                 saveFileDialog1.FileName = FileNameBox.Text;
                 StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
                 CodeToBeSaved.Write(currentRtb.Text);
                 CodeToBeSaved.Close();
-                Close();
-
                 GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
+                GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getPublishfolderId());
+                GGDrive.Instance.Upload(outputFileName, GGDrive.Instance.getPublishfolderId());
+                Close();
             }
             else
             {
                 MessageBox.Show("Please enter a file name");
             }
-          
+           
+
+
         }
     }
 }

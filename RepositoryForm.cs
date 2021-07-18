@@ -7,16 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class RepositoryForm : Form
     {
-        private GGDriveFile[] DriveFiles;
-       
-        public RepositoryForm()
+        RichTextBox currentRtb;
+        TabPage tabPage = new TabPage();
+        public RepositoryForm(RichTextBox currentRtb, TabPage tabPage)
         {
             InitializeComponent();
+            this.currentRtb = currentRtb;
+            this.tabPage = tabPage;
             GGDrive.Instance.Authentication();
             displayAllFiles();
         
@@ -32,9 +35,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     var displayFileNames = GGDrive.Instance.getDisplayFileNames();
                     foreach (var FileName in displayFileNames)
-                    {                     
-                        var LVI = new ListViewItem(FileName);
+                    {
+                        string fileName = FileName.Name;
+                        var LVI = new ListViewItem(fileName);
                         FilelistView.Items.Add(LVI);
+                        LVI.Tag = FileName;
                     }
 
                 }
@@ -67,6 +72,26 @@ namespace CS_IA_Ibasic_Intouch_Re
                 LVI.Text = FileName + "-" + LVI.Text + "     " + time;
                 LVI.Tag = version;
                 VersionListView.Items.Add(LVI);
+            }
+        }
+
+        private void VersionListView_Click(object sender, EventArgs e)
+        {
+            downloadFile();
+            Close();
+        }
+
+        private void downloadFile()
+        {
+            GGDriveFile GFlie = (GGDriveFile)FilelistView.SelectedItems[0].Tag;
+            string fileId = GFlie.Id;
+
+            openFileDialog1.FileName = GGDrive.Instance.DownloadGoogleFile(fileId);
+            using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
+            {
+                currentRtb.Text = sr.ReadToEnd();
+                sr.Close();
+                tabPage.Text = openFileDialog1.SafeFileName;
             }
         }
     }

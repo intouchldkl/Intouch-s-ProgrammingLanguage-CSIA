@@ -21,7 +21,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.currentRtb = currentRtb;
             this.tabPage = tabPage;
          
-           
         }
 
         private void LocalDButton_Click(object sender, EventArgs e)
@@ -32,7 +31,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
 
                 
-                // Open & read file
+                //  read file
                 using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
                 {
                    currentRtb.Text = sr.ReadToEnd();
@@ -46,7 +45,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void DriveButton_Click(object sender, EventArgs e)
         {
-            RepositoryForm repos = new RepositoryForm();
+            RepositoryForm repos = new RepositoryForm(currentRtb,tabPage);
             Close();
             repos.Show();
             

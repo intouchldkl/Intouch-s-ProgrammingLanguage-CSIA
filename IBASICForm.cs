@@ -72,7 +72,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void SaveAs_Click(object sender, EventArgs e)
         {
-            SaveAsForm saveasform = new SaveAsForm(currentRtb);
+            SaveAsForm saveasform = new SaveAsForm(currentRtb,tabControl1.SelectedTab);
             saveasform.Show();
 
           
@@ -210,6 +210,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
           
 
+        }
+
+        private void PUBLISH_Click(object sender, EventArgs e)
+        {
+            PublishForm publishForm = new PublishForm(currentRtb, tabControl1.SelectedTab);
+            publishForm.Show();
         }
     }
 }

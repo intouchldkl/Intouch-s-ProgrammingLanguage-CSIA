@@ -14,17 +14,20 @@ namespace CS_IA_Ibasic_Intouch_Re
     public partial class SaveAsForm : Form
     {
         RichTextBox currentRtb = new RichTextBox();
-        public SaveAsForm(RichTextBox currentRtb)
+        TabPage tabpage = new TabPage();
+        public SaveAsForm(RichTextBox currentRtb,TabPage tabpage)
         {
             InitializeComponent();
             this.currentRtb = currentRtb;
-    
+            this.tabpage = tabpage;
         }
 
         private void LocalDBut_Click(object sender, EventArgs e)
         {
+            saveFileDialog1.FileName = tabpage.Text;
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
+
                 StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
                 CodeToBeSaved.Write(currentRtb.Text);
                 CodeToBeSaved.Close();
@@ -32,9 +35,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void GDrivebut_Click(object sender, EventArgs e)
         {
-            SaveToDriveForm SaveDriveForm = new SaveToDriveForm(currentRtb);
+            SaveToDriveForm SaveDriveForm = new SaveToDriveForm(currentRtb,tabpage);
             SaveDriveForm.Show();
             Close();
 

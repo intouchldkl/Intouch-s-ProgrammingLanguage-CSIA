@@ -122,6 +122,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.PUBLISH.Name = "PUBLISH";
             this.PUBLISH.Size = new System.Drawing.Size(65, 20);
             this.PUBLISH.Text = "PUBLISH";
+            this.PUBLISH.Click += new System.EventHandler(this.PUBLISH_Click);
             // 
             // UNDO
             // 

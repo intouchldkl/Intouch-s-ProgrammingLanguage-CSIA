@@ -13,6 +13,8 @@ using System.Security.Claims;
 using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Google.Apis.Download;
+
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
@@ -25,6 +27,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private FileDataStore token;
         private UserCredential credential;
         private string IBASICfolderid = "";
+        private string Publishfolderid = "";
         
         /// <summary>
         /// To make use of a singleton pattern and let instance be accessible to every forms and classes
@@ -97,7 +100,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 mimeType = regKey.GetValue("Content Type").ToString();
             return mimeType;
         }
-        public Google.Apis.Drive.v3.Data.File Upload(string FilePath)
+        public Google.Apis.Drive.v3.Data.File Upload(string FilePath,string folderId)
         {
             if (System.IO.File.Exists(FilePath))
             {
@@ -107,7 +110,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 //body.Description = "";
                 body.MimeType = "txt";
                 ///Make sure the file end up in the IBASICfolder
-                body.Parents = new List<string> { IBASICfolderid };
+                body.Parents = new List<string> { folderId };
                 byte[] byteArray = System.IO.File.ReadAllBytes(FilePath);
                 MemoryStream stream = new MemoryStream(byteArray);
                 try
@@ -134,50 +137,52 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-        public void Download(string FilePath)
+        //Download file from Google Drive by fileId.
+        public string DownloadGoogleFile(string fileId)
         {
-            var request = Service.Files.Get(FilePath);
-            var stream = new MemoryStream();
-            string documentpath =
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string folderpath = "/ExperienceManager/";
-            string savingpath = documentpath + folderpath + FilePath + ".jpg";
+
+      
+            FilesResource.GetRequest request = Service.Files.Get(fileId);
+
+            string FileName = request.Execute().Name;
+
+            MemoryStream stream1 = new MemoryStream();
+
             // Add a handler which will be notified on progress changes.
             // It will notify on each chunk download and when the
             // download is completed or failed.
-            request.MediaDownloader.ProgressChanged +=
-            (Google.Apis.Download.IDownloadProgress progress) =>
+            request.MediaDownloader.ProgressChanged += (Google.Apis.Download.IDownloadProgress progress) =>
             {
                 switch (progress.Status)
                 {
-                    case Google.Apis.Download.DownloadStatus.Downloading:
+                    case DownloadStatus.Downloading:
                         {
-                            Console.WriteLine(progress.BytesDownloaded);
-
+ 
                             break;
                         }
-                    case Google.Apis.Download.DownloadStatus.Completed:
+                    case DownloadStatus.Completed:
                         {
-                            Console.WriteLine("Download complete.");
-                            SaveStream(stream, savingpath);
+                           
+                            SaveStream(stream1, FileName);
                             break;
                         }
-                    case Google.Apis.Download.DownloadStatus.Failed:
+                    case DownloadStatus.Failed:
                         {
-                            Console.WriteLine("Download failed.");
-
+                            MessageBox.Show("Download failed.");
                             break;
                         }
                 }
             };
-            request.Download(stream);
+            request.Download(stream1);
+            return FileName;
         }
-        public void SaveStream(MemoryStream Stream, string Path)
+
+        // file save to server path
+        private  void SaveStream(MemoryStream stream, string FilePath)
         {
-            using (FileStream file = new FileStream(Path, FileMode.Create,
-            FileAccess.Write))
+            using (System.IO.FileStream file = new FileStream(FilePath, FileMode.Create, FileAccess.ReadWrite))
             {
-                Stream.WriteTo(file);
+                stream.WriteTo(file);
             }
         }
         /// <summary>
@@ -202,10 +207,21 @@ namespace CS_IA_Ibasic_Intouch_Re
             
 
         }
-        public string getIBASICFolderId()
+        public void CreatePublishFolder(string folderName)
         {
-            return IBASICfolderid;
+            var fileMetadata = new Google.Apis.Drive.v3.Data.File()
+            {
+                Name = folderName,
+                MimeType = "application/vnd.google-apps.folder"
+            };
+            var request = Service.Files.Create(fileMetadata);
+            request.Fields = "id";
+            var file = request.Execute();
+            Publishfolderid = file.Id;
+
+
         }
+
         public GGDriveFile[] retrieveFile()
         {
             Authentication();
@@ -260,26 +276,51 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             return false;
         }
+        public bool checkForPublishFolder()
+        {
+            Authentication();
+            FilesResource.ListRequest listRequest = Service.Files.List();
+            listRequest.Fields = "nextPageToken, files(id, name)";
 
-        public List<string> getDisplayFileNames()
+            // List files.
+            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute()
+                .Files;
+            if (files != null && files.Count > 0)
+            {
+                foreach (var file in files)
+                {
+                    if (file.Name == "IBASIC-FOLDER-PUBLISH")
+                    {
+                        Publishfolderid = file.Id;
+                        return true;
+
+                    }
+
+                }
+            }
+
+            return false;
+        }
+
+        public List<GGDriveFile> getDisplayFileNames()
         {
             GGDriveFile[] AllDriveFiles = retrieveFile();
-            var List = new List<String>();
+            var List = new List<GGDriveFile>();
            /// string[] names = new string[AllDriveFiles.Length];
             bool ValidName = true;
-            List.Add(AllDriveFiles[0].Name);
+            List.Add(AllDriveFiles[0]);
             for(int i = 1; i < AllDriveFiles.Length; i++)
             {
                 for(int z = 0; z < List.Count; z++)
                 {
-                    if(AllDriveFiles[i].Name == List[z])
+                    if(AllDriveFiles[i].Name == List[z].Name)
                     {
                         ValidName = false;
                     }
                 }
                 if(ValidName == true)
                 {
-                    List.Add(AllDriveFiles[i].Name);
+                    List.Add(AllDriveFiles[i]);
                 }
             }
             return List;
@@ -299,6 +340,14 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
             return List;
+        }
+        public string getIBASICfolderId()
+        {
+            return IBASICfolderid;
+        }
+        public string getPublishfolderId()
+        {
+            return Publishfolderid;
         }
 
       

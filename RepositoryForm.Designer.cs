@@ -30,11 +30,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Versionlabel = new System.Windows.Forms.Label();
+            this.FileNamelabel = new System.Windows.Forms.Label();
             this.DriveReposLabel = new System.Windows.Forms.Label();
             this.FilelistView = new System.Windows.Forms.ListView();
             this.FileNamecolumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.VersionListView = new System.Windows.Forms.ListView();
-            this.label1 = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,13 +45,39 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.LightSlateGray;
-            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.Versionlabel);
+            this.panel1.Controls.Add(this.FileNamelabel);
             this.panel1.Controls.Add(this.DriveReposLabel);
             this.panel1.ForeColor = System.Drawing.Color.SlateGray;
             this.panel1.Location = new System.Drawing.Point(-4, -1);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(804, 109);
             this.panel1.TabIndex = 0;
+            // 
+            // Versionlabel
+            // 
+            this.Versionlabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Versionlabel.AutoSize = true;
+            this.Versionlabel.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Versionlabel.ForeColor = System.Drawing.Color.Navy;
+            this.Versionlabel.Location = new System.Drawing.Point(235, 90);
+            this.Versionlabel.Name = "Versionlabel";
+            this.Versionlabel.Size = new System.Drawing.Size(130, 19);
+            this.Versionlabel.TabIndex = 4;
+            this.Versionlabel.Text = "Version Control";
+            // 
+            // FileNamelabel
+            // 
+            this.FileNamelabel.AutoSize = true;
+            this.FileNamelabel.BackColor = System.Drawing.Color.LightSlateGray;
+            this.FileNamelabel.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FileNamelabel.ForeColor = System.Drawing.Color.Navy;
+            this.FileNamelabel.Location = new System.Drawing.Point(16, 90);
+            this.FileNamelabel.Name = "FileNamelabel";
+            this.FileNamelabel.Size = new System.Drawing.Size(91, 19);
+            this.FileNamelabel.TabIndex = 3;
+            this.FileNamelabel.Text = "File Name:";
             // 
             // DriveReposLabel
             // 
@@ -105,18 +133,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.VersionListView.TabIndex = 2;
             this.VersionListView.UseCompatibleStateImageBehavior = false;
             this.VersionListView.View = System.Windows.Forms.View.Tile;
+            this.VersionListView.Click += new System.EventHandler(this.VersionListView_Click);
             // 
-            // label1
+            // openFileDialog1
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.LightSlateGray;
-            this.label1.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Navy;
-            this.label1.Location = new System.Drawing.Point(16, 90);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(91, 19);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "File Name:";
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // RepositoryForm
             // 
@@ -143,6 +164,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         private System.Windows.Forms.ListView FilelistView;
         private System.Windows.Forms.ColumnHeader FileNamecolumnHeader;
         private System.Windows.Forms.ListView VersionListView;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label FileNamelabel;
+        private System.Windows.Forms.Label Versionlabel;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
