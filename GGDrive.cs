@@ -139,52 +139,15 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         //Download file from Google Drive by fileId.
         public string DownloadGoogleFile(string fileId)
-        {
-
-      
+        {     
             FilesResource.GetRequest request = Service.Files.Get(fileId);
-
             string FileName = request.Execute().Name;
-
-            MemoryStream stream1 = new MemoryStream();
-
-            // Add a handler which will be notified on progress changes.
-            // It will notify on each chunk download and when the
-            // download is completed or failed.
-            request.MediaDownloader.ProgressChanged += (Google.Apis.Download.IDownloadProgress progress) =>
-            {
-                switch (progress.Status)
-                {
-                    case DownloadStatus.Downloading:
-                        {
- 
-                            break;
-                        }
-                    case DownloadStatus.Completed:
-                        {
-                           
-                            SaveStream(stream1, FileName);
-                            break;
-                        }
-                    case DownloadStatus.Failed:
-                        {
-                            MessageBox.Show("Download failed.");
-                            break;
-                        }
-                }
-            };
+            MemoryStream stream1 = new MemoryStream();         
             request.Download(stream1);
             return FileName;
         }
 
-        // file save to server path
-        private  void SaveStream(MemoryStream stream, string FilePath)
-        {
-            using (System.IO.FileStream file = new FileStream(FilePath, FileMode.Create, FileAccess.ReadWrite))
-            {
-                stream.WriteTo(file);
-            }
-        }
+      
         /// <summary>
         /// Revoke and delete token.json to logout
         /// </summary>
