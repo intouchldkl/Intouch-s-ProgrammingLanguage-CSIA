@@ -24,6 +24,11 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void LocalDBut_Click(object sender, EventArgs e)
         {
+            savetoLocalD();
+        }
+
+        private void savetoLocalD()
+        {
             saveFileDialog1.FileName = tabpage.Text;
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {

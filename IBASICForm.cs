@@ -30,6 +30,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+         
         }
 
         private void ZoomBar_ValueChanged(object sender, EventArgs e)

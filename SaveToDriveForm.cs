@@ -27,24 +27,28 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             if(FileNameBox.Text != "")
             {
-                if (GGDrive.Instance.checkForIBasicFolder() == false)
-                {
-                    GGDrive.Instance.CreateIBASICFolder("IBASIC-FOLDER");
-                }
-
-                saveFileDialog1.FileName = FileNameBox.Text;
-                StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
-                CodeToBeSaved.Write(currentRtb.Text);
-                CodeToBeSaved.Close();
-                Close();
-
-                GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
+                saveFileToIBASICfolder();
             }
             else
             {
                 MessageBox.Show("Please enter a file name");
             }
           
+        }
+        private void saveFileToIBASICfolder()
+        {
+            if (GGDrive.Instance.checkForIBasicFolder() == false)
+            {
+                GGDrive.Instance.CreateIBASICFolder("IBASIC-FOLDER");
+            }
+
+            saveFileDialog1.FileName = FileNameBox.Text;
+            StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
+            CodeToBeSaved.Write(currentRtb.Text);
+            CodeToBeSaved.Close();
+            Close();
+
+            GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
         }
     }
 }

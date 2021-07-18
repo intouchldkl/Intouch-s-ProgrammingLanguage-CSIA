@@ -38,22 +38,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             if(FileNameBox.Text != "")
             {
-                if (GGDrive.Instance.checkForIBasicFolder() == false)
-                {
-                    GGDrive.Instance.CreateIBASICFolder("IBASIC-FOLDER");
-                }
-                if (GGDrive.Instance.checkForPublishFolder() == false)
-                {
-                    GGDrive.Instance.CreatePublishFolder("IBASIC-FOLDER-PUBLISH");
-                }
-
-                saveFileDialog1.FileName = FileNameBox.Text;
-                StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
-                CodeToBeSaved.Write(currentRtb.Text);
-                CodeToBeSaved.Close();
-                GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
-                GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getPublishfolderId());
-                GGDrive.Instance.Upload(outputFileName, GGDrive.Instance.getPublishfolderId());
+                publishToGDrive();
                 Close();
             }
             else
@@ -61,8 +46,28 @@ namespace CS_IA_Ibasic_Intouch_Re
                 MessageBox.Show("Please enter a file name");
             }
            
+        }
 
+        private void publishToGDrive()
+        {
 
+            if (GGDrive.Instance.checkForIBasicFolder() == false)
+            {
+                GGDrive.Instance.CreateIBASICFolder("IBASIC-FOLDER");
+            }
+            if (GGDrive.Instance.checkForPublishFolder() == false)
+            {
+                GGDrive.Instance.CreatePublishFolder("IBASIC-FOLDER-PUBLISH");
+            }
+
+            saveFileDialog1.FileName = FileNameBox.Text;
+            StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
+            CodeToBeSaved.Write(currentRtb.Text);
+            CodeToBeSaved.Close();
+            GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
+            GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getPublishfolderId());
+            GGDrive.Instance.Upload(outputFileName, GGDrive.Instance.getPublishfolderId());
+            
         }
     }
 }

@@ -25,22 +25,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void LocalDButton_Click(object sender, EventArgs e)
         {
-            // Open file 
-   
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-
-                
-                //  read file
-                using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
-                {
-                   currentRtb.Text = sr.ReadToEnd();
-                    sr.Close();
-                   tabPage.Text = openFileDialog1.SafeFileName;
-                }
-                Close();
-
-            }
+            openFileFromLocalD();
         }
 
         private void DriveButton_Click(object sender, EventArgs e)
@@ -49,6 +34,25 @@ namespace CS_IA_Ibasic_Intouch_Re
             Close();
             repos.Show();
             
+        }
+        private void openFileFromLocalD()
+        {
+            // Open file 
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+
+
+                //  read file
+                using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
+                {
+                    currentRtb.Text = sr.ReadToEnd();
+                    sr.Close();
+                    tabPage.Text = openFileDialog1.SafeFileName;
+                }
+                Close();
+
+            }
         }
     }
 }

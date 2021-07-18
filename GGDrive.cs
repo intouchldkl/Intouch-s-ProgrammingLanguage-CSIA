@@ -50,7 +50,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 // The file token.json stores the user's access and refresh tokens, and is created
                 // automatically when the authorization flow completes for the first time.
-
+                
                 token = new FileDataStore(credPath);
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     new ClientSecrets
@@ -192,6 +192,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             credential.RevokeTokenAsync(CancellationToken.None);
             token.DeleteAsync<string>(credPath);
+           
         }
         public void CreateIBASICFolder(string folderName)
         {
