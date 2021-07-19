@@ -90,6 +90,7 @@
     <Compile Include="IBASICForm.Designer.cs">
       <DependentUpon>IBASICForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="IBASICtranslator.cs" />
     <Compile Include="OpenForm.cs">
       <SubType>Form</SubType>
     </Compile>
