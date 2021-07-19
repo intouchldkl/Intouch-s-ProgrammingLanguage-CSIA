@@ -119,44 +119,53 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-            public string TarrayDeclaration()
+
+            public void TarrayDeclaration()
+        {
+            string line = "";
+            string keyword;
+            for (int i = 0; i < IBASICcode.Length; i++)
             {
-                string line = "";
-                string keyword;
-                for (int i = 0; i < IBASICcode.Length; i++)
+                line = IBASICcode[i].Trim();
+                keyword = line.Substring(0, 7);
+                ///get rid of all the spaces
+                string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
+                ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
+                if (line.Substring(7, 1) == " " &&
+                    arraycheck.Contains("ARRAY[") == true && IBASICcode[i].Contains(",") == false && keyword == "DECLARE")
                 {
-                    line = IBASICcode[i].Trim();
-                    keyword = line.Substring(0, 7);
-                    ///get rid of all the spaces
-                    string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                    ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
-                    if (line.Substring(7, 1) == " " &&
-                        arraycheck.Contains("ARRAY[") == true)
-                    {
-                        string therest = line.Substring(7);
+
+                    string therest = line.Substring(7);
+                    if (therest.Contains("OF") == true)
                         therest = therest.Trim();
-                        string[] variablearray = therest.Split(':', 2);
+                    string[] variablearray = therest.Split(':');
+                    if (variablearray.Length == 3)
+                    {
                         string variable = variablearray[0].Trim();
-                        string[] indexandtype = variablearray[1].Split(']');
+                        string[] indexandtype = variablearray[2].Split(']');
                         string type = indexandtype[1].Trim();
                         string[] types = type.Split('F');
-                        types[1] = types[1].Trim();
-                        string type1 = types[1].Substring(0, 1).ToUpper();
-                        string type2 = types[1].Substring(1).ToLower();
-                        ///get rid of all the space to make it easier to separate indices
-                        indexandtype[0] = string.Concat(indexandtype[0].Where(c => !Char.IsWhiteSpace(c)));
-                        string[] Indices = indexandtype[0].Split(':');
-                        int index = int.Parse(Indices[1]);
-                        if (keyword == "DECLARE")
+                        if (types.Length == 2 && types[1] != "")
                         {
-                            IBASICcode[i] = "Dim " + variable+"(" + (index-1) + ")" + " As " + type1 + type2;
-                            line = IBASICcode[i];
+                            types[1] = types[1].Trim();
+                            string type1 = types[1].Substring(0, 1).ToUpper();
+                            string type2 = types[1].Substring(1).ToLower();
+                            bool IsThereIndex = int.TryParse(indexandtype[0], out int index);
+                            if (IsThereIndex == true)
+                            {
+                                IBASICcode[i] = "Dim " + variable + "(" + index + ")" + " As " + type1 + type2;
+                            }
+
                         }
+
                     }
-                   
+
+
                 }
-            return line;
+
+            }
         }
-        
+
+
     }
 }
