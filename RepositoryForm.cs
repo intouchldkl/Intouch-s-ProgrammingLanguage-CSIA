@@ -14,12 +14,10 @@ namespace CS_IA_Ibasic_Intouch_Re
     public partial class RepositoryForm : Form
     {
         RichTextBox currentRtb;
-        TabPage tabPage = new TabPage();
-        public RepositoryForm(RichTextBox currentRtb, TabPage tabPage)
+        TabPage tabPage;
+        public RepositoryForm()
         {
             InitializeComponent();
-            this.currentRtb = currentRtb;
-            this.tabPage = tabPage;
             GGDrive.Instance.Authentication();
             displayAllFiles();
         
@@ -85,13 +83,14 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             GGDriveFile GFlie = (GGDriveFile)FilelistView.SelectedItems[0].Tag;
             string fileId = GFlie.Id;
-
-            openFileDialog1.FileName = GGDrive.Instance.DownloadGoogleFile(fileId); ;
+            openFileDialog1.FileName = GGDrive.Instance.DownloadGoogleFile(fileId);
+            IBASICForm.Instance.createNewTabPage(openFileDialog1.FileName);
+            currentRtb = IBASICForm.Instance.getCurrentRtb();
+            tabPage = IBASICForm.Instance.getCurrentTabpage();
             using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
             {
                 currentRtb.Text = sr.ReadToEnd();
                 sr.Close();
-                tabPage.Text = openFileDialog1.SafeFileName;
             }
         }
     }

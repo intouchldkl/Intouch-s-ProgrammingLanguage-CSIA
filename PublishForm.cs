@@ -13,14 +13,14 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class PublishForm : Form
     {
-        RichTextBox currentRtb = new RichTextBox();
-        TabPage tabPage = new TabPage();
+        RichTextBox currentRtb;
+        TabPage tabPage;
         string outputFileName;
-        public PublishForm(RichTextBox currentRtb,TabPage tabPage)
+        public PublishForm()
         {
             InitializeComponent();
-            this.currentRtb = currentRtb;
-            this.tabPage = tabPage;
+            this.currentRtb = IBASICForm.Instance.getCurrentRtb();
+            this.tabPage = IBASICForm.Instance.getCurrentTabpage();
             FileNameBox.Text = tabPage.Text;
             
         }
@@ -64,6 +64,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
             CodeToBeSaved.Write(currentRtb.Text);
             CodeToBeSaved.Close();
+            tabPage.Text = saveFileDialog1.FileName;
             GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
             GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getPublishfolderId());
             GGDrive.Instance.Upload(outputFileName, GGDrive.Instance.getPublishfolderId());

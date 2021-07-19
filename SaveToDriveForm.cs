@@ -13,13 +13,13 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class SaveToDriveForm : Form
     {
-        RichTextBox currentRtb = new RichTextBox();
-        TabPage tabPage = new TabPage();
-        public SaveToDriveForm(RichTextBox currentRtb,TabPage tabPage)
+        RichTextBox currentRtb;
+        TabPage tabPage;
+        public SaveToDriveForm()
         {
             InitializeComponent();
-            this.currentRtb = currentRtb;
-            this.tabPage = tabPage;
+            this.currentRtb = IBASICForm.Instance.getCurrentRtb();
+            this.tabPage = IBASICForm.Instance.getCurrentTabpage();
             FileNameBox.Text = tabPage.Text;
         }
 
@@ -27,7 +27,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             if(FileNameBox.Text != "")
             {
-                saveFileToIBASICfolder();
+               saveFileToIBASICfolder();
             }
             else
             {
@@ -47,7 +47,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             CodeToBeSaved.Write(currentRtb.Text);
             CodeToBeSaved.Close();
             Close();
-
+            tabPage.Text = saveFileDialog1.FileName;
             GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
         }
     }

@@ -15,6 +15,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         // To keep track of where the current textBox is as the tab changes
         RichTextBox currentRtb = new RichTextBox();
+        static IBASICForm instance;
         public IBASICForm()
         {
             InitializeComponent();
@@ -32,7 +33,18 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
          
         }
-
+        public static IBASICForm Instance
+        {
+            get { return instance ?? (instance = new IBASICForm()); }
+        }
+        public TabPage getCurrentTabpage()
+        {
+            return tabControl1.SelectedTab;
+        }
+        public RichTextBox getCurrentRtb()
+        {
+            return currentRtb;
+        }
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
         {
  
@@ -42,13 +54,12 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void New_Click(object sender, EventArgs e)
         {
-            createNewTabPage();
+            createNewTabPage("Untitled");
         }
 
         private void Open_Click(object sender, EventArgs e)
         {
-            createNewTabPage();
-            OpenForm openForm = new OpenForm(currentRtb, tabControl1.SelectedTab);
+            OpenForm openForm = new OpenForm();
             openForm.Show();
             AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
@@ -73,7 +84,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void SaveAs_Click(object sender, EventArgs e)
         {
-            SaveAsForm saveasform = new SaveAsForm(currentRtb,tabControl1.SelectedTab);
+            SaveAsForm saveasform = new SaveAsForm();
             saveasform.Show();
 
           
@@ -103,7 +114,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
         }
-        public void createNewTabPage()
+        public void createNewTabPage(string tabName)
         {
             RichTextBox rtb = new RichTextBox();
             rtb.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
@@ -118,7 +129,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             TabPage newTab = new TabPage();
             tabControl1.Controls.Add(newTab);
             newTab.Controls.Add(rtb);
-            newTab.Text = "Untitled";
+            newTab.Text = tabName;
             tabControl1.SelectedTab = newTab;
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             ///Make sure the user see the new tab
@@ -215,7 +226,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void PUBLISH_Click(object sender, EventArgs e)
         {
-            PublishForm publishForm = new PublishForm(currentRtb, tabControl1.SelectedTab);
+            PublishForm publishForm = new PublishForm();
             publishForm.Show();
         }
     }

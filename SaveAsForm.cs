@@ -13,13 +13,13 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class SaveAsForm : Form
     {
-        RichTextBox currentRtb = new RichTextBox();
-        TabPage tabpage = new TabPage();
-        public SaveAsForm(RichTextBox currentRtb,TabPage tabpage)
+        RichTextBox currentRtb;
+        TabPage tabpage;
+        public SaveAsForm()
         {
             InitializeComponent();
-            this.currentRtb = currentRtb;
-            this.tabpage = tabpage;
+            this.currentRtb = IBASICForm.Instance.getCurrentRtb();
+            this.tabpage = IBASICForm.Instance.getCurrentTabpage();
         }
 
         private void LocalDBut_Click(object sender, EventArgs e)
@@ -32,7 +32,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             saveFileDialog1.FileName = tabpage.Text;
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-
+                tabpage.Text = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
                 StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
                 CodeToBeSaved.Write(currentRtb.Text);
                 CodeToBeSaved.Close();
@@ -42,7 +42,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void GDrivebut_Click(object sender, EventArgs e)
         {
-            SaveToDriveForm SaveDriveForm = new SaveToDriveForm(currentRtb,tabpage);
+            SaveToDriveForm SaveDriveForm = new SaveToDriveForm();
             SaveDriveForm.Show();
             Close();
 

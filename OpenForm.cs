@@ -13,13 +13,11 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class OpenForm : Form
     {
-        RichTextBox currentRtb = new RichTextBox();
-        TabPage tabPage = new TabPage();
-        public OpenForm(RichTextBox currentRtb,TabPage tabPage)
+        RichTextBox currentRtb;
+        TabPage tabPage;
+        public OpenForm()
         {
             InitializeComponent();
-            this.currentRtb = currentRtb;
-            this.tabPage = tabPage;
          
         }
 
@@ -30,7 +28,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void DriveButton_Click(object sender, EventArgs e)
         {
-            RepositoryForm repos = new RepositoryForm(currentRtb,tabPage);
+            RepositoryForm repos = new RepositoryForm();
             Close();
             repos.Show();
             
@@ -41,14 +39,14 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-
-
+                IBASICForm.Instance.createNewTabPage(openFileDialog1.SafeFileName);
+                currentRtb = IBASICForm.Instance.getCurrentRtb();
+                tabPage = IBASICForm.Instance.getCurrentTabpage();
                 //  read file
                 using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
                 {
                     currentRtb.Text = sr.ReadToEnd();
                     sr.Close();
-                    tabPage.Text = openFileDialog1.SafeFileName;
                 }
                 Close();
 
