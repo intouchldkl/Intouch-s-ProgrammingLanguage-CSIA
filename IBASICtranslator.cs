@@ -14,7 +14,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             this.IBASICcode = IBASICcode;
         }
-        public string translateOUTPUT()
+        public void Toutput()
         {
             string line = "";
             string keyword;
@@ -23,50 +23,107 @@ namespace CS_IA_Ibasic_Intouch_Re
                 line = IBASICcode[i];
                 line = line.Trim();
                 keyword = line.Substring(0, 6);
-                string therest = line.Substring(6);
-                therest = therest.Trim();
-                char qm = '"';
-
-                if (keyword == "OUTPUT")
+                ///This if statement makes sure "INPUT" is not part of a variable name
+                if (line.Substring(6, 1) == " ")
                 {
-                    string[] eachString = therest.Split(',');
-                    string outputstring = "";
-                    ///This loop is to change , to + but it doesnt have to do it for the last eachstring
-                    for(int z = 0; z < eachString.Length-1; z++)
+                    string therest = line.Substring(6);
+                    therest = therest.Trim();
+                    char qm = '"';
+
+                    if (keyword == "OUTPUT")
                     {
-                        ///The if statement is to determine if the comma is within a string or a string add operation
-                        if (eachString[z].StartsWith(qm.ToString()) == true && eachString[z].EndsWith(qm.ToString()) == true
-                            || eachString[z].Contains(qm.ToString()) == false || eachString[z].EndsWith(qm.ToString()) == true)
+                        string[] eachString = therest.Split(',');
+                        string outputstring = "";
+                        ///This loop is to change , to + but it doesnt have to do it for the last eachstring
+                        for (int z = 0; z < eachString.Length - 1; z++)
                         {
-                            /// if eachstring[z] is just a " would mean that , is the first char of that string value
-                            /// so i wont change , to + but if eachstring[z] contains a " but isnt just " it would mean that
-                            ///  " is at the end so i'd change , to +. This also make sure that if 
-                            ///  , is part of a variable name it wont get converted to +
-                            if(eachString[z] != qm.ToString() && eachString[z].Contains(qm.ToString()) == true)
+                            ///The if statement is to determine if the comma is within a string or a string add operation
+                            if (eachString[z].StartsWith(qm.ToString()) == true && eachString[z].EndsWith(qm.ToString()) == true
+                                || eachString[z].Contains(qm.ToString()) == false || eachString[z].EndsWith(qm.ToString()) == true)
                             {
-                                eachString[z] = eachString[z] + "+";
+                                /// if eachstring[z] is just a " would mean that , is the first char of that string value
+                                /// so i wont change , to + but if eachstring[z] contains a " but isnt just " it would mean that
+                                ///  " is at the end so i'd change , to +. 
+                                if (eachString[z] != qm.ToString())
+                                {
+                                    eachString[z] = eachString[z] + "+";
+                                }
+                                else
+                                {
+                                    eachString[z] = eachString[z] + ",";
+                                }
                             }
                             else
                             {
                                 eachString[z] = eachString[z] + ",";
                             }
+                            outputstring = outputstring + eachString[z];
                         }
-                        else
-                        {
-                            eachString[z] = eachString[z] + ",";
-                        }
-                        outputstring = outputstring + eachString[z];
-                    }
-                    outputstring = outputstring + eachString[eachString.Length-1];
+                        outputstring = outputstring + eachString[eachString.Length - 1];
 
-                    line = "Console.WriteLine(" + outputstring + ")";
-                }
-                else if(keyword == "INPUT")
-                {
-                    line = therest + " = " + "Console.ReadLine()";
+                        IBASICcode[i] = "Console.WriteLine(" + outputstring + ")";
+                    }
+                    
                 }
             }
-            return line;
+         
         }
+        public void Tinput()
+        {
+            string line = "";
+            string keyword;
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                line = IBASICcode[i].Trim();
+                keyword = line.Substring(0, 5);
+                ///This if statement makes sure "INPUT" is not part of a variable name
+                if (line.Substring(5, 1) == " ")
+                {
+                    string therest = line.Substring(5);
+                    therest = therest.Trim();
+
+                    if (keyword == "INPUT")
+                    {
+                        IBASICcode[i] = therest + " = " + "Console.ReadLine()";
+                    }
+                }
+            }
+        }
+
+        public void TvarDeclaration()
+        {
+            string line = "";
+            string keyword;
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                line = IBASICcode[i].Trim();
+                keyword = line.Substring(0, 7);
+                string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
+                ///This if statement makes sure "INPUT" is not part of a variable name and its not array declaration
+                if (line.Substring(7, 1) == " " &&
+                    arraycheck.Contains("ARRAY[") == false)
+                {
+                    string therest = line.Substring(7);
+                    therest = therest.Trim();
+                    string[] variable = therest.Split(':');
+                    variable[0] = variable[0].Trim();
+                    variable[1] = variable[1].Trim();
+                    string type1 = variable[1].Substring(0, 1).ToUpper();
+                    string type2 = variable[1].Substring(1).ToLower();
+                    if (keyword == "DECLARE")
+                    {
+                        IBASICcode[i] = "Dim " + variable[0] + " As " + type1 + type2 ;
+                    
+                    }
+                }
+            }
+
+            public string Tassignvalue()
+            {
+
+            }
+           
+        }
+        
     }
 }
