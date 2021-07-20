@@ -260,10 +260,10 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         public void TForloop()
         {
-            string line = "";
             string keyword1 = "FOR ";
             string keyword2 = "NEXT ";
             string keyword3 = " TO ";
+            string keyword4 = " STEP ";
             for(int i = 0; i < IBASICcode.Length; i++)
             {
                 if(IBASICcode[i].Contains(keyword1) == true)
@@ -285,8 +285,89 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {                  
                      IBASICcode[i] =  IBASICcode[i].Replace(" TO ", " To ");
                 }
+                if (IBASICcode[i].Contains(keyword4) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(" STEP ", " Step ");
+                }
+            }
+        }
+        public void TIfstatement()
+        {
+            string keyword1 = "IF ";
+            string keyword2 = "ENDIF";
+            string keyword3 = "ELSEIF ";
+            string keyword4 = "ELSE";
+            string keyword5 = " THEN";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 3) == keyword1)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 2), "If ");
+                        if (IBASICcode[i].Contains(keyword5) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(" THEN", " Then ");
+                        }
+                    }
+                }
+                if (IBASICcode[i].Contains(keyword2) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword2)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 5), "End If");
+                    }
+
+                }
+                if (IBASICcode[i].Contains(keyword3) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword3)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 7), "ElseIf ");
+                        if (IBASICcode[i].Contains(keyword5) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(" THEN", " Then ");
+                        }
+                    }
+                }
+                if (IBASICcode[i].Contains(keyword4) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 4) == keyword4)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0,4), "Else");
+                    }
+                }
+
             }
         }
 
+        public void Twhileloop()
+        {
+            string keyword1 = "WHILE ";
+            string keyword2 = "ENDWHILE";
+            string keyword3 = " DO";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 6), "While ");
+                        if (IBASICcode[i].Contains(keyword3) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword3," ");
+                        }
+                    }
+                }
+                if (IBASICcode[i].Contains(keyword2) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 8) == keyword2)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 8), "EndWhile");
+                    }
+
+                }
+            }
+        }
     }
 }
