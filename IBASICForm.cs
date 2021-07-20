@@ -101,7 +101,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void Run_Click(object sender, EventArgs e)
         {
             IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
-           currentRtb.Text =  translator.TarrayDeclaration();
+           currentRtb.Text =  translator.TForloop();
             Compiler Icompiler = new Compiler(currentRtb.Text);
             Icompiler.launchEXE();
            
