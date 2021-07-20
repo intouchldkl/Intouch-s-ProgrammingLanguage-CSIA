@@ -406,5 +406,24 @@ namespace CS_IA_Ibasic_Intouch_Re
                 };
             }
         }
+        public void Tmoddiv()
+        {
+            string keyword1 = "MOD(";
+            string keyword2 = "DIV(";
+            string lineNoSpace = "";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                lineNoSpace = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
+                if (lineNoSpace.Contains(keyword1) == true)
+                {
+                        IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Math.IEEERemainder(");
+                }
+                if(lineNoSpace.Contains(keyword2) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword2, "Math.Floor(");
+                    IBASICcode[i] = IBASICcode[i].Replace(',', '/');
+                }
+            }
+        }
     }
 }
