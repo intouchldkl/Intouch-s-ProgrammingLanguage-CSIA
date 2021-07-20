@@ -9,68 +9,25 @@ namespace CS_IA_Ibasic_Intouch_Re
     class IBASICtranslator
     {
         private string[] IBASICcode;
+        private const string VBdivfunction = "Function DIV(i As Integer, z As Integer)" + "\n" + " Return Math.Floor(i / z)" + "\n" + "End Function";
+        private const string VBmodfunction = "Function MODULO(i As Integer, z As Integer)" + "\n" + " Return i Mod z" + "\n" + "End Function";
 
         public IBASICtranslator(string[] IBASICcode)
         {
             this.IBASICcode = IBASICcode;
         }
-        public void Toutput()
+        public string Toutput()
         {
-            string line = "";
-            string keyword = "OUTPUT";
+            string keyword = "OUTPUT ";
             for(int i=0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains("OUTPUT ") == true)
+                if (IBASICcode[i].Contains(keyword) == true)
                 {
-                    try
+                    if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword)
                     {
-                        line = IBASICcode[i].Trim();
-                        ///This if statement makes sure "INPUT" is not part of a variable name
-                        if (line.Substring(6, 1) == " " && line.Substring(6) != null && line.Substring(0, 6) == keyword)
-                        {
-                            string therest = line.Substring(6);
-                            therest = therest.Trim();
-                            char qm = '"';
-                            if (therest.Contains(qm) == true)
-                            {
-                                string[] eachString = therest.Split(',');
-                                string outputstring = "";
-                                ///This loop is to change , to + but it doesnt have to do it for the last eachstring
-                                for (int z = 0; z < eachString.Length - 1; z++)
-                                {
-                                    ///The if statement is to determine if the comma is within a string or a string add operation
-                                    if (eachString[z].StartsWith(qm.ToString()) == true && eachString[z].EndsWith(qm.ToString()) == true
-                                        || eachString[z].Contains(qm.ToString()) == false || eachString[z].EndsWith(qm.ToString()) == true)
-                                    {
-                                        /// if eachstring[z] is just a " would mean that , is the first char of that string value
-                                        /// so i wont change , to + but if eachstring[z] contains a " but isnt just " it would mean that
-                                        ///  " is at the end so i'd change , to +. 
-                                        if (eachString[z] != qm.ToString())
-                                        {
-                                            eachString[z] = eachString[z] + "+";
-                                        }
-                                        else
-                                        {
-                                            eachString[z] = eachString[z] + ",";
-                                        }
-                                    }
-                                    else
-                                    {
-                                        eachString[z] = eachString[z] + ",";
-                                    }
-                                    outputstring = outputstring + eachString[z];
-                                }
-                                outputstring = outputstring + eachString[eachString.Length - 1];
-                                therest = outputstring;
-                            }
-
-                            IBASICcode[i] = "Console.WriteLine(" + therest + ")";
-                        }
-
-                    }
-                    catch
-                    {
-
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "Console.WriteLine( ");
+                        IBASICcode[i] = IBASICcode[i] + ")";
+                        line = IBASICcode[i];
                     }
                 }
                 
@@ -406,24 +363,19 @@ namespace CS_IA_Ibasic_Intouch_Re
                 };
             }
         }
-        public void Tmoddiv()
+        public void Tmod()
         {
             string keyword1 = "MOD(";
-            string keyword2 = "DIV(";
             string lineNoSpace = "";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 lineNoSpace = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
                 if (lineNoSpace.Contains(keyword1) == true)
                 {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Math.IEEERemainder(");
-                }
-                if(lineNoSpace.Contains(keyword2) == true)
-                {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword2, "Math.Floor(");
-                    IBASICcode[i] = IBASICcode[i].Replace(',', '/');
+                        IBASICcode[i] = IBASICcode[i].Replace(keyword1, "MODULO(");
                 }
             }
         }
+   
     }
 }
