@@ -369,5 +369,28 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        public void TrepeatUntil()
+        {
+            string keyword1 = "REPEAT";
+            string keyword2 = "UNTIL ";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1 && IBASICcode[i].Trim().Length == 6)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 6), "Do");                     
+                    }
+                }
+                if (IBASICcode[i].Contains(keyword2) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword2 && IBASICcode[i].Trim().Length > 6)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 6), "Loop Until ");
+                    }
+
+                }
+            }
+        }
     }
 }
