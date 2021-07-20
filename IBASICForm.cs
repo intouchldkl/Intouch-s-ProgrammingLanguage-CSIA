@@ -101,7 +101,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void Run_Click(object sender, EventArgs e)
         {
             IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
-           currentRtb.Text =  translator.TrepeatUntil();
+           currentRtb.Text =  translator.TconstantDeclaration();
             Compiler Icompiler = new Compiler(currentRtb.Text);
             Icompiler.launchEXE();
            

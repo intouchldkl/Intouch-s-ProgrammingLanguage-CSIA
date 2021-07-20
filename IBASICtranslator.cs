@@ -283,11 +283,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
                 if (IBASICcode[i].Contains(keyword3) == true)
                 {                  
-                     IBASICcode[i] =  IBASICcode[i].Replace(" TO ", " To ");
+                     IBASICcode[i] =  IBASICcode[i].Replace(keyword3, " To ");
                 }
                 if (IBASICcode[i].Contains(keyword4) == true)
                 {
-                    IBASICcode[i] = IBASICcode[i].Replace(" STEP ", " Step ");
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword4, " Step ");
                 }
             }
         }
@@ -304,10 +304,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 3) == keyword1)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 2), "If ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 2), "If ");
                         if (IBASICcode[i].Contains(keyword5) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(" THEN", " Then ");
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword5, " Then ");
                         }
                     }
                 }
@@ -315,7 +315,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword2)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 5), "End If");
+                        IBASICcode[i] = IBASICcode[i].Replace(keyword2, "End If");
                     }
 
                 }
@@ -323,10 +323,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword3)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 7), "ElseIf ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "ElseIf ");
                         if (IBASICcode[i].Contains(keyword5) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(" THEN", " Then ");
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword5, " Then ");
                         }
                     }
                 }
@@ -334,7 +334,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 4) == keyword4)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0,4), "Else");
+                        IBASICcode[i] = IBASICcode[i].Replace(keyword4, "Else");
                     }
                 }
 
@@ -352,7 +352,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 6), "While ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 5), "While ");
                         if (IBASICcode[i].Contains(keyword3) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword3," ");
@@ -363,7 +363,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 8) == keyword2)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 8), "EndWhile");
+                        IBASICcode[i] = IBASICcode[i].Replace(keyword2, "EndWhile");
                     }
 
                 }
@@ -377,19 +377,33 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (IBASICcode[i].Contains(keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1 && IBASICcode[i].Trim().Length == 6)
+                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1 )
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 6), "Do");                     
+                        IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Do");                     
                     }
                 }
                 if (IBASICcode[i].Contains(keyword2) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword2 && IBASICcode[i].Trim().Length > 6)
+                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword2 )
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 6), "Loop Until ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 5), "Loop Until ");
                     }
 
                 }
+            }
+        }
+        public void TconstantDeclaration()
+        {
+            string keyword1 = "CONSTANT ";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0,9) == keyword1)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0,8), "Const ");
+                    }
+                };
             }
         }
     }
