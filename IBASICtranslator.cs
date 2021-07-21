@@ -11,12 +11,18 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string[] IBASICcode;
         private const string VBdivfunction = "Function DIV(i As Integer, z As Integer)" + "\n" + " Return Math.Floor(i / z)" + "\n" + "End Function";
         private const string VBmodfunction = "Function MODULO(i As Integer, z As Integer)" + "\n" + " Return i Mod z" + "\n" + "End Function";
-
+        private const string VBlengthfunction = "Function LENGTH(s As String)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Length" + "\n" + "End Function";
+        private const string VBUcasefunction = "Function UCASE(s As String)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.ToUpper" + "\n" + "End Function";
+        private const string VBLcasefunction = "Function LCASE(s As String)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.ToLower" + "\n" + "End Function";
+        private const string VBsubstringfunction = "Function SUBSTRING(s As String, i As Integer, z As Integer)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Substring(i, z)" + "\n" + "End Function";
+        private const string VBsubstringfunctionOVL = "Function SUBSTRING(s As String, i As Integer)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Substring(i)" + "\n" + "End Function";
+        private const string VBroundfunction = "Function ROUND(d As Double, place As Integer)" + "\n"  + "Return Math.Round(d, place)" + "\n" + "End Function";
+  
         public IBASICtranslator(string[] IBASICcode)
         {
             this.IBASICcode = IBASICcode;
         }
-        public string Toutput()
+        public void Toutput()
         {
             string keyword = "OUTPUT ";
             for(int i=0; i < IBASICcode.Length; i++)
@@ -27,7 +33,6 @@ namespace CS_IA_Ibasic_Intouch_Re
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "Console.WriteLine( ");
                         IBASICcode[i] = IBASICcode[i] + ")";
-                        line = IBASICcode[i];
                     }
                 }
                 
@@ -376,6 +381,59 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-   
+         public void Tcomment()
+        {
+            string keyword1 = "//";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword1, "'");
+                }
+            }
+        }
+        public void TdataType()
+        {
+            string keyword1 = " INTEGER";
+            string keyword2 = " REAL";
+            string keyword3 = " BOOLEAN";
+            string keyword4 = " CHAR";
+            string keyword5 = " STRING";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword1, " Integer");
+                }
+                if (IBASICcode[i].Contains(keyword2) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword2, " Double");
+                }
+                if (IBASICcode[i].Contains(keyword3) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword3, " Boolean");
+                }
+                if (IBASICcode[i].Contains(keyword4) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword4, " Char");
+                }
+                if (IBASICcode[i].Contains(keyword5) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword5, " String");
+                }
+            }
+        
+        }
+        public void Trandomfunc()
+        {
+            string keyword1 = "RANDOM()";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Rnd()");
+                }
+            }
+        }
     }
 }

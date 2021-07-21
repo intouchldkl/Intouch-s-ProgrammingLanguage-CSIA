@@ -31,7 +31,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
-         
         }
         public static IBASICForm Instance
         {
@@ -101,7 +100,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void Run_Click(object sender, EventArgs e)
         {
             IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
-           currentRtb.Text =  translator.Toutput();
+            currentRtb.Text = translator.Tcomment();
             Compiler Icompiler = new Compiler(currentRtb.Text);
             Icompiler.launchEXE();
            
