@@ -100,7 +100,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void Run_Click(object sender, EventArgs e)
         {
             IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
-          ///  currentRtb.Text = translator.Tcasestatement();
+            ///  currentRtb.Text = translator.Tcasestatement();
+            translator.Tfunction();
+            translator.Tprocedure();
+            foreach(string line in translator.IBfunctionsNsub)
+            {
+                currentRtb.Text = currentRtb.Text + "\n" + line;
+            }
             Compiler Icompiler = new Compiler(currentRtb.Text);
             Icompiler.launchEXE();
            

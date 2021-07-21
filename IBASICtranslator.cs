@@ -10,7 +10,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         private string[] IBASICcode;
         private List<string> arrayvar = new List<string>();
-        private List<string> IBfunctions = new List<string>();
+        public List<string> IBfunctionsNsub = new List<string>();
         private const string VBdivfunction = "Function DIV(i As Integer, z As Integer)" + "\n" + " Return Math.Floor(i / z)" + "\n" + "End Function";
         private const string VBmodfunction = "Function MODULO(i As Integer, z As Integer)" + "\n" + " Return i Mod z" + "\n" + "End Function";
         private const string VBlengthfunction = "Function LENGTH(s As String)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Length" + "\n" + "End Function";
@@ -506,9 +506,79 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword2 = "ENDFUNCTION";
             string keyword3 = "RETURN ";
             string keyword4 = ":";
+            string keyword5 = "RETURNS";
             for(int i = 0;i < IBASICcode.Length; i++)
             {
+                if(IBASICcode[i].Contains(keyword1) == true)
+                {
+                    if(IBASICcode[i].TrimStart().Substring(0, 9) == keyword1)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 8), "Function");
+                        if(IBASICcode[i].Contains(keyword4) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword4, " As ");
+                        }
+                        if(IBASICcode[i].Contains(keyword5) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword5, " As ");
+                        }
+                        for(int z = i; z < IBASICcode.Length; z++)
+                        {
+                            if(IBASICcode[z].Contains(keyword3) == true)
+                            {
+                                IBASICcode[z] = IBASICcode[z].Replace(keyword3, "Return ");
+                            }
+                            if(IBASICcode[z].Contains(keyword2) == true)
+                            {
+                                if(IBASICcode[z].TrimStart().Substring(0,11) == keyword2)
+                                {
+                                    IBASICcode[z] =  IBASICcode[z].Replace(keyword2, "End Function");
+                                    IBfunctionsNsub.Add(IBASICcode[z]);
+                                    IBASICcode[z] = "";
+                                    break;
+                                }
+                            }
+                            IBfunctionsNsub.Add(IBASICcode[z]);
+                            IBASICcode[z] = "";
+                        }
+                    }
+                }
+            }
+        }
+        public void Tprocedure()
+        {
+            string keyword1 = "PROCEDURE ";
+            string keyword2 = "ENDPROCEDURE";
+            string keyword3 = ":";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 10) == keyword1)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 9), "Sub ");
+                        if (IBASICcode[i].Contains(keyword3) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword3, " As ");
+                        }
+                        for (int z = i; z < IBASICcode.Length; z++)
+                        {
 
+                            if (IBASICcode[z].Contains(keyword2) == true)
+                            {
+                                if (IBASICcode[z].TrimStart().Substring(0, 12) == keyword2)
+                                {
+                                    IBASICcode[z] = IBASICcode[z].Replace(keyword2, "End Sub");
+                                    IBfunctionsNsub.Add(IBASICcode[z]);
+                                    IBASICcode[z] = "";
+                                    break;
+                                }
+                            }
+                            IBfunctionsNsub.Add(IBASICcode[z]);
+                            IBASICcode[z] = "";
+                        }
+                    }
+                }
             }
         }
     }
