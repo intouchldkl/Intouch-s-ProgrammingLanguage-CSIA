@@ -79,9 +79,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
                     ///This if statement makes sure "DECLARE" is not part of a variable name and its not array declaration
-                    if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword && arraycheck.Contains("ARRAY[") == false)
+                    if (IBASICcode[i].TrimStart().Substring(0, 8) == keyword && arraycheck.Contains("ARRAY[") == false)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "Dim ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Dim ");
 
                         if(IBASICcode[i].Contains(keyword2) == true)
                         {
