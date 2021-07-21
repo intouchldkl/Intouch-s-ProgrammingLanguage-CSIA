@@ -11,7 +11,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string[] IBASICcode;
         private string Translatedcode;
         private List<string> arrayvar = new List<string>();
-        public List<string> IBfunctionsNsub = new List<string>();
+        private List<string> IBfunctionsNsub = new List<string>();
+        private List<string> errormessages = new List<string>();
         private const string VBdivfunction = "Function DIV(i As Integer, z As Integer)" + "\n" + " Return Math.Floor(i / z)" + "\n" + "End Function";
         private const string VBmodfunction = "Function MODULO(i As Integer, z As Integer)" + "\n" + " Return i Mod z" + "\n" + "End Function";
         private const string VBlengthfunction = "Function LENGTH(s As String)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Length" + "\n" + "End Function";
@@ -52,8 +53,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (IBASICcode[i].Contains("INPUT ") == true)
                 {
-                    try
-                    {
+
                         line = IBASICcode[i].Trim();
                         ///This if statement makes sure "INPUT" is not part of a variable name
                         if (line.Substring(5, 1) == " " && line.Substring(5) != null && line.Substring(0, 5) == keyword)
@@ -64,11 +64,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                             IBASICcode[i] = therest + " = " + "Console.ReadLine()";
 
                         }
-                    }
-                    catch
-                    {
+ 
 
-                    }
                 }
             }
         }
@@ -91,6 +88,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
                         }
+                        else
+                        {
+                            errormessages.Add("Line " + i + " : Syntax error : Could be because ':' is missing ");
+                        }
                     }
 
 
@@ -104,68 +105,76 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void TarrayDeclaration()
         {
             string line = "";
-            string keyword = "DECALRE";
+            string keyword = "DECALRE ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                try
+
+                ///get rid of all the spaces
+                string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
+                if (arraycheck.Contains("ARRAY[") == true && arraycheck.Substring(0, 8) == keyword)
                 {
-                    ///get rid of all the spaces
-                    string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                    if (arraycheck.Contains("ARRAY[") == true && arraycheck.Substring(0, 7) == keyword)
+                    line = IBASICcode[i].Trim();
+                    ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
+                    if (line.Substring(7, 1) == " " && IBASICcode[i].Contains(",") == false)
                     {
-                        line = IBASICcode[i].Trim();
-                        ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
-                        if (line.Substring(7, 1) == " " && IBASICcode[i].Contains(",") == false)
+
+                        string therest = line.Substring(7);
+                        if (therest.Contains("OF") == true && therest.Contains("]") == true)
                         {
-
-                            string therest = line.Substring(7);
-                            if (therest.Contains("OF") == true && therest.Contains("]") == true)
-                                therest = string.Concat(therest.Where(c => !Char.IsWhiteSpace(c)));
-                            string[] variablearray = therest.Split(':');
-                            if (variablearray.Length == 3)
+                            therest = string.Concat(therest.Where(c => !Char.IsWhiteSpace(c)));
+                            if (therest.Contains(":") == true)
                             {
-                                string variableName = variablearray[0];
-                                string[] indexandtype = variablearray[2].Split(']');
-                                string type = indexandtype[1];
-                                string[] types = type.Split('F');
-                                if (types.Length == 2 && types[1] != "")
+                                string[] variablearray = therest.Split(':');
+                                if (variablearray.Length == 3)
                                 {
-                                    types[1] = types[1].Trim();
-                                    string type1 = types[1].Substring(0, 1).ToUpper();
-                                    string type2 = types[1].Substring(1).ToLower();
-                                    bool IsThereIndex = int.TryParse(indexandtype[0], out int index);
-                                    if (IsThereIndex == true)
+                                    string variableName = variablearray[0];
+                                    string[] indexandtype = variablearray[2].Split(']');
+                                    string type = indexandtype[1];
+                                    string[] types = type.Split('F');
+                                    if (types.Length == 2 && types[1] != "")
                                     {
-                                        IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + type1 + type2;
-                                        arrayvar.Add(variableName);
+                                        types[1] = types[1].Trim();
+                                        string type1 = types[1].Substring(0, 1).ToUpper();
+                                        string type2 = types[1].Substring(1).ToLower();
+                                        bool IsThereIndex = int.TryParse(indexandtype[0], out int index);
+                                        if (IsThereIndex == true)
+                                        {
+                                            IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + type1 + type2;
+                                            arrayvar.Add(variableName);
+                                        }
+                                        else
+                                        {
+                                            errormessages.Add("Line " + i + " : Syntax error: could be because an idex is missing");
+                                        }
+
                                     }
-
                                 }
-
+                            }
+                            else
+                            {
+                                errormessages.Add("Line " + i + " : Syntax error: could be because ':' is missing");
                             }
                         }
-
+                        else
+                        {
+                            errormessages.Add("Line " + i + " : Syntax error: could be because 'OF' or ']' is missing");
+                        }
                     }
-                }
-                catch
-                {
 
                 }
-
             }
         }
 
         public void T2dArrayDeclaration()
         {
             string line = "";
-            string keyword = "DECLARE";
+            string keyword = "DECLARE ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                try
-                {
+
                     ///get rid of all the spaces
                     string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                    if (arraycheck.Contains("ARRAY[") == true && arraycheck.Substring(0, 7) == keyword)
+                    if (arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == keyword)
                     {
                         line = IBASICcode[i].Trim();
                         ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
@@ -174,45 +183,68 @@ namespace CS_IA_Ibasic_Intouch_Re
 
                             string therest = line.Substring(7);
                             if (therest.Contains("OF") == true && therest.Contains("]") == true)
+                            { 
                                 therest = string.Concat(therest.Where(c => !Char.IsWhiteSpace(c)));
-                            string[] variablearray = therest.Split(':');
-                            if (variablearray.Length == 4)
+                            if(therest.Contains(":") == true)
                             {
-                                string variableName = variablearray[0];
-                                string[] uncutindex1 = variablearray[2].Split(',');
-                                bool isThereIndex1 = int.TryParse(uncutindex1[0], out int index1);
-                                if (isThereIndex1 == true)
+                            string[] variablearray = therest.Split(':');
+                                if (variablearray.Length == 4)
                                 {
-                                    string[] index2andtype = variablearray[3].Split(']');
-                                    string type = index2andtype[1];
-                                    string[] types = type.Split('F');
-                                    if (types.Length == 2 && types[1] != "")
+                                    string variableName = variablearray[0];
+                                    string[] uncutindex1 = variablearray[2].Split(',');
+                                    bool isThereIndex1 = int.TryParse(uncutindex1[0], out int index1);
+                                    if (isThereIndex1 == true)
                                     {
-                                        types[1] = types[1];
-                                        string type1 = types[1].Substring(0, 1).ToUpper();
-                                        string type2 = types[1].Substring(1).ToLower();
-                                        bool IsThereIndex2 = int.TryParse(index2andtype[0], out int index2);
-                                        if (IsThereIndex2 == true)
+                                        string[] index2andtype = variablearray[3].Split(']');
+                                        string type = index2andtype[1];
+                                        string[] types = type.Split('F');
+                                        if (types.Length == 2 && types[1] != "")
                                         {
-                                            IBASICcode[i] = "Dim " + variableName + "(" + index1 + ", " + index2 + ")" + " As " + type1 + type2;
-                                            arrayvar.Add(variableName);
+                                            types[1] = types[1];
+                                            string type1 = types[1].Substring(0, 1).ToUpper();
+                                            string type2 = types[1].Substring(1).ToLower();
+                                            bool IsThereIndex2 = int.TryParse(index2andtype[0], out int index2);
+                                            if (IsThereIndex2 == true)
+                                            {
+                                                IBASICcode[i] = "Dim " + variableName + "(" + index1 + ", " + index2 + ")" + " As " + type1 + type2;
+                                                arrayvar.Add(variableName);
+                                            }
+                                            else
+                                            {
+                                                errormessages.Add("Line " + i + " : Syntax error: could be because there is an index missing");
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            errormessages.Add("Line " + i + " : Syntax error: could be because data type is missing");
                                         }
 
                                     }
+                                    else
+                                    {
+                                        errormessages.Add("Line " + i + " : Syntax error: could be because there is an index missing");
+                                    }
                                 }
-
+                                else
+                                {
+                                    errormessages.Add("Line " + i + " : Syntax error: could be because ':' is missing or unneccessary ':'");
+                                }
                             }
+                            else
+                            {
+                                errormessages.Add("Line " + i + " : Syntax error: could be because ':' is missing");
+                            }
+
+                           }
+                        else
+                        {
+                            errormessages.Add("Line " + i + " : Syntax error: could be because 'OF' or ']' is missing");
+                        }
                         }
 
                     }
                 }
-                catch
-                {
-
-                }
-
-            }
-
         }
 
         public void TForloop()
@@ -228,6 +260,14 @@ namespace CS_IA_Ibasic_Intouch_Re
                     if (IBASICcode[i].TrimStart().Substring(0, 4) == keyword1)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 3), "For ");
+                        if (IBASICcode[i].Contains(keyword3) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword3, " To ");
+                        }
+                        else
+                        {
+                            errormessages.Add("Line " + i + " : Syntax error : Could be becuase 'TO' is missing or incorrect spacing");
+                        }
                     }
                 }
                 if (IBASICcode[i].Contains(keyword2) == true)
@@ -238,10 +278,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                     }
 
                 }
-                if (IBASICcode[i].Contains(keyword3) == true)
-                {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword3, " To ");
-                }
+
                 if (IBASICcode[i].Contains(keyword4) == true)
                 {
                     IBASICcode[i] = IBASICcode[i].Replace(keyword4, " Step ");
@@ -265,6 +302,17 @@ namespace CS_IA_Ibasic_Intouch_Re
                         if (IBASICcode[i].Contains(keyword5) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword5, " Then ");
+                        }
+                        for(int z = i; z < IBASICcode.Length; z++)
+                        {
+                            if(IBASICcode[z].Contains(keyword2) == true)
+                            {
+                                break;
+                            }
+                            if(z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            {
+                                errormessages.Add("Syntax error : ENDIF is expected somewhere");
+                            }
                         }
                     }
                 }
@@ -604,10 +652,29 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
         }
+        public void TtrueNfalse()
+        {
+            string keyword = "TRUE";
+            string keyword2 = "FALSE";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword) == true)
+                {
+
+                        IBASICcode[i] = IBASICcode[i].Replace(keyword, "True");
+                }
+                if (IBASICcode[i].Contains(keyword2) == true)
+                {
+
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword2, "False");
+                }
+            }
+        }
         public void TranslateAll()
         {
             Tcomment();
             TdataType();
+            TtrueNfalse();
             TvarDeclaration();
             TarrayDeclaration();
             T2dArrayDeclaration();
@@ -655,3 +722,4 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
     }
 }
+

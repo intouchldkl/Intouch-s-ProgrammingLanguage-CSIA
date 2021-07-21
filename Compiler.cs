@@ -16,7 +16,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string codeToCompile;
         private string output;
         private string ErrorMessage;
-
+        private CompilerResults results;
         public Compiler(string codeToCompile)
         {
             this.codeToCompile = codeToCompile;
@@ -31,25 +31,20 @@ namespace CS_IA_Ibasic_Intouch_Re
             ///Make sure to generate an EXE, not a DLL
             parameters.GenerateExecutable = true;
             parameters.OutputAssembly = output;
-            CompilerResults results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
-            if (results.Errors.Count > 0)
-            {
-
-                foreach (CompilerError CompErr in results.Errors)
-                {
-                    getErrorMessages(CompErr);
-                }
-            }
-            else
-            {
+             results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
+       
                 Process.Start(output);
-            }
+            
 
         }
-        public string getErrorMessages(CompilerError CompErr)
+        public string getErrorMessages()
         {
-            ErrorMessage = "Line number " + CompErr.Line + ", Error Number: " + CompErr.ErrorNumber +
+            foreach (CompilerError CompErr in results.Errors)
+            {
+                ErrorMessage = "Line number " + CompErr.Line + ", Error Number: " + CompErr.ErrorNumber +
              ", '" + CompErr.ErrorText + ";" + Environment.NewLine + Environment.NewLine; ;
+                
+            }
             return ErrorMessage;
         }
 
