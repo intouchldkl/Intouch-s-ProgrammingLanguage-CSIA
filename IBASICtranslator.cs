@@ -9,6 +9,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     class IBASICtranslator
     {
         private string[] IBASICcode;
+        private List<string> arrayvar = new List<string>();
         private const string VBdivfunction = "Function DIV(i As Integer, z As Integer)" + "\n" + " Return Math.Floor(i / z)" + "\n" + "End Function";
         private const string VBmodfunction = "Function MODULO(i As Integer, z As Integer)" + "\n" + " Return i Mod z" + "\n" + "End Function";
         private const string VBlengthfunction = "Function LENGTH(s As String)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Length" + "\n" + "End Function";
@@ -16,8 +17,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         private const string VBLcasefunction = "Function LCASE(s As String)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.ToLower" + "\n" + "End Function";
         private const string VBsubstringfunction = "Function SUBSTRING(s As String, i As Integer, z As Integer)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Substring(i, z)" + "\n" + "End Function";
         private const string VBsubstringfunctionOVL = "Function SUBSTRING(s As String, i As Integer)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Substring(i)" + "\n" + "End Function";
-        private const string VBroundfunction = "Function ROUND(d As Double, place As Integer)" + "\n"  + "Return Math.Round(d, place)" + "\n" + "End Function";
-  
+        private const string VBroundfunction = "Function ROUND(d As Double, place As Integer)" + "\n" + "Return Math.Round(d, place)" + "\n" + "End Function";
+
         public IBASICtranslator(string[] IBASICcode)
         {
             this.IBASICcode = IBASICcode;
@@ -25,7 +26,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void Toutput()
         {
             string keyword = "OUTPUT ";
-            for(int i=0; i < IBASICcode.Length; i++)
+            for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (IBASICcode[i].Contains(keyword) == true)
                 {
@@ -35,7 +36,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                         IBASICcode[i] = IBASICcode[i] + ")";
                     }
                 }
-                
+
             }
         }
         public void Tinput()
@@ -107,7 +108,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
 
 
-            public void TarrayDeclaration()
+        public void TarrayDeclaration()
         {
             string line = "";
             string keyword = "DECALRE";
@@ -143,6 +144,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                     if (IsThereIndex == true)
                                     {
                                         IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + type1 + type2;
+                                        arrayvar.Add(variableName);
                                     }
 
                                 }
@@ -167,12 +169,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 try
-                { 
-                ///get rid of all the spaces
-                string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                if(arraycheck.Contains("ARRAY[") == true && arraycheck.Substring(0, 7) == keyword)
-                { 
-                line = IBASICcode[i].Trim();
+                {
+                    ///get rid of all the spaces
+                    string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
+                    if (arraycheck.Contains("ARRAY[") == true && arraycheck.Substring(0, 7) == keyword)
+                    {
+                        line = IBASICcode[i].Trim();
                         ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
                         if (line.Substring(7, 1) == " " && IBASICcode[i].Contains(",") == true)
                         {
@@ -200,7 +202,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                         if (IsThereIndex2 == true)
                                         {
                                             IBASICcode[i] = "Dim " + variableName + "(" + index1 + ", " + index2 + ")" + " As " + type1 + type2;
-
+                                            arrayvar.Add(variableName);
                                         }
 
                                     }
@@ -217,7 +219,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
 
             }
-            
+
         }
 
         public void TForloop()
@@ -226,26 +228,26 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword2 = "NEXT ";
             string keyword3 = " TO ";
             string keyword4 = " STEP ";
-            for(int i = 0; i < IBASICcode.Length; i++)
+            for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if(IBASICcode[i].Contains(keyword1) == true)
+                if (IBASICcode[i].Contains(keyword1) == true)
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 4) == keyword1)
                     {
-                      IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 3), "For ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 3), "For ");
                     }
                 }
                 if (IBASICcode[i].Contains(keyword2) == true)
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword2)
                     {
-                      IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 4), "Next ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 4), "Next ");
                     }
 
                 }
                 if (IBASICcode[i].Contains(keyword3) == true)
-                {                  
-                     IBASICcode[i] =  IBASICcode[i].Replace(keyword3, " To ");
+                {
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword3, " To ");
                 }
                 if (IBASICcode[i].Contains(keyword4) == true)
                 {
@@ -317,7 +319,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 5), "While ");
                         if (IBASICcode[i].Contains(keyword3) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword3," ");
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword3, " ");
                         }
                     }
                 }
@@ -339,14 +341,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (IBASICcode[i].Contains(keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1 )
+                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Do");                     
+                        IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Do");
                     }
                 }
                 if (IBASICcode[i].Contains(keyword2) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword2 )
+                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword2)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 5), "Loop Until ");
                     }
@@ -361,9 +363,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (IBASICcode[i].Contains(keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0,9) == keyword1)
+                    if (IBASICcode[i].TrimStart().Substring(0, 9) == keyword1)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0,8), "Const ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 8), "Const ");
                     }
                 };
             }
@@ -377,11 +379,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 lineNoSpace = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
                 if (lineNoSpace.Contains(keyword1) == true)
                 {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword1, "MODULO(");
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword1, "MODULO(");
                 }
             }
         }
-         public void Tcomment()
+        public void Tcomment()
         {
             string keyword1 = "//";
             for (int i = 0; i < IBASICcode.Length; i++)
@@ -422,7 +424,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                     IBASICcode[i] = IBASICcode[i].Replace(keyword5, " String");
                 }
             }
-        
+
         }
         public void Trandomfunc()
         {
@@ -432,6 +434,80 @@ namespace CS_IA_Ibasic_Intouch_Re
                 if (IBASICcode[i].Contains(keyword1) == true)
                 {
                     IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Rnd()");
+                }
+            }
+        }
+        public void Tarrays()
+        {
+            string keyword1 = "[";
+            string keyword2 = "]";
+            string keyword3 = ",";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                foreach (string arrayname in arrayvar)
+                    if (IBASICcode[i].Contains(arrayname) == true)
+                    {
+                        if (IBASICcode[i].Contains(keyword3) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword3, ")(");
+                        }
+                        if (IBASICcode[i].Contains(keyword1) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword1, "(");
+                        }
+                        if (IBASICcode[i].Contains(keyword2) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword2, ")");
+                        }
+                    }
+            }
+        }
+        public void Tcasestatement()
+        {
+            string keyword1 = "CASE OF ";
+            string keyword2 = "CASE ";
+            string keyword3 = "OTHERWISE ";
+            string keyword4 = ":";
+            string keyword5 = "ENDCASE";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (IBASICcode[i].Contains(keyword1) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 8) == keyword1)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Select Case ");
+                    }
+                }
+                if (IBASICcode[i].Contains(keyword2) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword2)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 4), "Case ");
+                        if(IBASICcode[i].Contains(keyword4) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword4, Environment.NewLine);
+                        }
+                    }
+
+                }
+                if (IBASICcode[i].Contains(keyword3) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 10) == keyword3)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 9), "Case Else ");
+                        if (IBASICcode[i].Contains(keyword4) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword4, Environment.NewLine);
+                        }
+                    }
+
+                }
+                if (IBASICcode[i].Contains(keyword5) == true)
+                {
+                    if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword5)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "End Select ");
+                    }
                 }
             }
         }
