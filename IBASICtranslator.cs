@@ -10,6 +10,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         private string[] IBASICcode;
         private List<string> arrayvar = new List<string>();
+        private List<string> IBfunctions = new List<string>();
         private const string VBdivfunction = "Function DIV(i As Integer, z As Integer)" + "\n" + " Return Math.Floor(i / z)" + "\n" + "End Function";
         private const string VBmodfunction = "Function MODULO(i As Integer, z As Integer)" + "\n" + " Return i Mod z" + "\n" + "End Function";
         private const string VBlengthfunction = "Function LENGTH(s As String)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Length" + "\n" + "End Function";
@@ -70,38 +71,26 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         public void TvarDeclaration()
         {
-            string line = "";
-            string keyword = "DECLARE";
+            string keyword = "DECLARE ";
+            string keyword2 = ":";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains("DECLARE ") == true)
+                if (IBASICcode[i].Contains(keyword) == true)
                 {
-                    line = IBASICcode[i].Trim();
                     string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                    if (line.Substring(7) != null)
+                    ///This if statement makes sure "DECLARE" is not part of a variable name and its not array declaration
+                    if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword && arraycheck.Contains("ARRAY[") == false)
                     {
-                        try
-                        {
-                            ///This if statement makes sure "DECLARE" is not part of a variable name and its not array declaration
-                            if (line.Substring(0, 7) == keyword && line.Substring(7, 1) == " " &&
-                                arraycheck.Contains("ARRAY[") == false)
-                            {
-                                string therest = line.Substring(7);
-                                therest = therest.Trim();
-                                string[] variable = therest.Split(':');
-                                string variableName = variable[0].Trim();
-                                variable[1] = variable[1].Trim();
-                                string type1 = variable[1].Substring(0, 1).ToUpper();
-                                string type2 = variable[1].Substring(1).ToLower();
-                                IBASICcode[i] = "Dim " + variableName + " As " + type1 + type2;
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "Dim ");
 
-                            }
-                        }
-                        catch
+                        if(IBASICcode[i].Contains(keyword2) == true)
                         {
-
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
                         }
                     }
+
+
+
                 }
 
             }
@@ -509,6 +498,17 @@ namespace CS_IA_Ibasic_Intouch_Re
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "End Select ");
                     }
                 }
+            }
+        }
+        public void Tfunction()
+        {
+            string keyword1 = "FUNCTION ";
+            string keyword2 = "ENDFUNCTION";
+            string keyword3 = "RETURN ";
+            string keyword4 = ":";
+            for(int i = 0;i < IBASICcode.Length; i++)
+            {
+
             }
         }
     }
