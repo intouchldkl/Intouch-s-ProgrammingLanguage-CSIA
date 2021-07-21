@@ -9,6 +9,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     class IBASICtranslator
     {
         private string[] IBASICcode;
+        private string Translatedcode;
         private List<string> arrayvar = new List<string>();
         public List<string> IBfunctionsNsub = new List<string>();
         private const string VBdivfunction = "Function DIV(i As Integer, z As Integer)" + "\n" + " Return Math.Floor(i / z)" + "\n" + "End Function";
@@ -19,6 +20,9 @@ namespace CS_IA_Ibasic_Intouch_Re
         private const string VBsubstringfunction = "Function SUBSTRING(s As String, i As Integer, z As Integer)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Substring(i, z)" + "\n" + "End Function";
         private const string VBsubstringfunctionOVL = "Function SUBSTRING(s As String, i As Integer)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Substring(i)" + "\n" + "End Function";
         private const string VBroundfunction = "Function ROUND(d As Double, place As Integer)" + "\n" + "Return Math.Round(d, place)" + "\n" + "End Function";
+        private const string Header = "Imports System" + "\n" + "Module Program" + "\n" + "Sub Main(args As String())" + "\n";
+        private const string endSubMain = "End Sub";
+        private const string endModule = "End Module";
 
         public IBASICtranslator(string[] IBASICcode)
         {
@@ -580,6 +584,70 @@ namespace CS_IA_Ibasic_Intouch_Re
                     }
                 }
             }
+        }
+        public void Tcallprocedure()
+        {
+            string keyword = "CALL ";
+            for(int i = 0;i < IBASICcode.Length; i++)
+            {
+                if(IBASICcode[i].Contains(keyword) == true)
+                {
+                    if(IBASICcode[i].TrimStart().Substring(0,5) == keyword)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 4), "Call ");
+                    }
+                }
+            }
+
+        }
+        public void TranslateAll()
+        {
+            Tcomment();
+            TdataType();
+            TvarDeclaration();
+            TarrayDeclaration();
+            T2dArrayDeclaration();
+            TconstantDeclaration();
+            Toutput();
+            Tinput();
+            TIfstatement();
+            Twhileloop();
+            TForloop();
+            TrepeatUntil();
+            Trandomfunc();
+            Tmod();
+            Tcallprocedure();
+            Tcasestatement();
+            Tfunction();
+            Tprocedure();
+        }
+        public void putinFormat()
+        {
+            Translatedcode = Header;
+            TranslateAll();
+            foreach(string line in IBASICcode)
+            {
+                Translatedcode = Translatedcode + "\n" + line; 
+            }
+            Translatedcode = Translatedcode + "\n" + "Console.ReadKey()";
+            Translatedcode = Translatedcode + "\n" + endSubMain;
+            Translatedcode = Translatedcode + "\n" + VBdivfunction;
+            Translatedcode = Translatedcode + "\n" + VBlengthfunction;
+            Translatedcode = Translatedcode + "\n" + VBLcasefunction;
+            Translatedcode = Translatedcode + "\n" + VBmodfunction;
+            Translatedcode = Translatedcode + "\n" + VBUcasefunction;
+            Translatedcode = Translatedcode + "\n" + VBsubstringfunction;
+            Translatedcode = Translatedcode + "\n" + VBsubstringfunctionOVL;
+            Translatedcode = Translatedcode + "\n" + VBroundfunction;
+            foreach (string line in IBfunctionsNsub)
+            {
+                Translatedcode = Translatedcode + "\n" + line;
+            }
+            Translatedcode = Translatedcode + "\n" + endModule;
+        }
+        public string getTranslatedcode()
+        {
+            return Translatedcode;
         }
     }
 }

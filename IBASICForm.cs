@@ -101,13 +101,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
             ///  currentRtb.Text = translator.Tcasestatement();
-            translator.Tfunction();
-            translator.Tprocedure();
-            foreach(string line in translator.IBfunctionsNsub)
-            {
-                currentRtb.Text = currentRtb.Text + "\n" + line;
-            }
-            Compiler Icompiler = new Compiler(currentRtb.Text);
+            translator.TranslateAll();
+            translator.putinFormat();
+           /// currentRtb.Text = translator.getTranslatedcode();
+            Compiler Icompiler = new Compiler(translator.getTranslatedcode());
             Icompiler.launchEXE();
            
         }
