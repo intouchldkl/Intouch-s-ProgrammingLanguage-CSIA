@@ -32,21 +32,26 @@ namespace CS_IA_Ibasic_Intouch_Re
             parameters.GenerateExecutable = true;
             parameters.OutputAssembly = output;
              results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
-       
+            if (results.Errors.Count == 0)
+            {
                 Process.Start(output);
-            
+            }
+            else
+            {
+                foreach (CompilerError CompErr in results.Errors)
+                {
+                    ErrorMessage = ErrorMessage + " VBcompile error: VBcompiler cannot compile this code may be because of " +
+                         CompErr.ErrorText + "\n";
+
+                }
+            }
 
         }
         public string getErrorMessages()
-        {
-            foreach (CompilerError CompErr in results.Errors)
-            {
-                ErrorMessage = "Line number " + CompErr.Line + ", Error Number: " + CompErr.ErrorNumber +
-             ", '" + CompErr.ErrorText + ";" + Environment.NewLine + Environment.NewLine; ;
-                
-            }
+        { 
             return ErrorMessage;
         }
+
 
     }
 }

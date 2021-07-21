@@ -216,6 +216,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // ErrorMsgBox
             // 
             this.ErrorMsgBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ErrorMsgBox.ForeColor = System.Drawing.Color.DarkRed;
             this.ErrorMsgBox.Location = new System.Drawing.Point(26, 61);
             this.ErrorMsgBox.Name = "ErrorMsgBox";
             this.ErrorMsgBox.ReadOnly = true;

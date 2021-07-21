@@ -10,6 +10,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         private string[] IBASICcode;
         private string Translatedcode;
+        private string errmsg;
         private List<string> arrayvar = new List<string>();
         private List<string> IBfunctionsNsub = new List<string>();
         private List<string> errormessages = new List<string>();
@@ -54,17 +55,17 @@ namespace CS_IA_Ibasic_Intouch_Re
                 if (IBASICcode[i].Contains("INPUT ") == true)
                 {
 
-                        line = IBASICcode[i].Trim();
-                        ///This if statement makes sure "INPUT" is not part of a variable name
-                        if (line.Substring(5, 1) == " " && line.Substring(5) != null && line.Substring(0, 5) == keyword)
-                        {
-                            keyword = line.Substring(0, 5);
-                            string therest = line.Substring(5);
-                            therest = therest.Trim();
-                            IBASICcode[i] = therest + " = " + "Console.ReadLine()";
+                    line = IBASICcode[i].Trim();
+                    ///This if statement makes sure "INPUT" is not part of a variable name
+                    if (line.Substring(5, 1) == " " && line.Substring(5) != null && line.Substring(0, 5) == keyword)
+                    {
+                        keyword = line.Substring(0, 5);
+                        string therest = line.Substring(5);
+                        therest = therest.Trim();
+                        IBASICcode[i] = therest + " = " + "Console.ReadLine()";
 
-                        }
- 
+                    }
+
 
                 }
             }
@@ -84,13 +85,13 @@ namespace CS_IA_Ibasic_Intouch_Re
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Dim ");
 
-                        if(IBASICcode[i].Contains(keyword2) == true)
+                        if (IBASICcode[i].Contains(keyword2) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
                         }
                         else
                         {
-                            errormessages.Add("Line " + i + " : Syntax error : Could be because ':' is missing ");
+                            errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because ':' is missing ");
                         }
                     }
 
@@ -144,7 +145,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                         }
                                         else
                                         {
-                                            errormessages.Add("Line " + i + " : Syntax error: could be because an idex is missing");
+                                            errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because an idex is missing");
                                         }
 
                                     }
@@ -152,12 +153,12 @@ namespace CS_IA_Ibasic_Intouch_Re
                             }
                             else
                             {
-                                errormessages.Add("Line " + i + " : Syntax error: could be because ':' is missing");
+                                errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because ':' is missing");
                             }
                         }
                         else
                         {
-                            errormessages.Add("Line " + i + " : Syntax error: could be because 'OF' or ']' is missing");
+                            errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because 'OF' or ']' is missing");
                         }
                     }
 
@@ -172,22 +173,22 @@ namespace CS_IA_Ibasic_Intouch_Re
             for (int i = 0; i < IBASICcode.Length; i++)
             {
 
-                    ///get rid of all the spaces
-                    string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                    if (arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == keyword)
+                ///get rid of all the spaces
+                string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
+                if (arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == keyword)
+                {
+                    line = IBASICcode[i].Trim();
+                    ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
+                    if (line.Substring(7, 1) == " " && IBASICcode[i].Contains(",") == true)
                     {
-                        line = IBASICcode[i].Trim();
-                        ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
-                        if (line.Substring(7, 1) == " " && IBASICcode[i].Contains(",") == true)
-                        {
 
-                            string therest = line.Substring(7);
-                            if (therest.Contains("OF") == true && therest.Contains("]") == true)
-                            { 
-                                therest = string.Concat(therest.Where(c => !Char.IsWhiteSpace(c)));
-                            if(therest.Contains(":") == true)
+                        string therest = line.Substring(7);
+                        if (therest.Contains("OF") == true && therest.Contains("]") == true)
+                        {
+                            therest = string.Concat(therest.Where(c => !Char.IsWhiteSpace(c)));
+                            if (therest.Contains(":") == true)
                             {
-                            string[] variablearray = therest.Split(':');
+                                string[] variablearray = therest.Split(':');
                                 if (variablearray.Length == 4)
                                 {
                                     string variableName = variablearray[0];
@@ -211,40 +212,40 @@ namespace CS_IA_Ibasic_Intouch_Re
                                             }
                                             else
                                             {
-                                                errormessages.Add("Line " + i + " : Syntax error: could be because there is an index missing");
+                                                errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because there is an index missing");
                                             }
 
                                         }
                                         else
                                         {
-                                            errormessages.Add("Line " + i + " : Syntax error: could be because data type is missing");
+                                            errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because data type is missing");
                                         }
 
                                     }
                                     else
                                     {
-                                        errormessages.Add("Line " + i + " : Syntax error: could be because there is an index missing");
+                                        errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because there is an index missing");
                                     }
                                 }
                                 else
                                 {
-                                    errormessages.Add("Line " + i + " : Syntax error: could be because ':' is missing or unneccessary ':'");
+                                    errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because ':' is missing or unneccessary ':'");
                                 }
                             }
                             else
                             {
-                                errormessages.Add("Line " + i + " : Syntax error: could be because ':' is missing");
+                                errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because ':' is missing");
                             }
 
-                           }
+                        }
                         else
                         {
-                            errormessages.Add("Line " + i + " : Syntax error: could be because 'OF' or ']' is missing");
+                            errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because 'OF' or ']' is missing");
                         }
-                        }
-
                     }
+
                 }
+            }
         }
 
         public void TForloop()
@@ -266,7 +267,18 @@ namespace CS_IA_Ibasic_Intouch_Re
                         }
                         else
                         {
-                            errormessages.Add("Line " + i + " : Syntax error : Could be becuase 'TO' is missing or incorrect spacing");
+                            errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be becuase 'TO' is missing or incorrect spacing");
+                        }
+                        for (int z = i; z < IBASICcode.Length; z++)
+                        {
+                            if (IBASICcode[z].Contains(keyword2) == true)
+                            {
+                                break;
+                            }
+                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            {
+                                errormessages.Add("Syntax error : NEXT is expected somewhere ");
+                            }
                         }
                     }
                 }
@@ -303,13 +315,17 @@ namespace CS_IA_Ibasic_Intouch_Re
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword5, " Then ");
                         }
-                        for(int z = i; z < IBASICcode.Length; z++)
+                        else
                         {
-                            if(IBASICcode[z].Contains(keyword2) == true)
+                            errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because 'THEN' is expected or incorrect spacing");
+                        }
+                        for (int z = i; z < IBASICcode.Length; z++)
+                        {
+                            if (IBASICcode[z].Contains(keyword2) == true)
                             {
                                 break;
                             }
-                            if(z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
                             {
                                 errormessages.Add("Syntax error : ENDIF is expected somewhere");
                             }
@@ -332,6 +348,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                         if (IBASICcode[i].Contains(keyword5) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword5, " Then ");
+                        }
+                        else
+                        {
+                            errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because 'THEN' is expected or incorrect spacing");
                         }
                     }
                 }
@@ -362,6 +382,21 @@ namespace CS_IA_Ibasic_Intouch_Re
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword3, " ");
                         }
+                        else
+                        {
+                            errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because 'DO' is expected or incorrect spacing");
+                        }
+                        for (int z = i; z < IBASICcode.Length; z++)
+                        {
+                            if (IBASICcode[z].Contains(keyword2) == true)
+                            {
+                                break;
+                            }
+                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            {
+                                errormessages.Add("Syntax error : ENDWHILE is expected somewhere");
+                            }
+                        }
                     }
                 }
                 if (IBASICcode[i].Contains(keyword2) == true)
@@ -385,7 +420,19 @@ namespace CS_IA_Ibasic_Intouch_Re
                     if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Do");
+                        for (int z = i; z < IBASICcode.Length; z++)
+                        {
+                            if (IBASICcode[z].Contains(keyword2) == true)
+                            {
+                                break;
+                            }
+                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            {
+                                errormessages.Add("Syntax error : UNTIL or UNTIL condition is expected somewhere ");
+                            }
+                        }
                     }
+
                 }
                 if (IBASICcode[i].Contains(keyword2) == true)
                 {
@@ -485,22 +532,34 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword3 = ",";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                foreach (string arrayname in arrayvar)
-                    if (IBASICcode[i].Contains(arrayname) == true)
-                    {
-                        if (IBASICcode[i].Contains(keyword3) == true)
+                if (IBASICcode[i].Contains("DECLARE") == false)
+                {
+                    foreach (string arrayname in arrayvar)
+                        if (IBASICcode[i].Contains(arrayname) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword3, ")(");
+                            if (IBASICcode[i].Contains(keyword3) == true)
+                            {
+                                IBASICcode[i] = IBASICcode[i].Replace(keyword3, ")(");
+                            }
+
+                            if (IBASICcode[i].Contains(keyword1) == true)
+                            {
+                                IBASICcode[i] = IBASICcode[i].Replace(keyword1, "(");
+                            }
+                            else
+                            {
+                                errormessages.Add("Line " + (i + 1) + " : Syntax error " + arrayname + " is an array and '[' is expected");
+                            }
+                            if (IBASICcode[i].Contains(keyword2) == true)
+                            {
+                                IBASICcode[i] = IBASICcode[i].Replace(keyword2, ")");
+                            }
+                            else
+                            {
+                                errormessages.Add("Line " + (i + 1) + " : Syntax error " + arrayname + " is an array and ']' is expected");
+                            }
                         }
-                        if (IBASICcode[i].Contains(keyword1) == true)
-                        {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword1, "(");
-                        }
-                        if (IBASICcode[i].Contains(keyword2) == true)
-                        {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword2, ")");
-                        }
-                    }
+                }
             }
         }
         public void Tcasestatement()
@@ -517,29 +576,45 @@ namespace CS_IA_Ibasic_Intouch_Re
                     if (IBASICcode[i].TrimStart().Substring(0, 8) == keyword1)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Select Case ");
-                    }
-                }
-                if (IBASICcode[i].Contains(keyword2) == true)
-                {
-                    if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword2)
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 4), "Case ");
-                        if(IBASICcode[i].Contains(keyword4) == true)
+                        for (int z = i; z < IBASICcode.Length; z++)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword4, Environment.NewLine);
+                            if (IBASICcode[z].Contains(keyword5) == true)
+                            {
+                                break;
+                            }
+                            if (IBASICcode[z].Contains(keyword2) == true)
+                            {
+                                if (IBASICcode[z].TrimStart().Substring(0, 5) == keyword2)
+                                {
+                                    IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].TrimStart().Substring(0, 4), "Case ");
+                                    if (IBASICcode[z].Contains(keyword4) == true)
+                                    {
+                                        IBASICcode[z] = IBASICcode[z].Replace(keyword4, Environment.NewLine);
+                                    }
+                                    else
+                                    {
+                                        errormessages.Add("Line " + (z + 1) + " : Syntax error : ':' after the condition");
+                                    }
+                                }
+                                else
+                                {
+                                    errormessages.Add("Line " + (z + 1) + " : Syntax error : 'CASE' is expected at the start of the line");
+                                }
+
+                            }
+                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword5) == false)
+                            {
+                                errormessages.Add("Syntax error : ENDCASE is expected somewhere ");
+                            }
                         }
                     }
-
                 }
+
                 if (IBASICcode[i].Contains(keyword3) == true)
                 {
                     if (IBASICcode[i].TrimStart().Substring(0, 10) == keyword3)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 9), "Case Else ");
-                        if (IBASICcode[i].Contains(keyword4) == true)
-                        {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword4, Environment.NewLine);
-                        }
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 9), "Case Else " + "\n");
                     }
 
                 }
@@ -559,38 +634,50 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword3 = "RETURN ";
             string keyword4 = ":";
             string keyword5 = "RETURNS";
-            for(int i = 0;i < IBASICcode.Length; i++)
+            for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if(IBASICcode[i].Contains(keyword1) == true)
+                if (IBASICcode[i].Contains(keyword1) == true)
                 {
-                    if(IBASICcode[i].TrimStart().Substring(0, 9) == keyword1)
+                    if (IBASICcode[i].TrimStart().Substring(0, 9) == keyword1)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 8), "Function");
-                        if(IBASICcode[i].Contains(keyword4) == true)
+                        if (IBASICcode[i].Contains(keyword4) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword4, " As ");
                         }
-                        if(IBASICcode[i].Contains(keyword5) == true)
+                        if (IBASICcode[i].Contains(keyword5) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword5, " As ");
                         }
-                        ///Loop until ENDFUNCTION is found
-                        for(int z = i; z < IBASICcode.Length; z++)
+                        else
                         {
-                            if(IBASICcode[z].Contains(keyword3) == true)
+                            errormessages.Add("Line " + (i + 1) + " 'RETURNS' is expected, A function must return value");
+                        }
+                        ///Loop until ENDFUNCTION is found
+                        for (int z = i; z < IBASICcode.Length; z++)
+                        {
+                            if (IBASICcode[z].Contains(keyword3) == true)
                             {
                                 IBASICcode[z] = IBASICcode[z].Replace(keyword3, "Return ");
                             }
-                            if(IBASICcode[z].Contains(keyword2) == true)
+                            else
                             {
-                                if(IBASICcode[z].TrimStart().Substring(0,11) == keyword2)
+                                errormessages.Add("Line " + (i + 1) + " 'RETURN' is expected, A function must return value");
+                            }
+                            if (IBASICcode[z].Contains(keyword2) == true)
+                            {
+                                if (IBASICcode[z].TrimStart().Substring(0, 11) == keyword2)
                                 {
-                                    IBASICcode[z] =  IBASICcode[z].Replace(keyword2, "End Function");
+                                    IBASICcode[z] = IBASICcode[z].Replace(keyword2, "End Function");
                                     IBfunctionsNsub.Add(IBASICcode[z]);
                                     IBASICcode[z] = "";
                                     //Stop the process when ENDFUNCTION is found
                                     break;
                                 }
+                            }
+                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            {
+                                errormessages.Add(" ENDFUNCTION is expected somewhere");
                             }
                             ///Put all the code within the function in a list called IBfunctionsNsub and remove that code 
                             ///from IBASICcode because it has to be put outside of VB main sub
@@ -617,6 +704,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword3, " As ");
                         }
+                        if (IBASICcode[i].Contains("(") == true && IBASICcode[i].Contains(keyword3) == false && IBASICcode[i].Contains(")") == true)
+                        {
+                            errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because datatype hasn't been specified");
+                        }
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
 
@@ -630,6 +721,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                                     break;
                                 }
                             }
+                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            {
+                                errormessages.Add(" ENDPROCEDURE is expected somewhere");
+                            }
                             IBfunctionsNsub.Add(IBASICcode[z]);
                             IBASICcode[z] = "";
                         }
@@ -640,11 +735,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void Tcallprocedure()
         {
             string keyword = "CALL ";
-            for(int i = 0;i < IBASICcode.Length; i++)
+            for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if(IBASICcode[i].Contains(keyword) == true)
+                if (IBASICcode[i].Contains(keyword) == true)
                 {
-                    if(IBASICcode[i].TrimStart().Substring(0,5) == keyword)
+                    if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 4), "Call ");
                     }
@@ -661,7 +756,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 if (IBASICcode[i].Contains(keyword) == true)
                 {
 
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword, "True");
+                    IBASICcode[i] = IBASICcode[i].Replace(keyword, "True");
                 }
                 if (IBASICcode[i].Contains(keyword2) == true)
                 {
@@ -691,14 +786,21 @@ namespace CS_IA_Ibasic_Intouch_Re
             Tcasestatement();
             Tfunction();
             Tprocedure();
+            if (errormessages != null)
+            {
+                foreach (string msg in errormessages)
+                {
+                    errmsg = errmsg + msg + "\n";
+                }
+            }
         }
         public void putinFormat()
         {
             Translatedcode = Header;
             TranslateAll();
-            foreach(string line in IBASICcode)
+            foreach (string line in IBASICcode)
             {
-                Translatedcode = Translatedcode + "\n" + line; 
+                Translatedcode = Translatedcode + "\n" + line;
             }
             Translatedcode = Translatedcode + "\n" + "Console.ReadKey()";
             Translatedcode = Translatedcode + "\n" + endSubMain;
@@ -720,6 +822,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             return Translatedcode;
         }
+        public string getIBASICerrormessages()
+        {
+
+            return errmsg;
+        }
+
+   
     }
 }
 

@@ -99,16 +99,25 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void Run_Click(object sender, EventArgs e)
         {
+            ErrorMsgBox.Clear();
             IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
             ///  currentRtb.Text = translator.Tcasestatement();
             translator.putinFormat();
            /// currentRtb.Text = translator.getTranslatedcode();
-            Compiler Icompiler = new Compiler(translator.getTranslatedcode());
-            Icompiler.launchEXE();
-            if (Icompiler.getErrorMessages() != null)
+           if(translator.getIBASICerrormessages() == null)
             {
-                ErrorMsgBox.Text = ErrorMsgBox.Text + Icompiler.getErrorMessages();
+                Compiler Icompiler = new Compiler(translator.getTranslatedcode());
+                Icompiler.launchEXE();
+                if (Icompiler.getErrorMessages() != null)
+                {
+                    ErrorMsgBox.Text =  Icompiler.getErrorMessages();
+                }
             }
+            else
+            {
+                ErrorMsgBox.Text = translator.getIBASICerrormessages();
+            }
+
            
         }
 
