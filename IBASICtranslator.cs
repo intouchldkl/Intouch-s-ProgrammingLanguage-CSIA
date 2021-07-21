@@ -526,6 +526,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword5, " As ");
                         }
+                        ///Loop until ENDFUNCTION is found
                         for(int z = i; z < IBASICcode.Length; z++)
                         {
                             if(IBASICcode[z].Contains(keyword3) == true)
@@ -539,9 +540,12 @@ namespace CS_IA_Ibasic_Intouch_Re
                                     IBASICcode[z] =  IBASICcode[z].Replace(keyword2, "End Function");
                                     IBfunctionsNsub.Add(IBASICcode[z]);
                                     IBASICcode[z] = "";
+                                    //Stop the process when ENDFUNCTION is found
                                     break;
                                 }
                             }
+                            ///Put all the code within the function in a list called IBfunctionsNsub and remove that code 
+                            ///from IBASICcode because it has to be put outside of VB main sub
                             IBfunctionsNsub.Add(IBASICcode[z]);
                             IBASICcode[z] = "";
                         }
