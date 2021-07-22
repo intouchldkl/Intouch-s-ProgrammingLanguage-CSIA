@@ -35,6 +35,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             syntaxhighlight();
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
+            
         }
         public static IBASICForm Instance
         {
@@ -283,7 +284,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.SelectionStart = 0;
             currentRtb.SelectionLength = currentRtb.Text.Length;
             currentRtb.SelectionColor = originalColor;
-
             // scanning...
             foreach (Match m in BkeywordMatches)
             {
@@ -384,6 +384,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             autocompleteMenu1.AddItem("ROUND()");
             autocompleteMenu1.AddItem("RANDOM()");
         }
-      
+
+    
     }
 }

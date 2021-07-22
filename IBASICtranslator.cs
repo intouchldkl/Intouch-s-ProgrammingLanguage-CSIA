@@ -56,9 +56,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 if (IBASICcode[i].Contains("INPUT ") == true)
                 {
 
-                    line = IBASICcode[i].Trim();
+                    line = IBASICcode[i].TrimStart();
                     ///This if statement makes sure "INPUT" is not part of a variable name
-                    if (line.Substring(5, 1) == " " && line.Substring(5) != null && line.Substring(0, 5) == keyword)
+                    if (line.Substring(5) != null && line.Substring(0, 5) == keyword)
                     {
                         keyword = line.Substring(0, 5);
                         string therest = line.Substring(5);

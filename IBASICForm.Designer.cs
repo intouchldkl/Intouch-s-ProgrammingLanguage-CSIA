@@ -219,7 +219,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // ErrorMsgBox
             // 
             this.ErrorMsgBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            
+            this.autocompleteMenu1.SetAutocompleteMenu(this.ErrorMsgBox, null);
             this.ErrorMsgBox.ForeColor = System.Drawing.Color.DarkRed;
             this.ErrorMsgBox.Location = new System.Drawing.Point(26, 61);
             this.ErrorMsgBox.Name = "ErrorMsgBox";
@@ -291,9 +291,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.splitContainer2.Panel1.Controls.Add(this.splitContainer1);
             this.splitContainer2.Panel1MinSize = 400;
-            // 
-            // splitContainer2.Panel2
-            // 
             this.splitContainer2.Panel2MinSize = 420;
             this.splitContainer2.Size = new System.Drawing.Size(835, 567);
             this.splitContainer2.SplitterDistance = 400;
@@ -316,6 +313,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.ClientSize = new System.Drawing.Size(835, 593);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.menuStrip1);
+            this.DoubleBuffered = true;
             this.Name = "IBASICForm";
             this.Text = "IBASIC";
             this.menuStrip1.ResumeLayout(false);
