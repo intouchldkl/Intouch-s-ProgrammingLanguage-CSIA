@@ -17,10 +17,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         // To keep track of where the current textBox is as the tab changes
         RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
-
         public IBASICForm()
         {
             InitializeComponent();
+            initialliseAutoCompleteMenuItem();
             RichTextBox RTB = new RichTextBox();
             tabPage1.Controls.Add(RTB);
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
@@ -34,6 +34,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             syntaxhighlight();
+            autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
         }
         public static IBASICForm Instance
         {
@@ -127,9 +128,9 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-            LineNumberBox.ZoomFactor = ZoomBar.Value;
             currentRtb.ZoomFactor = ZoomBar.Value;
             AddLineNumbers();
+            LineNumberBox.ZoomFactor = ZoomBar.Value;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             syntaxhighlight();
@@ -156,6 +157,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             AddLineNumbers();
             currentRtb.ZoomFactor = ZoomBar.Value;
             LineNumberBox.ZoomFactor = ZoomBar.Value;
+            autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
         }
 
         private void CloseTabBut_Click(object sender, EventArgs e)
@@ -223,6 +225,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {            
                 AddLineNumbers();
             syntaxhighlight();
+            LineNumberBox.ZoomFactor = ZoomBar.Value;
         }
         private void CurrentRtb_VScroll(object sender, EventArgs e)
         {
@@ -252,12 +255,14 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void syntaxhighlight()
         {
-            string Bkeywords = @"\b(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP)\b";
+            string Bkeywords = @"\b(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Text, Bkeywords);
             string Gkeywords = @"\b(OUTPUT|INPUT)\b";
             MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Text, Gkeywords);
             string Pkeywords = @"\b(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
             MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Text, Pkeywords);
+            string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|RANDOM|ROUND)\b";
+            MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Text, Ykeywords);
             // getting types/classes from the text 
             string types = @"\b(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
             MatchCollection typeMatches = Regex.Matches(currentRtb.Text, types);
@@ -327,7 +332,52 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.Focus();
 
         }
-
-   
+        private void initialliseAutoCompleteMenuItem()
+        {
+            autocompleteMenu1.AddItem("OUTPUT ");
+            autocompleteMenu1.AddItem("INPUT ");
+            autocompleteMenu1.AddItem("DECLARE ");
+            autocompleteMenu1.AddItem("STRING");
+            autocompleteMenu1.AddItem("INTEGER");
+            autocompleteMenu1.AddItem("CHAR");
+            autocompleteMenu1.AddItem("REAL");
+            autocompleteMenu1.AddItem("BOOLEAN");
+            autocompleteMenu1.AddItem("TRUE");
+            autocompleteMenu1.AddItem("FALSE");
+            autocompleteMenu1.AddItem("FOR ");
+            autocompleteMenu1.AddItem("TO ");
+            autocompleteMenu1.AddItem("NEXT ");
+            autocompleteMenu1.AddItem("WHILE ");
+            autocompleteMenu1.AddItem("DO");
+            autocompleteMenu1.AddItem("ENDWHILE");
+            autocompleteMenu1.AddItem("IF ");
+            autocompleteMenu1.AddItem("THEN");
+            autocompleteMenu1.AddItem("ELSE");
+            autocompleteMenu1.AddItem("ELSEIF");
+            autocompleteMenu1.AddItem("ENDIF");
+            autocompleteMenu1.AddItem("STEP");
+            autocompleteMenu1.AddItem("CASE OF ");
+            autocompleteMenu1.AddItem("CASE ");
+            autocompleteMenu1.AddItem("AND ");
+            autocompleteMenu1.AddItem("OR ");
+            autocompleteMenu1.AddItem("OTHERWISE ");
+            autocompleteMenu1.AddItem("ENDCASE ");
+            autocompleteMenu1.AddItem("FUNCTION ");
+            autocompleteMenu1.AddItem("RETURNS ");
+            autocompleteMenu1.AddItem("RETURN ");
+            autocompleteMenu1.AddItem("ENDFUNCTION");
+            autocompleteMenu1.AddItem("PROCEDURE ");
+            autocompleteMenu1.AddItem("ENDPROCEDURE");
+            autocompleteMenu1.AddItem("CALL");
+            autocompleteMenu1.AddItem("MOD()");
+            autocompleteMenu1.AddItem("DIV()");
+            autocompleteMenu1.AddItem("UCASE()");
+            autocompleteMenu1.AddItem("LCASE()");
+            autocompleteMenu1.AddItem("LENGTH()");
+            autocompleteMenu1.AddItem("SUBSTRING()");
+            autocompleteMenu1.AddItem("ROUND()");
+            autocompleteMenu1.AddItem("RANDOM()");
+        }
+      
     }
 }

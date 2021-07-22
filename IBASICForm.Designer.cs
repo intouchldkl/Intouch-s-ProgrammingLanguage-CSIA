@@ -55,6 +55,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.CloseTabBut = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.autocompleteMenu1 = new AutocompleteMenuNS.AutocompleteMenu();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomBar)).BeginInit();
@@ -170,6 +171,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.LineNumberBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.autocompleteMenu1.SetAutocompleteMenu(this.LineNumberBox, null);
             this.LineNumberBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LineNumberBox.Location = new System.Drawing.Point(3, 25);
             this.LineNumberBox.Name = "LineNumberBox";
@@ -217,6 +219,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // ErrorMsgBox
             // 
             this.ErrorMsgBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            
             this.ErrorMsgBox.ForeColor = System.Drawing.Color.DarkRed;
             this.ErrorMsgBox.Location = new System.Drawing.Point(26, 61);
             this.ErrorMsgBox.Name = "ErrorMsgBox";
@@ -296,6 +299,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.splitContainer2.SplitterDistance = 400;
             this.splitContainer2.TabIndex = 8;
             // 
+            // autocompleteMenu1
+            // 
+            this.autocompleteMenu1.Colors = ((AutocompleteMenuNS.Colors)(resources.GetObject("autocompleteMenu1.Colors")));
+            this.autocompleteMenu1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.autocompleteMenu1.ImageList = null;
+            this.autocompleteMenu1.Items = new string[0];
+            this.autocompleteMenu1.TargetControlWrapper = null;
+            // 
             // IBASICForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -348,5 +359,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private TrackBar ZoomBar;
         private SplitContainer splitContainer1;
         private SplitContainer splitContainer2;
+        private AutocompleteMenuNS.AutocompleteMenu autocompleteMenu1;
     }
 }
