@@ -256,16 +256,16 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void syntaxhighlight()
         {
-            string Bkeywords = @"\b(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
+            string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Text, Bkeywords);
-            string Gkeywords = @"\b(OUTPUT|INPUT)\b";
+            string Gkeywords = @"\b(?i)(OUTPUT|INPUT)\b";
             MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Text, Gkeywords);
-            string Pkeywords = @"\b(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
+            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
             MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Text, Pkeywords);
             string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|RANDOM|ROUND)\b";
             MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Text, Ykeywords);
             // getting types/classes from the text 
-            string types = @"\b(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
+            string types = @"\b(?i)(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
             MatchCollection typeMatches = Regex.Matches(currentRtb.Text, types);
 
             // getting comments (inline or multiline)
