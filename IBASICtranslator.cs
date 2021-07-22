@@ -25,6 +25,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private const string Header = "Imports System" + "\n" + "Module Program" + "\n" + "Sub Main(args As String())" + "\n";
         private const string endSubMain = "End Sub";
         private const string endModule = "End Module";
+        private const string endmsg = "Press any key to continue";
 
         public IBASICtranslator(string[] IBASICcode)
         {
@@ -277,7 +278,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                             }
                             if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
                             {
-                                errormessages.Add("Syntax error : NEXT is expected somewhere ");
+                                errormessages.Add("Syntax error : NEXT or an identifier is expected somewhere ");
                             }
                         }
                     }
@@ -304,6 +305,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword3 = "ELSEIF ";
             string keyword4 = "ELSE";
             string keyword5 = " THEN";
+            string keyword6 = "AND";
+            string keyword7 = "OR";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (IBASICcode[i].Contains(keyword1) == true)
@@ -318,6 +321,14 @@ namespace CS_IA_Ibasic_Intouch_Re
                         else
                         {
                             errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because 'THEN' is expected or incorrect spacing");
+                        }
+                        if (IBASICcode[i].Contains(keyword6) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword6, " And ");
+                        }
+                        if (IBASICcode[i].Contains(keyword7) == true)
+                        {
+                            IBASICcode[i] = IBASICcode[i].Replace(keyword7, " Or ");
                         }
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
@@ -424,6 +435,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                         {
                             if (IBASICcode[z].Contains(keyword2) == true)
                             {
+                                if (IBASICcode[z].TrimStart().Substring(0, 6) == keyword2)
+                                {
+                                    IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].TrimStart().Substring(0, 5), "Loop Until ");
+                                }
                                 break;
                             }
                             if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
@@ -434,14 +449,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                     }
 
                 }
-                if (IBASICcode[i].Contains(keyword2) == true)
-                {
-                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword2)
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 5), "Loop Until ");
-                    }
 
-                }
             }
         }
         public void TconstantDeclaration()
@@ -484,11 +492,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void TdataType()
         {
-            string keyword1 = " INTEGER";
+            string keyword1 = "INTEGER";
             string keyword2 = " REAL";
-            string keyword3 = " BOOLEAN";
-            string keyword4 = " CHAR";
-            string keyword5 = " STRING";
+            string keyword3 = "BOOLEAN";
+            string keyword4 = "CHAR";
+            string keyword5 = "STRING";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (IBASICcode[i].Contains(keyword1) == true)
@@ -797,6 +805,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 Translatedcode = Translatedcode + "\n" + line;
             }
+            char qm = '"';
+            Translatedcode = Translatedcode + "\n"  + "Console.WriteLine(" + qm + endmsg + qm + ")";
             Translatedcode = Translatedcode + "\n" + "Console.ReadKey()";
             Translatedcode = Translatedcode + "\n" + endSubMain;
             Translatedcode = Translatedcode + "\n" + VBdivfunction;

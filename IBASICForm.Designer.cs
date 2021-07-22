@@ -195,6 +195,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // tabPage1
             // 
+            this.tabPage1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(340, 374);
@@ -287,6 +288,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.splitContainer2.Panel1.Controls.Add(this.splitContainer1);
             this.splitContainer2.Panel1MinSize = 400;
+            // 
+            // splitContainer2.Panel2
+            // 
             this.splitContainer2.Panel2MinSize = 420;
             this.splitContainer2.Size = new System.Drawing.Size(835, 567);
             this.splitContainer2.SplitterDistance = 400;

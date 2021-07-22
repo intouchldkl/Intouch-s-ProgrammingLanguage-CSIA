@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
@@ -16,6 +17,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         // To keep track of where the current textBox is as the tab changes
         RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
+
         public IBASICForm()
         {
             InitializeComponent();
@@ -30,7 +32,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.WordWrap = false;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
-            currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+            currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            syntaxhighlight();
         }
         public static IBASICForm Instance
         {
@@ -129,11 +132,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             AddLineNumbers();
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
+            syntaxhighlight();
         }
         public void createNewTabPage(string tabName)
         {
             RichTextBox rtb = new RichTextBox();
-            rtb.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+            rtb.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             rtb.AcceptsTab = true;
             rtb.Dock = DockStyle.Fill;
             //To allow both scrollbars
@@ -218,6 +222,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void currentRtb_TextChanged(object sender, EventArgs e)
         {            
                 AddLineNumbers();
+            syntaxhighlight();
         }
         private void CurrentRtb_VScroll(object sender, EventArgs e)
         {
@@ -245,5 +250,84 @@ namespace CS_IA_Ibasic_Intouch_Re
             PublishForm publishForm = new PublishForm();
             publishForm.Show();
         }
+        private void syntaxhighlight()
+        {
+            string Bkeywords = @"\b(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP)\b";
+            MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Text, Bkeywords);
+            string Gkeywords = @"\b(OUTPUT|INPUT)\b";
+            MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Text, Gkeywords);
+            string Pkeywords = @"\b(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
+            MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Text, Pkeywords);
+            // getting types/classes from the text 
+            string types = @"\b(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
+            MatchCollection typeMatches = Regex.Matches(currentRtb.Text, types);
+
+            // getting comments (inline or multiline)
+            string comments = @"(\/.+?$|\'.+?$)";
+            MatchCollection commentMatches = Regex.Matches(currentRtb.Text, comments, RegexOptions.Multiline);
+
+            // getting strings
+            string strings = "\".+?\"";
+            MatchCollection stringMatches = Regex.Matches(currentRtb.Text, strings);
+
+            // saving the original caret position + forecolor
+            int originalIndex = currentRtb.SelectionStart;
+            int originalLength = currentRtb.SelectionLength;
+            Color originalColor = Color.Black;
+            // removes any previous highlighting (so modified words won't remain highlighted)
+            currentRtb.SelectionStart = 0;
+            currentRtb.SelectionLength = currentRtb.Text.Length;
+            currentRtb.SelectionColor = originalColor;
+
+            // scanning...
+            foreach (Match m in BkeywordMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Blue;
+            }
+            foreach (Match m in GkeywordMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.DarkCyan;
+            }
+            foreach (Match m in PkeywordMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Purple;
+            }
+
+            foreach (Match m in typeMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Orange;
+            }
+            foreach (Match m in commentMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Green;
+            }
+
+            foreach (Match m in stringMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Brown;
+            }
+
+            // restoring the original colors, for further writing
+            currentRtb.SelectionStart = originalIndex;
+            currentRtb.SelectionLength = originalLength;
+            currentRtb.SelectionColor = originalColor;
+            // giving back the focus
+            currentRtb.Focus();
+
+        }
+
+   
     }
 }
