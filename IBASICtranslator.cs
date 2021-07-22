@@ -662,10 +662,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                             {
                                 IBASICcode[z] = IBASICcode[z].Replace(keyword3, "Return ");
                             }
-                            else
-                            {
-                                errormessages.Add("Line " + (i + 1) + " 'RETURN' is expected, A function must return value");
-                            }
+     
                             if (IBASICcode[z].Contains(keyword2) == true)
                             {
                                 if (IBASICcode[z].TrimStart().Substring(0, 11) == keyword2)
