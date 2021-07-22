@@ -703,10 +703,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword3, " As ");
                         }
-                        if (IBASICcode[i].Contains("(") == true && IBASICcode[i].Contains(keyword3) == false && IBASICcode[i].Contains(")") == true)
-                        {
-                            errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because datatype hasn't been specified");
-                        }
+
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
 
