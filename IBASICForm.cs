@@ -303,6 +303,12 @@ namespace CS_IA_Ibasic_Intouch_Re
                 currentRtb.SelectionLength = m.Length;
                 currentRtb.SelectionColor = Color.Purple;
             }
+            foreach (Match m in YkeywordMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.DarkGoldenrod;
+            }
 
             foreach (Match m in typeMatches)
             {
