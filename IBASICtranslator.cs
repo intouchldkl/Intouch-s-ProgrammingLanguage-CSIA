@@ -106,13 +106,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void TarrayDeclaration()
         {
             string line = "";
-            string keyword = "DECALRE ";
+            string keyword = "DECLARE ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
 
                 ///get rid of all the spaces
                 string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                if (arraycheck.Contains("ARRAY[") == true && arraycheck.Substring(0, 8) == keyword)
+                if (arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == keyword)
                 {
                     line = IBASICcode[i].Trim();
                     ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
@@ -529,19 +529,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             string keyword1 = "[";
             string keyword2 = "]";
-            string keyword3 = ",";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains("DECLARE") == false)
+                if (IBASICcode[i].Contains("Dim") == false)
                 {
                     foreach (string arrayname in arrayvar)
                         if (IBASICcode[i].Contains(arrayname) == true)
                         {
-                            if (IBASICcode[i].Contains(keyword3) == true)
-                            {
-                                IBASICcode[i] = IBASICcode[i].Replace(keyword3, ")(");
-                            }
-
                             if (IBASICcode[i].Contains(keyword1) == true)
                             {
                                 IBASICcode[i] = IBASICcode[i].Replace(keyword1, "(");
@@ -774,6 +768,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             TarrayDeclaration();
             T2dArrayDeclaration();
             TconstantDeclaration();
+            Tarrays();
             Toutput();
             Tinput();
             TIfstatement();
