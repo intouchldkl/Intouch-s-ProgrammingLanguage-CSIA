@@ -36,6 +36,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
+            if(Directory.Exists("token.json") == true)
+            {
+                LOGIN.Text = "LOGOUT";
+            }
 
 
         }
