@@ -154,12 +154,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// </summary>
         public void logout()
         {
-            ///    credential.RevokeTokenAsync(CancellationToken.None);
-            /// token.DeleteAsync<string>(credPath);
-            if(Directory.Exists("token.json") == true)
-            {
-                Directory.Delete("token.json", true);
-            }
+            Authentication();
+            credential.RevokeTokenAsync(CancellationToken.None);
+             token.DeleteAsync<string>(credPath);
+       ///    if(Directory.Exists("token.json") == true)
+         ///   {
+          ///      Directory.Delete("token.json", true);
+           /// }
            
         }
         public void CreateIBASICFolder(string folderName)
