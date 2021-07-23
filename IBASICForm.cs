@@ -288,7 +288,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             MatchCollection typeMatches = Regex.Matches(currentRtb.Lines[lineNumber], types);
 
             // getting comments (inline or multiline)
-            string comments = @"(\/.+?$|'.+?$)";
+            string comments = @"\/.+?$";
             MatchCollection commentMatches = Regex.Matches(currentRtb.Lines[lineNumber], comments, RegexOptions.Multiline);
 
             // getting strings

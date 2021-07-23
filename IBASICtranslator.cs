@@ -748,6 +748,21 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        public void Tchar()
+        {
+            string pattern = "\'.+?\'";
+            char qm = '"';
+            for (int i = 0; i < IBASICcode.Length;i++)
+            {
+                MatchCollection stringMatches = Regex.Matches(IBASICcode[i], pattern);
+                foreach (Match m in stringMatches)
+                {
+                    string temp = m.ToString().Replace("'", "\"");
+                    temp = temp + "c";
+                    IBASICcode[i] = IBASICcode[i].Replace(m.ToString(), temp);
+                }
+            }
+        }
         public void TranslateAll()
         {
             Tcomment();
@@ -757,6 +772,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             TarrayDeclaration();
             T2dArrayDeclaration();
             TconstantDeclaration();
+            Tchar();
             Tarrays();
             Toutput();
             Tinput();
