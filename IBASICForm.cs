@@ -40,6 +40,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 LOGIN.Text = "LOGOUT";
             }
+            if(isLogin() == true)
+            {
+                PUBLISH.Enabled = true;
+            }
 
 
         }
@@ -214,12 +218,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // get Last Index & Last Line from richTextBox1    
             int Last_Index =currentRtb.GetCharIndexFromPosition(pt);
             int Last_Line = currentRtb.GetLineFromCharIndex(Last_Index);
-            // set Center alignment to LineNumberTextBox    
-            buffer.SelectionAlignment = HorizontalAlignment.Center;
-            // set LineNumberTextBox text to null & width to getWidth() function value    
-            buffer.Text = "";
-            buffer.Width = getWidth();
-            // now add each line number to LineNumberTextBox upto last line    
+            //  add each line number to LineNumberTextBox upto last line    
             for (int i = First_Line; i <= Last_Line + 2; i++)
             {
                 buffer.Text += i + 1 + "\n";
@@ -246,12 +245,16 @@ namespace CS_IA_Ibasic_Intouch_Re
               if(LOGIN.Text == "LOGIN")
                 {
                 GGDrive.Instance.Authentication();
+                PUBLISH.Enabled = true;
                 LOGIN.Text = "LOGOUT";
+                MessageBox.Show("YOU ARE LOGGED IN TO YOUR CURRENT GMAIL","IBASIC");              
                 }
             else
-            {
+            {            
                 GGDrive.Instance.logout();
+                PUBLISH.Enabled = false;
                 LOGIN.Text = "LOGIN";
+                MessageBox.Show("YOU ARE LOGGED OUT!","IBASIC");
             }
           
 
@@ -399,7 +402,17 @@ namespace CS_IA_Ibasic_Intouch_Re
             autocompleteMenu1.AddItem("ARRAY[]");
         }
 
-
+        public bool isLogin()
+        {
+            if(LOGIN.Text == "LOGOUT")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
     }

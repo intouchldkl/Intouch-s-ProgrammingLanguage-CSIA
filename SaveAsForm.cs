@@ -20,6 +20,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             InitializeComponent();
             this.currentRtb = IBASICForm.Instance.getCurrentRtb();
             this.tabpage = IBASICForm.Instance.getCurrentTabpage();
+            if (IBASICForm.Instance.isLogin() == true)
+            {
+                GDriveBut.Enabled = true;
+            }
         }
 
         private void LocalDBut_Click(object sender, EventArgs e)

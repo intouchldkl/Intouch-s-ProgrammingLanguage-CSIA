@@ -18,7 +18,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         public OpenForm()
         {
             InitializeComponent();
-         
+            if(IBASICForm.Instance.isLogin() == true)
+            {
+                DriveButton.Enabled = true;
+            }
         }
 
         private void LocalDButton_Click(object sender, EventArgs e)

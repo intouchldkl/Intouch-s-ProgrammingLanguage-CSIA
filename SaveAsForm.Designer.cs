@@ -64,6 +64,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.GDriveBut.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDriveBut.AutoSize = true;
+            this.GDriveBut.Enabled = false;
             this.GDriveBut.Font = new System.Drawing.Font("Constantia", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.GDriveBut.Location = new System.Drawing.Point(451, 247);
             this.GDriveBut.Name = "GDriveBut";

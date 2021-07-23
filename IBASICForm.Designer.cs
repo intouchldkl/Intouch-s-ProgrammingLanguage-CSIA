@@ -120,6 +120,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // PUBLISH
             // 
+            this.PUBLISH.Enabled = false;
             this.PUBLISH.Name = "PUBLISH";
             this.PUBLISH.Size = new System.Drawing.Size(65, 20);
             this.PUBLISH.Text = "PUBLISH";
