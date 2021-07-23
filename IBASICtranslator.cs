@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CS_IA_Ibasic_Intouch_Re
@@ -11,6 +13,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string[] IBASICcode;
         private string Translatedcode;
         private string errmsg;
+        TextInfo textinfo = new CultureInfo("en-Uk", false).TextInfo;
         private List<string> arrayvar = new List<string>();
         private List<string> IBfunctionsNsub = new List<string>();
         private List<string> errormessages = new List<string>();
@@ -36,11 +39,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword = "OUTPUT ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword) == true || IBASICcode[i].Contains(keyword.ToLower()) == true
-                    || IBASICcode[i].Contains("Output") == true)
+                if (StringExtension.Contains(IBASICcode[i] ,keyword) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword || IBASICcode[i].TrimStart().Substring(0, 7) == keyword.ToLower()
-                        || IBASICcode[i].TrimStart().Substring(0, 7) == "Output ")
+                    if (StringExtension.compare( IBASICcode[i].TrimStart().Substring(0, 7) , keyword) == true )
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "Console.WriteLine( ");
                         IBASICcode[i] = IBASICcode[i] + ")";
@@ -55,13 +56,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword = "INPUT";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains("INPUT ") == true || IBASICcode[i].Contains("Input ") == true || IBASICcode[i].Contains("input ") == true)
+                if (StringExtension.Contains(IBASICcode[i],"INPUT ") == true )
                 {
 
                     line = IBASICcode[i].TrimStart();
                     ///This if statement makes sure "INPUT" is not part of a variable name
-                    if (line.Substring(5) != null && line.Substring(0, 5) == keyword ||  line.Substring(5) != null && line.Substring(0, 5) == "Input"
-                        || line.Substring(5) != null && line.Substring(0, 5) == "input")
+                    if (line.Substring(5) != null && StringExtension.compare( line.Substring(0, 5) , keyword) == true )
                     {
                         string therest = line.Substring(5);
                         therest = therest.Trim();
@@ -80,14 +80,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword2 = ":";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword) == true || IBASICcode[i].Contains(keyword.ToLower()) == true
-                    || IBASICcode[i].Contains("Declare ") == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword) == true)
                 {
                     string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
                     ///This if statement makes sure "DECLARE" is not part of a variable name and its not array declaration
-                    if (IBASICcode[i].TrimStart().Substring(0, 8) == keyword && arraycheck.Contains("ARRAY[") == false
-                        || arraycheck.Contains("ARRAY[") == false && IBASICcode[i].TrimStart().Substring(0, 8) == "Declare "
-                    || arraycheck.Contains("ARRAY[") == false && IBASICcode[i].TrimStart().Substring(0, 8) == "declare ")
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword) == true && StringExtension.Contains(arraycheck,"ARRAY[") == false)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Dim ");
 
@@ -118,9 +115,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
                 ///get rid of all the spaces
                 string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                if (arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == keyword
-                    || arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == "Declare "
-                    || arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == "declare ")
+                if (StringExtension.Contains(arraycheck, "ARRAY[") == true && StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword) == true)
                 {
                     line = IBASICcode[i].Trim();
                     ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
@@ -128,9 +123,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                     {
 
                         string therest = line.Substring(7);
-                        if (therest.Contains("OF") == true && therest.Contains("]") == true
-                            || therest.Contains("Of") == true && therest.Contains("]") == true
-                            || therest.Contains("of") == true && therest.Contains("]") == true)
+                        if (StringExtension.Contains(therest,"OF") == true && therest.Contains("]") == true)
                         {
                             therest = string.Concat(therest.Where(c => !Char.IsWhiteSpace(c)));
                             if (therest.Contains(":") == true)
@@ -153,12 +146,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                                     if (types.Length == 2 && types[1] != "")
                                     {
                                         types[1] = types[1].Trim();
-                                        string type1 = types[1].Substring(0, 1).ToUpper();
-                                        string type2 = types[1].Substring(1).ToLower();
                                         bool IsThereIndex = int.TryParse(indexandtype[0], out int index);
                                         if (IsThereIndex == true)
                                         {
-                                            IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + type1 + type2;
+                                            IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + types[1];
                                             arrayvar.Add(variableName);
                                         }
                                         else
@@ -193,9 +184,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
                 ///get rid of all the spaces
                 string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                if (arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == keyword
-                     || arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == "Declare "
-                    || arraycheck.Contains("ARRAY[") == true && IBASICcode[i].TrimStart().Substring(0, 8) == "declare ")
+                if (StringExtension.Contains(arraycheck, "ARRAY[") == true && StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword) == true)
                 {
                     line = IBASICcode[i].Trim();
                     ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
@@ -203,7 +192,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                     {
 
                         string therest = line.Substring(7);
-                        if (therest.Contains("OF") == true && therest.Contains("]") == true)
+                        if (StringExtension.Contains(therest, "OF") == true && therest.Contains("]") == true)
                         {
                             therest = string.Concat(therest.Where(c => !Char.IsWhiteSpace(c)));
                             if (therest.Contains(":") == true)
@@ -229,13 +218,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                                         }
                                         if (types.Length == 2 && types[1] != "")
                                         {
-                                            types[1] = types[1];
-                                            string type1 = types[1].Substring(0, 1).ToUpper();
-                                            string type2 = types[1].Substring(1).ToLower();
+                                          
                                             bool IsThereIndex2 = int.TryParse(index2andtype[0], out int index2);
                                             if (IsThereIndex2 == true)
                                             {
-                                                IBASICcode[i] = "Dim " + variableName + "(" + index1 + ", " + index2 + ")" + " As " + type1 + type2;
+                                                IBASICcode[i] = "Dim " + variableName + "(" + index1 + ", " + index2 + ")" + " As " + types[1];
                                                 arrayvar.Add(variableName);
                                             }
                                             else
@@ -284,48 +271,42 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword4 = " STEP ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true || IBASICcode[i].Contains(keyword1.ToLower()) == true
-                    || IBASICcode[i].Contains("For ") == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 4) == keyword1 || IBASICcode[i].TrimStart().Substring(0, 4) == keyword1.ToLower()
-                       || IBASICcode[i].TrimStart().Substring(0, 4) == "For ")
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 4), keyword1) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 3), "For ");
-                        if (IBASICcode[i].Contains(keyword3) == true || IBASICcode[i].Contains("to") == true
-                            || IBASICcode[i].Contains("To") == true)
+                        if (StringExtension.Contains(IBASICcode[i], keyword3) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword3, " To ");
+                            IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)( TO )\b", " To ");
                         }
                         else
                         {
                             errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be becuase 'TO' is missing or incorrect spacing");
                         }
+
+                        if (StringExtension.Contains(IBASICcode[i], keyword4) == true)
+                        {
+                            IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)( STEP)\b", " Step ");
+                        }
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
-                            if (IBASICcode[z].Contains(keyword2) == true || IBASICcode[z].Contains("Next ") == true || IBASICcode[z].Contains("next ") == true)
+                            if (StringExtension.Contains(IBASICcode[z], keyword2) == true)
                             {
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 5), keyword2) == true)
+                                {
+                                    IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].Trim().Substring(0, 4), "Next ");
+                                }
                                 break;
                             }
-                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)
                             {
                                 errormessages.Add("Syntax error : NEXT or an identifier is expected somewhere ");
                             }
                         }
                     }
                 }
-                if (IBASICcode[i].Contains(keyword2) == true)
-                {
-                    if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword2)
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].Trim().Substring(0, 4), "Next ");
-                    }
 
-                }
-
-                if (IBASICcode[i].Contains(keyword4) == true )
-                {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword4, " Step ");
-                }
             }
         }
         public void TIfstatement()
@@ -339,67 +320,52 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword7 = "OR";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true || IBASICcode[i].Contains(keyword1.ToLower()) == true
-                    || IBASICcode[i].Contains("If") == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 3) == keyword1 || IBASICcode[i].TrimStart().Substring(0, 3) == keyword1.ToLower()
-                        || IBASICcode[i].TrimStart().Substring(0, 3) == "If ")
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 3), keyword1) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 2), "If ");
-                        if (IBASICcode[i].Contains(keyword5) == true)
+                        if (StringExtension.Contains(IBASICcode[i], keyword5) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword5, " Then ");
+                            IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)( THEN)\b", " Then ");
                         }
                         else
                         {
                             errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because 'THEN' is expected or incorrect spacing");
                         }
-                        if (IBASICcode[i].Contains(keyword6) == true)
+                        if (StringExtension.Contains(IBASICcode[i], keyword6) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword6, " And ");
+                            IBASICcode[i] =  Regex.Replace(IBASICcode[i], @"\b(?i)(AND)\b", " And ");
                         }
-                        if (IBASICcode[i].Contains(keyword7) == true)
+                        if (StringExtension.Contains(IBASICcode[i], keyword7) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword7, " Or ");
+                            IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)(OR)\b", " or ");
                         }
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
-                            if (IBASICcode[z].Contains(keyword2) == true || IBASICcode[z].Contains(keyword2.ToLower()) == true
-                    || IBASICcode[z].Contains("Endif") == true)
+                            if (StringExtension.Contains(IBASICcode[z], keyword2) == true)
                             {
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 5), keyword2) == true)
+                                {
+                                    IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(ENDIF)\b", "End If");
+                                }
                                 break;
                             }
-                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)
                             {
                                 errormessages.Add("Syntax error : ENDIF is expected somewhere");
                             }
                         }
                     }
                 }
-                if (IBASICcode[i].Contains(keyword2) == true )
+                if (StringExtension.Contains(IBASICcode[i], keyword3) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword2)
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword2, "End If");
-                    }
-                    else if (IBASICcode[i].Contains(keyword2.ToLower()) == true)
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword2.ToLower(), "End If");
-                    }
-                    else if (IBASICcode[i].Contains("Endif") == true)
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace("Endif", "End If");
-                    }
-
-                }
-                if (IBASICcode[i].Contains(keyword3) == true)
-                {
-                    if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword3)
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 7), keyword3) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "ElseIf ");
-                        if (IBASICcode[i].Contains(keyword5) == true)
+                        if (StringExtension.Contains(IBASICcode[i], keyword5) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword5, " Then ");
+                            IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)( THEN)\b", " Then ");
                         }
                         else
                         {
@@ -407,11 +373,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                         }
                     }
                 }
-                if (IBASICcode[i].Contains(keyword4) == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword4) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 4) == keyword4)
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 4), keyword4) == true)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword4, "Else");
+                        IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)(ELSE)\b", "Else ");
                     }
                 }
 
@@ -425,24 +391,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword3 = " DO";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true || IBASICcode[i].Contains(keyword1.ToLower()) == true
-                    || IBASICcode[i].Contains("While ") == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1 || IBASICcode[i].TrimStart().Substring(0, 6) == keyword1.ToLower()
-                        || IBASICcode[i].TrimStart().Substring(0, 6) == "While ")
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 6), keyword1) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 5), "While ");
-                        if (IBASICcode[i].Contains(keyword3) == true )
+                        if (StringExtension.Contains(IBASICcode[i], keyword3) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword3, " ");
-                        }
-                        else if (IBASICcode[i].Contains(keyword3.ToLower()) == true)
-                        {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword3.ToLower(), " ");
-                        }
-                        else if (IBASICcode[i].Contains(" Do") == true)
-                        {
-                            IBASICcode[i] = IBASICcode[i].Replace(" Do", " ");
+                            IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)(DO)\b", " ");
                         }
                         else
                         {
@@ -450,34 +406,20 @@ namespace CS_IA_Ibasic_Intouch_Re
                         }
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
-                            if (IBASICcode[z].Contains(keyword2) == true || IBASICcode[z].Contains(keyword2.ToLower()) == true
-                                || IBASICcode[z].Contains("Endwhile") == true)
+                            if (StringExtension.Contains(IBASICcode[z], keyword2) == true)
                             {
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 8), keyword2) == true)
+                                {
+                                    IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(ENDWHILE)\b", "End While");
+                                }
                                 break;
                             }
-                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)
                             {
                                 errormessages.Add("Syntax error : ENDWHILE is expected somewhere");
                             }
                         }
                     }
-                }
-                if (IBASICcode[i].Contains(keyword2) == true || IBASICcode[i].Contains(keyword2.ToLower()) == true
-                    || IBASICcode[i].Contains("Endwhile") == true)
-                {
-                    if (IBASICcode[i].TrimStart().Substring(0, 8) == keyword2 )
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword2, "End While");
-                    }
-                    else if(IBASICcode[i].TrimStart().Substring(0, 8) == keyword2.ToLower())
-                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword2.ToLower(), "End While");
-                    }
-                    else if (IBASICcode[i].TrimStart().Substring(0, 8) == "Endwhile")
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace("Endwhile", "End While");
-                    }
-
                 }
             }
         }
@@ -487,24 +429,22 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword2 = "UNTIL ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true || IBASICcode[i].Contains(keyword1.ToLower()) == true
-                    || IBASICcode[i].Contains("Repeat") == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 6) == keyword1)
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 6), keyword1) == true)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(keyword1, "Do");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "Do");
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
-                            if (IBASICcode[z].Contains(keyword2) == true || IBASICcode[z].Contains(keyword2.ToLower()) == true
-                                || IBASICcode[z].Contains("Until ") == true)
+                            if (StringExtension.Contains(IBASICcode[z], keyword2) == true)
                             {
-                                if (IBASICcode[z].TrimStart().Substring(0, 6) == keyword2)
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 6), keyword2) == true)
                                 {
                                     IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].TrimStart().Substring(0, 5), "Loop Until ");
                                 }
                                 break;
                             }
-                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)
                             {
                                 errormessages.Add("Syntax error : UNTIL or UNTIL condition is expected somewhere ");
                             }
@@ -520,11 +460,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword1 = "CONSTANT ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true || IBASICcode[i].Contains(keyword1.ToLower()) == true
-                   || IBASICcode[i].Contains("Constant ") == true )
+                if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 9) == keyword1 || IBASICcode[i].TrimStart().Substring(0, 9) == keyword1.ToLower()
-                        || IBASICcode[i].TrimStart().Substring(0, 9) == "Constant ")
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 9), keyword1) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 8), "Const ");
                     }
@@ -557,32 +495,19 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void TdataType()
         {
-            string keyword1 = "INTEGER";
-            string keyword2 = " REAL";
-            string keyword3 = "BOOLEAN";
-            string keyword4 = "CHAR";
-            string keyword5 = "STRING";
+            string[] keywords = { "INTEGER", "REAL", "BOOLEAN", "CHAR", "STRING" };
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true)
+                foreach(string keyword in keywords)
                 {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword1, " Integer");
-                }               
-                if (IBASICcode[i].Contains(keyword2) == true)
-                {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword2, " Double");
-                }
-                if (IBASICcode[i].Contains(keyword3) == true)
-                {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword3, " Boolean");
-                }
-                if (IBASICcode[i].Contains(keyword4) == true)
-                {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword4, " Char");
-                }
-                if (IBASICcode[i].Contains(keyword5) == true)
-                {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword5, " String");
+                    if (StringExtension.compare("REAL", keyword) == true)
+                    {
+                        IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)(REAL)\b", "Double");
+                    }
+                    else if (StringExtension.Contains(IBASICcode[i], keyword))
+                    {
+                        IBASICcode[i].Replace(keyword, textinfo.ToTitleCase(keyword));
+                    }
                 }
             }
 
@@ -638,25 +563,24 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword5 = "ENDCASE";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true || IBASICcode[i].Contains(keyword1.ToLower()) == true
-                    || IBASICcode[i].Contains("Case of ") == true || IBASICcode[i].Contains("Case Of ") == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 8) == keyword1 || IBASICcode[i].TrimStart().Substring(0, 8) == keyword1.ToLower()
-                       || IBASICcode[i].TrimStart().Substring(0, 8) == "Case of " || IBASICcode[i].TrimStart().Substring(0, 8) == "Case Of")
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword1) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Select Case ");
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
-                            if (IBASICcode[z].Contains(keyword5) == true || IBASICcode[i].Contains(keyword5.ToLower()) == true
-                    || IBASICcode[i].Contains("Endcase") == true)
+                            if (StringExtension.Contains(IBASICcode[z], keyword5) == true)
                             {
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 7), keyword5) == true)
+                                {
+                                    IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].TrimStart().Substring(0, 7), "End Select ");
+                                }
                                 break;
                             }
-                            if (IBASICcode[z].Contains(keyword2) == true || IBASICcode[i].Contains(keyword2.ToLower()) == true
-                    || IBASICcode[i].Contains("Case ") == true)
+                            if (StringExtension.Contains(IBASICcode[z], keyword2) == true)
                             {
-                                if (IBASICcode[z].TrimStart().Substring(0, 5) == keyword2 || IBASICcode[z].TrimStart().Substring(0, 5) == keyword2.ToLower()
-                    || IBASICcode[z].TrimStart().Substring(0, 5) == "Case ")
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 5), keyword2) == true)
                                 {
                                     IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].TrimStart().Substring(0, 4), "Case ");
                                     if (IBASICcode[z].Contains(keyword4) == true)
@@ -674,31 +598,19 @@ namespace CS_IA_Ibasic_Intouch_Re
                                 }
 
                             }
-                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword5) == false)
+                            if (StringExtension.Contains(IBASICcode[z], keyword3) == true)
+                            {
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 10), keyword3) == true)
+                                {
+                                    IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 9), "Case Else " + "\n");
+                                }
+
+                            }
+                            if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword5) == false)
                             {
                                 errormessages.Add("Syntax error : ENDCASE is expected somewhere ");
                             }
                         }
-                    }
-                }
-
-                if (IBASICcode[i].Contains(keyword3) == true || IBASICcode[i].Contains(keyword2.ToLower()) == true
-                    || IBASICcode[i].Contains("Otherwise ") == true)
-                {
-                    if (IBASICcode[i].TrimStart().Substring(0, 10) == keyword3 || IBASICcode[i].TrimStart().Substring(0, 10) == keyword3.ToLower()
-                        || IBASICcode[i].TrimStart().Substring(0, 10) == "Otherwise ")
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 9), "Case Else " + "\n");
-                    }
-
-                }
-                if (IBASICcode[i].Contains(keyword5) == true || IBASICcode[i].Contains(keyword5.ToLower()) == true
-                    || IBASICcode[i].Contains("Endcase") == true)
-                {
-                    if (IBASICcode[i].TrimStart().Substring(0, 7) == keyword5 || IBASICcode[i].TrimStart().Substring(0, 7) == keyword5.ToLower()
-                         || IBASICcode[i].TrimStart().Substring(0, 7) == "Endcase")
-                    {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "End Select ");
                     }
                 }
             }
@@ -712,28 +624,18 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword5 = "RETURNS";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true || IBASICcode[i].Contains(keyword1.ToLower()) == true
-                    || IBASICcode[i].Contains("Function ") == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 9) == keyword1 || IBASICcode[i].TrimStart().Substring(0, 9) == keyword1.ToLower()
-                       || IBASICcode[i].TrimStart().Substring(0, 9) == "Function ")
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 9), keyword1) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 8), "Function");
                         if (IBASICcode[i].Contains(keyword4) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword4, " As ");
                         }
-                        if (IBASICcode[i].Contains(keyword5) == true)
+                        if (StringExtension.Contains(IBASICcode[i], keyword5) == true)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword5, " As ");
-                        }
-                        else if (IBASICcode[i].Contains(keyword5.ToLower()) == true)
-                        {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword5.ToLower(), " As ");
-                        }
-                        else if (IBASICcode[i].Contains("Returns") == true)
-                        {
-                            IBASICcode[i] = IBASICcode[i].Replace("Returns", " As ");
+                            IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)(RETURNS)\b", " As ");
                         }
                         else
                         {
@@ -742,43 +644,24 @@ namespace CS_IA_Ibasic_Intouch_Re
                         ///Loop until ENDFUNCTION is found
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
-                            if (IBASICcode[z].Contains(keyword3) == true)
+                            if (StringExtension.Contains(IBASICcode[z], keyword3) == true)
                             {
-                                IBASICcode[z] = IBASICcode[z].Replace(keyword3, "Return ");
-                            }
-                            else if (IBASICcode[z].Contains(keyword3.ToLower()) == true)
-                            {
-                                IBASICcode[z] = IBASICcode[z].Replace(keyword3.ToLower(), " Return ");
+                                IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(RETURN)\b", textinfo.ToTitleCase(keyword3));
                             }
 
-                            if (IBASICcode[z].Contains(keyword2) == true)
+
+                            if (StringExtension.Contains(IBASICcode[z], keyword3) == true)
                             {
-                                if (IBASICcode[z].TrimStart().Substring(0, 11) == keyword2)
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 11), keyword2) == true)
                                 {
-                                    IBASICcode[z] = IBASICcode[z].Replace(keyword2, "End Function");
-                                    IBfunctionsNsub.Add(IBASICcode[z]);
-                                    IBASICcode[z] = "";
-                                    //Stop the process when ENDFUNCTION is found
-                                    break;
-                                }
-                                else if (IBASICcode[z].TrimStart().Substring(0, 11) == keyword2.ToLower())
-                                {
-                                    IBASICcode[z] = IBASICcode[z].Replace(keyword2.ToLower(), "End Function");
-                                    IBfunctionsNsub.Add(IBASICcode[z]);
-                                    IBASICcode[z] = "";
-                                    //Stop the process when ENDFUNCTION is found
-                                    break;
-                                }
-                                else if (IBASICcode[z].TrimStart().Substring(0, 11) == "Endfunction")
-                                {
-                                    IBASICcode[z] = IBASICcode[z].Replace("Endfunction", "End Function");
+                                    IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(ENDFUNCTION)\b", "End Function");
                                     IBfunctionsNsub.Add(IBASICcode[z]);
                                     IBASICcode[z] = "";
                                     //Stop the process when ENDFUNCTION is found
                                     break;
                                 }
                             }
-                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)
                             {
                                 errormessages.Add(" ENDFUNCTION is expected somewhere");
                             }
@@ -798,11 +681,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword3 = ":";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword1) == true || IBASICcode[i].Contains(keyword1.ToLower()) == true
-                    || IBASICcode[i].Contains("Procedure ") == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 10) == keyword1 || IBASICcode[i].TrimStart().Substring(0, 10) == keyword1.ToLower()
-                       || IBASICcode[i].TrimStart().Substring(0, 10) == "Procedure ")
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 10), keyword1) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 9), "Sub ");
                         if (IBASICcode[i].Contains(keyword3) == true)
@@ -813,11 +694,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
 
-                            if (IBASICcode[z].Contains(keyword2) == true || IBASICcode[z].Contains(keyword2.ToLower()) == true
-                    || IBASICcode[z].Contains("Endprocedure") == true || IBASICcode[z].Contains("EndProcedure") == true)
+                            if (StringExtension.Contains(IBASICcode[z], keyword2) == true)
                             {
-                                if (IBASICcode[z].TrimStart().Substring(0, 12) == keyword2 || IBASICcode[z].TrimStart().Substring(0, 12) == keyword2.ToLower()
-                                    || IBASICcode[z].TrimStart().Substring(0, 12) == "Endprocedure" || IBASICcode[z].TrimStart().Substring(0, 12) == "EndProcedure")
+                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 12), keyword2) == true)
                                 {
                                     IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].TrimStart().Substring(0, 12), "End Sub");
                                     IBfunctionsNsub.Add(IBASICcode[z]);
@@ -825,7 +704,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                     break;
                                 }
                             }
-                            if (z == (IBASICcode.Length - 1) && IBASICcode[z].Contains(keyword2) == false)
+                            if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)
                             {
                                 errormessages.Add(" ENDPROCEDURE is expected somewhere");
                             }
@@ -841,9 +720,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword = "CALL ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword) == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword) == true)
                 {
-                    if (IBASICcode[i].TrimStart().Substring(0, 5) == keyword)
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 5), keyword) == true)
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 4), "Call ");
                     }
@@ -857,15 +736,15 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword2 = "FALSE";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-                if (IBASICcode[i].Contains(keyword) == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword) == true)
                 {
 
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword, "True");
+                    IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)(TRUE)\b", "True");
                 }
-                if (IBASICcode[i].Contains(keyword2) == true)
+                if (StringExtension.Contains(IBASICcode[i], keyword2) == true)
                 {
 
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword2, "False");
+                    IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)(FALSE)\b", "False");
                 }
             }
         }

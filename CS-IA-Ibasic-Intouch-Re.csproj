@@ -129,6 +129,7 @@
     <Compile Include="SaveToDriveForm.Designer.cs">
       <DependentUpon>SaveToDriveForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="StringExtension.cs" />
     <EmbeddedResource Include="IBASICForm.resx">
       <DependentUpon>IBASICForm.cs</DependentUpon>
     </EmbeddedResource>
