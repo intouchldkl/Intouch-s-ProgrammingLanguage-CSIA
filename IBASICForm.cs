@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
@@ -17,6 +18,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         // To keep track of where the current textBox is as the tab changes
         RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
+        int lineNumber;
         public IBASICForm()
         {
             InitializeComponent();
@@ -33,7 +35,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            syntaxhighlight();
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
 
 
@@ -226,7 +227,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void currentRtb_TextChanged(object sender, EventArgs e)
         {            
                 AddLineNumbers();
-            syntaxhighlight();
+                syntaxhighlight();            
             LineNumberBox.ZoomFactor = ZoomBar.Value;
         }
         private void CurrentRtb_VScroll(object sender, EventArgs e)
@@ -257,76 +258,82 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void syntaxhighlight()
         {
+            int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine();
+                lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
+            if (currentRtb.Text == "")
+            {
+                return;
+            }
             string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
-            MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Text, Bkeywords);
+            MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Bkeywords);
             string Gkeywords = @"\b(?i)(OUTPUT|INPUT)\b";
-            MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Text, Gkeywords);
+            MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Gkeywords);
             string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
-            MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Text, Pkeywords);
+            MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Pkeywords);
             string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|RANDOM|ROUND)\b";
-            MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Text, Ykeywords);
+            MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Ykeywords);
             // getting types/classes from the text 
             string types = @"\b(?i)(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
-            MatchCollection typeMatches = Regex.Matches(currentRtb.Text, types);
+            MatchCollection typeMatches = Regex.Matches(currentRtb.Lines[lineNumber], types);
 
             // getting comments (inline or multiline)
-            string comments = @"(\/.+?$|\'.+?$)";
-            MatchCollection commentMatches = Regex.Matches(currentRtb.Text, comments, RegexOptions.Multiline);
+            string comments = @"(\/.+?$|'.+?$)";
+            MatchCollection commentMatches = Regex.Matches(currentRtb.Lines[lineNumber], comments, RegexOptions.Multiline);
 
             // getting strings
             string strings = "\".+?\"";
-            MatchCollection stringMatches = Regex.Matches(currentRtb.Text, strings);
+            MatchCollection stringMatches = Regex.Matches(currentRtb.Lines[lineNumber], strings);
 
             // saving the original caret position + forecolor
             int originalIndex = currentRtb.SelectionStart;
             int originalLength = currentRtb.SelectionLength;
             Color originalColor = Color.Black;
             // removes any previous highlighting (so modified words won't remain highlighted)
-            currentRtb.SelectionStart = 0;
-            currentRtb.SelectionLength = currentRtb.Text.Length;
+            currentRtb.SelectionStart = cursorPosition;
+            currentRtb.SelectionLength = currentRtb.Lines[lineNumber].Length;
             currentRtb.SelectionColor = originalColor;
             // scanning...
             foreach (Match m in BkeywordMatches)
             {
-                currentRtb.SelectionStart = m.Index;
-                currentRtb.SelectionLength = m.Length;
-                currentRtb.SelectionColor = Color.Blue;
+                currentRtb.SelectionStart = m.Index + cursorPosition;
+                currentRtb.SelectionLength = m.Length ;
+                currentRtb.SelectionColor = Color.Blue ;
             }
             foreach (Match m in GkeywordMatches)
             {
-                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionStart = m.Index + cursorPosition;
                 currentRtb.SelectionLength = m.Length;
                 currentRtb.SelectionColor = Color.DarkCyan;
             }
             foreach (Match m in PkeywordMatches)
             {
-                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionStart = m.Index + cursorPosition;
                 currentRtb.SelectionLength = m.Length;
                 currentRtb.SelectionColor = Color.Purple;
             }
             foreach (Match m in YkeywordMatches)
             {
-                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionStart = m.Index + cursorPosition;
                 currentRtb.SelectionLength = m.Length;
                 currentRtb.SelectionColor = Color.DarkGoldenrod;
             }
 
             foreach (Match m in typeMatches)
             {
-                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionStart = m.Index + cursorPosition;
                 currentRtb.SelectionLength = m.Length;
                 currentRtb.SelectionColor = Color.Orange;
             }
             foreach (Match m in commentMatches)
             {
-                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionStart = m.Index + cursorPosition;
                 currentRtb.SelectionLength = m.Length;
                 currentRtb.SelectionColor = Color.Green;
             }
 
             foreach (Match m in stringMatches)
             {
-                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionStart = m.Index + cursorPosition;
                 currentRtb.SelectionLength = m.Length;
                 currentRtb.SelectionColor = Color.Brown;
             }
@@ -337,7 +344,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.SelectionColor = originalColor;
             // giving back the focus
             currentRtb.Focus();
-
         }
         private void initialliseAutoCompleteMenuItem()
         {
@@ -384,8 +390,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             autocompleteMenu1.AddItem("SUBSTRING()");
             autocompleteMenu1.AddItem("ROUND()");
             autocompleteMenu1.AddItem("RANDOM()");
+            autocompleteMenu1.AddItem("ARRAY[]");
         }
+   
 
-    
     }
 }
