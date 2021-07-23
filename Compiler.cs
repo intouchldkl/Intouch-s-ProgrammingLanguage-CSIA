@@ -40,8 +40,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 foreach (CompilerError CompErr in results.Errors)
                 {
-                    ErrorMessage = ErrorMessage + " VBcompile error: VBcompiler cannot compile this code may be because of " +
-                         CompErr.ErrorText + "\n";
+                    string[] VBmsg = CompErr.ErrorText.Split('.');
+ 
+                    ErrorMessage = ErrorMessage + " VBcompile error:  may be because of " +
+                         VBmsg[0] + "\n";
 
                 }
             }
