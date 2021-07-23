@@ -53,10 +53,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
         {
- 
             currentRtb.ZoomFactor = ZoomBar.Value;
             LineNumberBox.ZoomFactor = ZoomBar.Value;
-
         }
         private void New_Click(object sender, EventArgs e)
         {
@@ -200,6 +198,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void AddLineNumbers()
         {
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+            RichTextBox buffer = new RichTextBox();           
             // create & set Point pt to (0,0)    
             Point pt = new Point(0, 0);
             // get First Index & First Line from richTextBox1    
@@ -212,15 +211,18 @@ namespace CS_IA_Ibasic_Intouch_Re
             int Last_Index =currentRtb.GetCharIndexFromPosition(pt);
             int Last_Line = currentRtb.GetLineFromCharIndex(Last_Index);
             // set Center alignment to LineNumberTextBox    
-            LineNumberBox.SelectionAlignment = HorizontalAlignment.Center;
+            buffer.SelectionAlignment = HorizontalAlignment.Center;
             // set LineNumberTextBox text to null & width to getWidth() function value    
-            LineNumberBox.Text = "";
-            LineNumberBox.Width = getWidth();
+            buffer.Text = "";
+            buffer.Width = getWidth();
             // now add each line number to LineNumberTextBox upto last line    
             for (int i = First_Line; i <= Last_Line + 2; i++)
             {
-                LineNumberBox.Text += i + 1 + "\n";
+                buffer.Text += i + 1 + "\n";
             }
+            LineNumberBox.SelectionAlignment = HorizontalAlignment.Center;
+            LineNumberBox.Width = getWidth();
+            LineNumberBox.Text = buffer.Text;
             LineNumberBox.ZoomFactor = ZoomBar.Value;
         }
 
@@ -260,10 +262,12 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine();
                 lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
+
             if (currentRtb.Text == "")
             {
                 return;
             }
+            // getting keywords from the text
             string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Bkeywords);
             string Gkeywords = @"\b(?i)(OUTPUT|INPUT)\b";
@@ -342,8 +346,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.SelectionStart = originalIndex;
             currentRtb.SelectionLength = originalLength;
             currentRtb.SelectionColor = originalColor;
-            // giving back the focus
-            currentRtb.Focus();
         }
         private void initialliseAutoCompleteMenuItem()
         {
@@ -392,7 +394,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             autocompleteMenu1.AddItem("RANDOM()");
             autocompleteMenu1.AddItem("ARRAY[]");
         }
-   
+
+
+
 
     }
 }
