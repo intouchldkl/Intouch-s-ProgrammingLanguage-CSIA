@@ -765,7 +765,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void TranslateAll()
         {
-            Tcomment();
             TdataType();
             TtrueNfalse();
             TvarDeclaration();
@@ -784,6 +783,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             Tmod();
             Tcallprocedure();
             Tcasestatement();
+            Tcomment();
             Tfunction();
             Tprocedure();
             if (errormessages != null)
