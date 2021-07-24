@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using CefSharp.WinForms;
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
@@ -19,9 +20,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
         int lineNumber;
+        ChromiumWebBrowser browser;
         public IBASICForm()
         {
             InitializeComponent();
+            browser = new ChromiumWebBrowser("https://inn607.wixsite.com/ibasictutorials-1 ");
+            browser.Dock = DockStyle.Fill;
+            splitContainer2.Panel2.Controls.Add(browser);
             initialliseAutoCompleteMenuItem();
             RichTextBox RTB = new RichTextBox();
             tabPage1.Controls.Add(RTB);
