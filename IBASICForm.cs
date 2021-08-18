@@ -239,6 +239,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                 AddLineNumbers();
                 syntaxhighlight();            
             LineNumberBox.ZoomFactor = ZoomBar.Value;
+            if(tabControl1.SelectedTab.Text.Last() != '*')
+            {
+                tabControl1.SelectedTab.Text += '*';
+            }
         }
         private void CurrentRtb_VScroll(object sender, EventArgs e)
         {
