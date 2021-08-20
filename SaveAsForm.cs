@@ -33,7 +33,14 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void savetoLocalD()
         {
-            saveFileDialog1.FileName = tabpage.Text.Remove(tabpage.Text.Length-1);
+            if(tabpage.Text.Last() == '*')
+            {
+                saveFileDialog1.FileName = tabpage.Text.Remove(tabpage.Text.Length - 1);
+            }
+            else
+            {
+                saveFileDialog1.FileName = tabpage.Text;
+            }
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 tabpage.Text = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);

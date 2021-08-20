@@ -20,7 +20,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             InitializeComponent();
             this.currentRtb = IBASICForm.Instance.getCurrentRtb();
             this.tabPage = IBASICForm.Instance.getCurrentTabpage();
-            FileNameBox.Text = tabPage.Text.Remove(tabPage.Text.Length - 1); 
+            if(tabPage.Text.Last() == '*')
+            {
+                FileNameBox.Text = tabPage.Text.Remove(tabPage.Text.Length - 1);
+            }
+            else
+            {
+                FileNameBox.Text = tabPage.Text;
+            }
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
