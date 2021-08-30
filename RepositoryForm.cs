@@ -35,9 +35,13 @@ namespace CS_IA_Ibasic_Intouch_Re
                     foreach (var FileName in displayFileNames)
                     {
                         string fileName = FileName.Name;
+                        if (fileName.Contains(".txt") == true)
+                        {
+                            fileName = fileName.Replace(".txt", "");
+                        }                   
                         var LVI = new ListViewItem(fileName);
                         FilelistView.Items.Add(LVI);
-                        LVI.Tag = FileName;
+                        LVI.Tag = FileName.Name;
                     }
 
                 }
@@ -58,11 +62,15 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void displayVersionFiles()
         {
-            string FileName = FilelistView.SelectedItems[0].Text;
+            string FileName = (string)FilelistView.SelectedItems[0].Tag ;
             var AllVersionFiles = GGDrive.Instance.getVersionFiles(FileName); 
             int i = AllVersionFiles.Count;
             foreach (var version in AllVersionFiles)
             {
+                if(FileName.Contains(".txt") == true)
+                {
+                    FileName = FileName.Replace(".txt", "");
+                }
                 string time = version.createdTime.ToString();
                 var row = new string[] { "Version " + i, time };
                 i--;

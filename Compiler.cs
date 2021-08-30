@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using Microsoft.VisualBasic;
+using System.IO;
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
@@ -27,21 +28,28 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         public void launchEXE()
         {
+            Process myprocess = new Process();
             output = "out.exe";
             ///Make sure to generate an EXE, not a DLL
             parameters.GenerateExecutable = true;
             parameters.OutputAssembly = output;
-             results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
+            parameters.TempFiles.KeepFiles = true;
+            parameters.TempFiles.AddFile(output, true);
+            results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
             if (results.Errors.Count == 0)
             {
-                Process.Start(output);
+                myprocess.StartInfo.FileName = output;
+                myprocess.Start();
+                myprocess.WaitForExit(1000);
+                IBASICForm.Instance.CaptureMyScreen();
+ 
             }
             else
             {
                 foreach (CompilerError CompErr in results.Errors)
                 {
                     string[] VBmsg = CompErr.ErrorText.Split('.');
- 
+
                     ErrorMessage = ErrorMessage + " VBcompile error:  may be because of " +
                          VBmsg[0] + "\n";
 
@@ -50,7 +58,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         }
         public string getErrorMessages()
-        { 
+        {
             return ErrorMessage;
         }
 

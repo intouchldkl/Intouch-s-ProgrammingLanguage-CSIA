@@ -143,6 +143,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // RUN
             // 
             this.RUN.Name = "RUN";
+            this.RUN.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.RUN.Size = new System.Drawing.Size(43, 20);
             this.RUN.Text = "RUN";
             this.RUN.Click += new System.EventHandler(this.Run_Click);

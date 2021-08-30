@@ -44,7 +44,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 tabpage.Text = Path.GetFileNameWithoutExtension(saveFileDialog1.FileName);
-                StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
+                StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName + ".txt");
                 CodeToBeSaved.Write(currentRtb.Text);
                 CodeToBeSaved.Close();
                 Close();

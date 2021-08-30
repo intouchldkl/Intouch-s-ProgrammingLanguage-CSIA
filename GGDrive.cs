@@ -223,18 +223,17 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public bool checkForIBasicFolder()
         {
-            Authentication();
+            ///Authentication();
             FilesResource.ListRequest listRequest = Service.Files.List();
             listRequest.Fields = "nextPageToken, files(id, name)";
 
             // List files.
-            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute()
-                .Files;
+            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
             if (files != null && files.Count > 0)
             {
                 foreach (var file in files)
                 {
-                    if(file.Name == "IBASIC-FOLDER")
+                    if(file.Name == "IBASIC--FOLDER")
                     {
                         IBASICfolderid = file.Id;
                         return true;
@@ -248,13 +247,12 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public bool checkForPublishFolder()
         {
-            Authentication();
+            ///Authentication();
             FilesResource.ListRequest listRequest = Service.Files.List();
             listRequest.Fields = "nextPageToken, files(id, name)";
 
             // List files.
-            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute()
-                .Files;
+            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
             if (files != null && files.Count > 0)
             {
                 foreach (var file in files)

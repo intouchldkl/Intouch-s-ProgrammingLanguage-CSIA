@@ -50,12 +50,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
             saveFileDialog1.FileName = FileNameBox.Text;
-            StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
+            StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName +".txt");
             CodeToBeSaved.Write(currentRtb.Text);
             CodeToBeSaved.Close();
             Close();
             tabPage.Text = saveFileDialog1.FileName;
-            GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
+            GGDrive.Instance.Upload(saveFileDialog1.FileName+".txt", GGDrive.Instance.getIBASICfolderId());
         }
     }
 }

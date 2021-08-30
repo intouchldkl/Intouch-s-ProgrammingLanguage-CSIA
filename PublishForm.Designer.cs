@@ -35,9 +35,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.label2 = new System.Windows.Forms.Label();
             this.OutputLabel = new System.Windows.Forms.Label();
             this.OutputBut = new System.Windows.Forms.Button();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.PublishBut = new System.Windows.Forms.Button();
             this.FileNameBox = new System.Windows.Forms.TextBox();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
@@ -83,9 +83,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.OutputBut.UseVisualStyleBackColor = true;
             this.OutputBut.Click += new System.EventHandler(this.OutputBut_Click);
             // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "AddIcon.jpg");
+            // 
             // PublishBut
             // 
-            this.PublishBut.Enabled = false;
             this.PublishBut.Font = new System.Drawing.Font("Constantia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PublishBut.Location = new System.Drawing.Point(564, 311);
             this.PublishBut.Name = "PublishBut";
@@ -102,12 +107,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.FileNameBox.Name = "FileNameBox";
             this.FileNameBox.Size = new System.Drawing.Size(276, 29);
             this.FileNameBox.TabIndex = 5;
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "AddIcon.jpg");
             // 
             // openFileDialog1
             // 

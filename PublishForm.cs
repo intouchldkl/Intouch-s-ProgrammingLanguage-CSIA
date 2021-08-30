@@ -16,6 +16,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         RichTextBox currentRtb;
         TabPage tabPage;
         string outputFileName;
+        bool needAutoOutput = true;
         public PublishForm()
         {
             InitializeComponent();
@@ -37,7 +38,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {          
                 outputFileName = openFileDialog1.FileName;
-                PublishBut.Enabled = true;
+                needAutoOutput = false;
             }
         }
 
@@ -68,13 +69,20 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
             saveFileDialog1.FileName = FileNameBox.Text;
-            StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName);
+            StreamWriter CodeToBeSaved = new StreamWriter(saveFileDialog1.FileName+".txt");
             CodeToBeSaved.Write(currentRtb.Text);
             CodeToBeSaved.Close();
             tabPage.Text = saveFileDialog1.FileName;
-            GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getIBASICfolderId());
-            GGDrive.Instance.Upload(saveFileDialog1.FileName, GGDrive.Instance.getPublishfolderId());
-            GGDrive.Instance.Upload(outputFileName, GGDrive.Instance.getPublishfolderId());
+            GGDrive.Instance.Upload(saveFileDialog1.FileName+".txt", GGDrive.Instance.getIBASICfolderId());
+            GGDrive.Instance.Upload(saveFileDialog1.FileName+".txt", GGDrive.Instance.getPublishfolderId());
+            if(needAutoOutput == false)
+            {
+                GGDrive.Instance.Upload(outputFileName, GGDrive.Instance.getPublishfolderId());
+            }
+            else
+            {
+                GGDrive.Instance.Upload("Output.jpg", GGDrive.Instance.getPublishfolderId());
+            }
             
         }
     }

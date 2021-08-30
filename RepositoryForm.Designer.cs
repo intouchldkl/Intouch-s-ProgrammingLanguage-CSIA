@@ -131,6 +131,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.VersionListView.Name = "VersionListView";
             this.VersionListView.Size = new System.Drawing.Size(497, 339);
             this.VersionListView.TabIndex = 2;
+            this.VersionListView.TileSize = new System.Drawing.Size(490, 36);
             this.VersionListView.UseCompatibleStateImageBehavior = false;
             this.VersionListView.View = System.Windows.Forms.View.Tile;
             this.VersionListView.Click += new System.EventHandler(this.VersionListView_Click);
