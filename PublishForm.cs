@@ -81,7 +81,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             else
             {
-                GGDrive.Instance.Upload("Output.jpg", GGDrive.Instance.getPublishfolderId());
+                GGDrive.Instance.Upload("out.txt", GGDrive.Instance.getPublishfolderId());
             }
             
         }

@@ -33,16 +33,21 @@ namespace CS_IA_Ibasic_Intouch_Re
             ///Make sure to generate an EXE, not a DLL
             parameters.GenerateExecutable = true;
             parameters.OutputAssembly = output;
-            parameters.TempFiles.KeepFiles = true;
-            parameters.TempFiles.AddFile(output, true);
             results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
             if (results.Errors.Count == 0)
-            {
+            {         
                 myprocess.StartInfo.FileName = output;
+                myprocess.StartInfo.UseShellExecute = false;
+                myprocess.StartInfo.RedirectStandardOutput = true;
                 myprocess.Start();
-                myprocess.WaitForExit(1000);
+                myprocess.WaitForExit();
+                string outputtext = myprocess.StandardOutput.ReadToEnd();
+                StreamWriter sw = new StreamWriter("out.txt");
+                sw.Write(outputtext);
+                sw.Close();
                 IBASICForm.Instance.CaptureMyScreen();
- 
+              
+
             }
             else
             {

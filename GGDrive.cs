@@ -201,11 +201,13 @@ namespace CS_IA_Ibasic_Intouch_Re
             listRequest.Fields = "nextPageToken, files(id, name,version,createdTime)";
             ///Make sure it retrieves from the right folder
             listRequest.Q = listRequest.Q = ("(" + "'" + IBASICfolderid + "'" + " in parents" + ")" + "");
+            listRequest.PageSize = 100;
+            var result = listRequest.Execute();
             // List files.
-            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
+            IList<Google.Apis.Drive.v3.Data.File> files = result.Files;
 
             GGDriveFile[] driveFiles = new GGDriveFile[files.Count];
-            if (files != null && files.Count > 0)
+            while (files != null && files.Count > 0)
             {
                 for (int i = 0; i < files.Count; i++)
                 {
@@ -218,6 +220,19 @@ namespace CS_IA_Ibasic_Intouch_Re
                         createdTime = file.CreatedTime
                     };
                 }
+                if (!string.IsNullOrWhiteSpace(result.NextPageToken))
+                {
+                    listRequest = Service.Files.List();
+                    listRequest.PageToken = result.NextPageToken;
+                    listRequest.PageSize = 100;
+                    listRequest.Fields = "nextPageToken, files(id, name,version,createdTime)";
+                    result = listRequest.Execute();
+                    files = result.Files;
+                }
+                else
+                {
+                    break;
+                }
             }
             return driveFiles;
         }
@@ -226,10 +241,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             ///Authentication();
             FilesResource.ListRequest listRequest = Service.Files.List();
             listRequest.Fields = "nextPageToken, files(id, name)";
-
+            listRequest.PageSize = 100;
+            var result = listRequest.Execute();
             // List files.
-            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
-            if (files != null && files.Count > 0)
+            IList<Google.Apis.Drive.v3.Data.File> files = result.Files;
+            while (files != null && files.Count > 0)
             {
                 foreach (var file in files)
                 {
@@ -241,6 +257,19 @@ namespace CS_IA_Ibasic_Intouch_Re
                     }
                 
                 }
+                if (!string.IsNullOrWhiteSpace(result.NextPageToken))
+                {
+                    listRequest = Service.Files.List();
+                    listRequest.PageToken = result.NextPageToken;
+                    listRequest.PageSize = 100;
+                    listRequest.Fields = "nextPageToken, files(id, name)";
+                    result = listRequest.Execute();
+                    files = result.Files;
+                }
+                else
+                {
+                    break;
+                }
             }
 
             return false;
@@ -250,23 +279,38 @@ namespace CS_IA_Ibasic_Intouch_Re
             ///Authentication();
             FilesResource.ListRequest listRequest = Service.Files.List();
             listRequest.Fields = "nextPageToken, files(id, name)";
+            listRequest.PageSize = 100;
 
+            var result = listRequest.Execute();
             // List files.
-            IList<Google.Apis.Drive.v3.Data.File> files = listRequest.Execute().Files;
-            if (files != null && files.Count > 0)
+            IList<Google.Apis.Drive.v3.Data.File> files = result.Files;
+            while (files != null && files.Count > 0)
             {
                 foreach (var file in files)
                 {
                     if (file.Name == "IBASIC-FOLDER-PUBLISH")
                     {
-                        Publishfolderid = file.Id;
+                        IBASICfolderid = file.Id;
                         return true;
 
                     }
 
                 }
+                if (!string.IsNullOrWhiteSpace(result.NextPageToken))
+                {
+                    listRequest = Service.Files.List();
+                    listRequest.PageToken = result.NextPageToken;
+                    listRequest.PageSize = 100;
+                    listRequest.Fields = "nextPageToken, files(id, name)";
+                    result = listRequest.Execute();
+                    files = result.Files;
+                }
+                else
+                {
+                    break;
+                }
             }
-
+            
             return false;
         }
 
