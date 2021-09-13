@@ -42,6 +42,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                         var LVI = new ListViewItem(fileName);
                         FilelistView.Items.Add(LVI);
                         LVI.Tag = FileName.Name;
+                 //       LVI.Tag = FileName.Id;
                     }
 
                 }
@@ -89,7 +90,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void downloadFile()
         {
-            GGDriveFile GFlie = (GGDriveFile)FilelistView.SelectedItems[0].Tag;
+            GGDriveFile GFlie = (GGDriveFile)VersionListView.SelectedItems[0].Tag;
             string fileId = GFlie.Id;
             openFileDialog1.FileName = GGDrive.Instance.DownloadGoogleFile(fileId);
             IBASICForm.Instance.createNewTabPage(openFileDialog1.FileName);

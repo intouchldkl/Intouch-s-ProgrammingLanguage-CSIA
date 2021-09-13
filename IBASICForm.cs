@@ -21,7 +21,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
         int lineNumber;
-        ChromiumWebBrowser browser;
+        ChromiumWebBrowser browser ;
         string outname;
         public IBASICForm()
         {
@@ -288,7 +288,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // getting keywords from the text
             string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Bkeywords);
-            string Gkeywords = @"\b(?i)(OUTPUT|INPUT)\b";
+            string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE)\b";
             MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Gkeywords);
             string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
             MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Pkeywords);
@@ -368,6 +368,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void initialliseAutoCompleteMenuItem()
         {
             autocompleteMenu1.AddItem("OUTPUT ");
+            autocompleteMenu1.AddItem("OUTPUTLINE ");
             autocompleteMenu1.AddItem("INPUT ");
             autocompleteMenu1.AddItem("DECLARE ");
             autocompleteMenu1.AddItem("STRING");
@@ -425,57 +426,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-        public void CaptureMyScreen()
-
-        {
-
-            try
-
-            {
-
-                //Creating a new Bitmap object
-
-                Bitmap captureBitmap = new Bitmap(1024, 768, PixelFormat.Format32bppArgb);
-
-
-                //Bitmap captureBitmap = new Bitmap(int width, int height, PixelFormat);
-
-                //Creating a Rectangle object which will  
-
-                //capture our Current Screen
-
-                Rectangle captureRectangle = Screen.AllScreens[0].Bounds;
-
-
-
-                //Creating a New Graphics Object
-
-                Graphics captureGraphics = Graphics.FromImage(captureBitmap);
-
-
-
-                //Copying Image from The Screen
-
-                captureGraphics.CopyFromScreen(captureRectangle.Left, captureRectangle.Top, 0, 0, captureRectangle.Size);
-
-
-
-                //Saving the Image File (I am here Saving it in My E drive).
-
-                captureBitmap.Save("Output.jpg", ImageFormat.Jpeg);
-
-
-            }
-
-            catch (Exception ex)
-
-            {
-
-                MessageBox.Show(ex.Message);
-
-            }
-
-        }
+     
 
     }
 }

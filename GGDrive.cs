@@ -290,7 +290,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (file.Name == "IBASIC-FOLDER-PUBLISH")
                     {
-                        IBASICfolderid = file.Id;
+                        Publishfolderid = file.Id;
                         return true;
 
                     }

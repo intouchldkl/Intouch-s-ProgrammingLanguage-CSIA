@@ -12,7 +12,8 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         public static bool compare(string value1 , string value2)
         {
-            return string.Compare(value1.ToLower(), value2.ToLower()) >= 0;
+            int result = string.Compare(value1.ToLower(), value2.ToLower());
+            return result == 0;
         }
         public static bool Contains(string source, string toCheck)
         {
