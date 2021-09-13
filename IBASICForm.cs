@@ -292,7 +292,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Gkeywords);
             string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
             MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Pkeywords);
-            string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|RANDOM|ROUND)\b";
+            string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|RANDOM|ROUND|CONVERTTOSTRING|GETRANDOMNUMBER)\b";
             MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Ykeywords);
             // getting types/classes from the text 
             string types = @"\b(?i)(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
@@ -410,8 +410,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             autocompleteMenu1.AddItem("LENGTH()");
             autocompleteMenu1.AddItem("SUBSTRING()");
             autocompleteMenu1.AddItem("ROUND()");
-            autocompleteMenu1.AddItem("RANDOM()");
+            autocompleteMenu1.AddItem("GETRANDOMNUMBER()");
             autocompleteMenu1.AddItem("ARRAY[]");
+            autocompleteMenu1.AddItem("CONVERTTOSTRING()");
         }
 
         public bool isLogin()

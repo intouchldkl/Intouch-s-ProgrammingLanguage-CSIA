@@ -29,9 +29,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         private const string endSubMain = "End Sub";
         private const string endModule = "End Module";
         private const string endmsg = "Press any key to continue";
-        private const string VBrandomNFunction = "Function getRandomNumber(min As Integer, max As Integer)" + "\n" + "Dim  random As New Random()" + "\n" + "Return random.Next(min,max)" + "\n" + "End Function";
-        private List<string> needconversionvar = new List<string>();
-        private List<string> arrayneedconversionvar = new List<string>();
+        private const string VBrandomNFunction = "Function GETRANDOMNUMBER(min As Integer, max As Integer)" + "\n" + "Dim  random As New Random()" + "\n" + "Return random.Next(min,max)" + "\n" + "End Function";
+        private const string VBConvertToStringFunction = "Function CONVERTTOSTRING(s As Integer)" + "\n" + "Return s.ToString" + "\n" + "End Function";
+        private const string VBConvertToStringFunction2 = "Function CONVERTTOSTRING(s As Boolean)" + "\n" + "Return s.ToString" + "\n" + "End Function";
+        private const string VBConvertToStringFunction3 = "Function CONVERTTOSTRING(s As Double)" + "\n" + "Return s.ToString" + "\n" + "End Function";
+
        
 
         public IBASICtranslator(string[] IBASICcode)
@@ -49,7 +51,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 6), "Console.Write( ");
                         IBASICcode[i] = IBASICcode[i] + ")";
-                        IBASICcode[i] = convertVarTostring(IBASICcode[i]);
+ 
                     }
                 }
 
@@ -66,7 +68,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 10), "Console.WriteLine( ");
                         IBASICcode[i] = IBASICcode[i] + ")";
-                        IBASICcode[i] = convertVarTostring(IBASICcode[i]);
+
                     }
                 }
 
@@ -111,8 +113,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Dim ");
                         string line = IBASICcode[i];
 
-                        string[] datatype = line.Split(':');
-                        string name = datatype[0].Substring(3);
+  
                         if (IBASICcode[i].Contains(keyword2) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
@@ -122,7 +123,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                             errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because ':' is missing ");
                         }
 
-                        addVartoList(name.Trim(), datatype[1].Trim());
+              
                     }
 
 
@@ -178,7 +179,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                         {
                                             IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + types[1];
                                             arrayvar.Add(variableName);
-                                            addarrayVartoList(variableName.Trim(), types[1].Trim());
+                      
                                         }
                                         else
                                         {
@@ -252,7 +253,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                             {
                                                 IBASICcode[i] = "Dim " + variableName + "(" + index1 + ", " + index2 + ")" + " As " + types[1];
                                                 arrayvar.Add(variableName);
-                                                addarrayVartoList(variableName.Trim(), types[1].Trim());
+                           
                                             }
                                             else
                                             {
@@ -852,6 +853,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             Translatedcode = Translatedcode + "\n" + VBsubstringfunctionOVL;
             Translatedcode = Translatedcode + "\n" + VBroundfunction;
             Translatedcode = Translatedcode + "\n" + VBrandomNFunction;
+            Translatedcode = Translatedcode + "\n" + VBConvertToStringFunction;
+            Translatedcode = Translatedcode + "\n" + VBConvertToStringFunction2;
+            Translatedcode = Translatedcode + "\n" + VBConvertToStringFunction3;
             foreach (string line in IBfunctionsNsub)
             {
                 Translatedcode = Translatedcode + "\n" + line;
@@ -867,53 +871,11 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             return errmsg;
         }
-        public void addVartoList(string var,string datatype)
-        {
-            if(datatype == "INTEGER" || datatype == "DOUBLE" || datatype == "BOOLEAN")
-            {
-                needconversionvar.Add(var);
-            }
-         
-        }
-        public void addarrayVartoList(string var, string datatype)
-        {
-            if (datatype == "INTEGER" || datatype == "DOUBLE" || datatype == "BOOLEAN")
-            {
-                arrayneedconversionvar.Add(var);
-            }
 
-        }
+       
 
-        public string convertVarTostring(string line)
-        {
-            foreach(string var in needconversionvar)
-            {
-                string vname =   var +" ";
-                string vname2 =   var +"+";
-                string vname3 =   " " +var;
-                string vname4 =   "+" +var;
-                if (line.Contains(vname) == true || line.Contains(vname2) || line.Contains(vname3) || line.Contains(vname4))
-                {
-                   line = line.Replace(var, var + ".ToString");
-                }
-            }
-            return line;
-        }
-        public string convertarrayVarTostring(string line)
-        {
-            foreach (string var in needconversionvar)
-            {
-                string vname = var + " ";
-                string vname2 = var + "+";
-                string vname3 = " " + var;
-                string vname4 = "+" + var;
-                if (line.Contains(vname) == true || line.Contains(vname2) || line.Contains(vname3) || line.Contains(vname4))
-                {
-                    line = line.Replace(var, var + ".ToString");
-                }
-            }
-            return line;
-        }
+       
+       
     }
 }
 
