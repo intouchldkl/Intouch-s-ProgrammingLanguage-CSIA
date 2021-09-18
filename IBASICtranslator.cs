@@ -25,7 +25,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         private const string VBsubstringfunction = "Function SUBSTRING(s As String, i As Integer, z As Integer)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Substring(i, z)" + "\n" + "End Function";
         private const string VBsubstringfunctionOVL = "Function SUBSTRING(s As String, i As Integer)" + "\n" + "Dim ss As String = s" + "\n" + "Return ss.Substring(i)" + "\n" + "End Function";
         private const string VBroundfunction = "Function ROUND(d As Double, place As Integer)" + "\n" + "Return Math.Round(d, place)" + "\n" + "End Function";
-        private const string Header = "Imports System" + "\n" + "Module Program" + "\n" + "Sub Main(args As String())" + "\n";
+        private const string Header = "Imports System" + "\n" + "Module Program" + "\n" ;
+        private const string submain = "Sub Main(args As String())" + "\n";
         private const string endSubMain = "End Sub";
         private const string endModule = "End Module";
         private const string endmsg = "Press any key to continue";
@@ -33,7 +34,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private const string VBConvertToStringFunction = "Function CONVERTTOSTRING(s As Integer)" + "\n" + "Return s.ToString" + "\n" + "End Function";
         private const string VBConvertToStringFunction2 = "Function CONVERTTOSTRING(s As Boolean)" + "\n" + "Return s.ToString" + "\n" + "End Function";
         private const string VBConvertToStringFunction3 = "Function CONVERTTOSTRING(s As Double)" + "\n" + "Return s.ToString" + "\n" + "End Function";
-
+        private List<string> declarelines = new List<string>();
        
 
         public IBASICtranslator(string[] IBASICcode)
@@ -74,6 +75,21 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
+        public void Tclearoutput()
+        {
+            string keyword = "CLEAROUTPUT";
+            for (int i = 0; i < IBASICcode.Length; i++)
+            {
+                if (StringExtension.Contains(IBASICcode[i], keyword) == true)
+                {
+                    if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 11), keyword) == true)
+                    {
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 11), "Console.Clear()");
+
+                    }
+                }
+            }
+        }
         public void Tinput()
         {
             string line = "";
@@ -110,13 +126,15 @@ namespace CS_IA_Ibasic_Intouch_Re
                     ///This if statement makes sure "DECLARE" is not part of a variable name and its not array declaration
                     if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword) == true && StringExtension.Contains(arraycheck,"ARRAY[") == false)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Dim ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Public ");
                         string line = IBASICcode[i];
 
   
                         if (IBASICcode[i].Contains(keyword2) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
+                            declarelines.Add(IBASICcode[i]);
+                            IBASICcode[i] = "";
                         }
                         else
                         {
@@ -129,7 +147,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
 
                 }
-
+                
             }
         }
 
@@ -179,7 +197,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                                         {
                                             IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + types[1];
                                             arrayvar.Add(variableName);
-                      
+                                            string globaldeclare = "Public " + variableName + "()" + " As " + types[1];
+                                            declarelines.Add(globaldeclare);
+                                      
                                         }
                                         else
                                         {
@@ -231,9 +251,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                 {
                                     string variableName = variablearray[0];
                                     string[] uncutindex1 = variablearray[2].Split(',');
-                                    bool isThereIndex1 = int.TryParse(uncutindex1[0], out int index1);
-                                    if (isThereIndex1 == true)
-                                    {
+                                    string index1 =   uncutindex1[0];
                                         string[] index2andtype = variablearray[3].Split(']');
                                         string type = index2andtype[1];
                                         string[] types = new string[2];
@@ -247,30 +265,24 @@ namespace CS_IA_Ibasic_Intouch_Re
                                         }
                                         if (types.Length == 2 && types[1] != "")
                                         {
-                                          
-                                            bool IsThereIndex2 = int.TryParse(index2andtype[0], out int index2);
-                                            if (IsThereIndex2 == true)
-                                            {
+
+                                        string index2 = index2andtype[0];
                                                 IBASICcode[i] = "Dim " + variableName + "(" + index1 + ", " + index2 + ")" + " As " + types[1];
                                                 arrayvar.Add(variableName);
-                           
-                                            }
-                                            else
-                                            {
-                                                errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because there is an index missing");
-                                            }
+                                        string globaldeclare = "Public " + variableName + "(1000,1000)" + " As " + types[1];
+                                        declarelines.Add(globaldeclare);
 
-                                        }
+                                        //        else
+                                        //     {
+                                        //           errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because there is an index missing");
+                                        //       }
+
+                                    }
                                         else
                                         {
                                             errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because data type is missing");
                                         }
 
-                                    }
-                                    else
-                                    {
-                                        errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because there is an index missing");
-                                    }
                                 }
                                 else
                                 {
@@ -563,7 +575,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 if (IBASICcode[i].Contains("Dim") == false)
                 {
                     foreach (string arrayname in arrayvar)
-                        if (IBASICcode[i].Contains(arrayname) == true)
+                        if (IBASICcode[i].Contains(arrayname+"[") == true)
                         {
                             if (IBASICcode[i].Contains(keyword1) == true)
                             {
@@ -812,6 +824,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             Tarrays();
             Toutput();
             Toutputline();
+            Tclearoutput();
             Tinput();
             TIfstatement();
             Twhileloop();
@@ -836,6 +849,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             Translatedcode = Header;
             TranslateAll();
+            foreach(string l in declarelines)
+            {
+                Translatedcode = Translatedcode + l + "\n";
+            }
+            Translatedcode = Translatedcode + submain;
             foreach (string line in IBASICcode)
             {
                 Translatedcode = Translatedcode + "\n" + line;
