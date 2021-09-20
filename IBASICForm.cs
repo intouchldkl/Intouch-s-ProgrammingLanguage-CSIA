@@ -276,7 +276,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             PublishForm publishForm = new PublishForm();
             publishForm.Show();
         }
-        private void syntaxhighlight()
+        public void syntaxhighlight()
         {
             int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine();
                 lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
@@ -288,7 +288,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // getting keywords from the text
             string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Bkeywords);
-            string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE)\b";
+            string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
             MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Gkeywords);
             string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
             MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Pkeywords);
@@ -365,6 +365,88 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.SelectionLength = originalLength;
             currentRtb.SelectionColor = originalColor;
         }
+        public void syntaxhighlightall(RichTextBox Rtb)
+        {
+            if (Rtb.Text == "")
+            {
+                return;
+            }
+            // getting keywords from the text
+            string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
+            MatchCollection BkeywordMatches = Regex.Matches(Rtb.Text, Bkeywords);
+            string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
+            MatchCollection GkeywordMatches = Regex.Matches(Rtb.Text, Gkeywords);
+            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
+            MatchCollection PkeywordMatches = Regex.Matches(Rtb.Text, Pkeywords);
+            string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|ROUND|CONVERTTOSTRING|GETRANDOMNUMBER)\b";
+            MatchCollection YkeywordMatches = Regex.Matches(Rtb.Text, Ykeywords);
+            // getting types/classes from the text 
+            string types = @"\b(?i)(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
+            MatchCollection typeMatches = Regex.Matches(Rtb.Text, types);
+
+            // getting comments (inline or multiline)
+            string comments = @"\/.+?$";
+            MatchCollection commentMatches = Regex.Matches(Rtb.Text, comments, RegexOptions.Multiline);
+
+            // getting strings
+            string strings = "\".+?\"";
+            MatchCollection stringMatches = Regex.Matches(Rtb.Text, strings);
+
+            // saving the original caret position + forecolor
+            int originalIndex = Rtb.SelectionStart;
+            int originalLength = Rtb.SelectionLength;
+            Color originalColor = Color.Black;
+            // removes any previous highlighting (so modified words won't remain highlighted)
+            Rtb.SelectionStart = 0;
+            Rtb.SelectionLength = Rtb.Text.Length;
+            Rtb.SelectionColor = originalColor;
+            // scanning...
+            foreach (Match m in BkeywordMatches)
+            {
+                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionLength = m.Length;
+                Rtb.SelectionColor = Color.Blue;
+            }
+            foreach (Match m in GkeywordMatches)
+            {
+                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionLength = m.Length;
+                Rtb.SelectionColor = Color.DarkCyan;
+            }
+            foreach (Match m in PkeywordMatches)
+            {
+                Rtb.SelectionStart = m.Index;
+                Rtb.SelectionLength = m.Length;
+                Rtb.SelectionColor = Color.Purple;
+            }
+            foreach (Match m in YkeywordMatches)
+            {
+                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionLength = m.Length;
+                Rtb.SelectionColor = Color.DarkGoldenrod;
+            }
+
+            foreach (Match m in typeMatches)
+            {
+                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionLength = m.Length;
+                Rtb.SelectionColor = Color.Orange;
+            }
+            foreach (Match m in commentMatches)
+            {
+                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionLength = m.Length;
+                Rtb.SelectionColor = Color.Green;
+            }
+
+            foreach (Match m in stringMatches)
+            {
+                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionLength = m.Length;
+                Rtb.SelectionColor = Color.Brown;
+            }
+
+        }
         private void initialliseAutoCompleteMenuItem()
         {
             autocompleteMenu1.AddItem("OUTPUT ");
@@ -413,6 +495,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             autocompleteMenu1.AddItem("GETRANDOMNUMBER()");
             autocompleteMenu1.AddItem("ARRAY[]");
             autocompleteMenu1.AddItem("CONVERTTOSTRING()");
+            autocompleteMenu1.AddItem("CLEAROUTPUT");
         }
 
         public bool isLogin()

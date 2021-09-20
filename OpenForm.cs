@@ -48,7 +48,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 //  read file
                 using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
                 {
+                    RichTextBox buffer = new RichTextBox();
                     currentRtb.Text = sr.ReadToEnd();
+                    buffer.Rtf = currentRtb.Rtf;
+                    IBASICForm.Instance.syntaxhighlightall(buffer);
+                    currentRtb.Rtf = buffer.Rtf;
                     sr.Close();
                 }
                 Close();
