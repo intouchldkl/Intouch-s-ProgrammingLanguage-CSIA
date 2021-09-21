@@ -18,11 +18,14 @@ namespace CS_IA_Ibasic_Intouch_Re
     public partial class IBASICForm : Form
     {
         // To keep track of where the current textBox is as the tab changes
-        RichTextBox currentRtb = new RichTextBox();
+        public  RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
-        int lineNumber;
+        private int lineNumber;
         ChromiumWebBrowser browser ;
-        string outname;
+        private int tablevel = 1;
+        private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ", "Function ", "Procedure ", "Repeat " };
+        private string[] keywords1 = new string[] { "ElseIf ", "Else " };
+        private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until " };
         public IBASICForm()
         {
             InitializeComponent();
@@ -39,8 +42,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.ScrollBars = RichTextBoxScrollBars.Both;
             // To allow horizontal scroll bar to work by unlimiting the wordwrap
             currentRtb.WordWrap = false;
+            currentRtb.AcceptsTab = true;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
+            currentRtb.KeyDown += CurrentRtb_KeyDown;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
             if(Directory.Exists("token.json") == true)
@@ -83,8 +88,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
                 currentRtb.VScroll += CurrentRtb_VScroll;
-            
-            
+            currentRtb.KeyDown += CurrentRtb_KeyDown;
+
+
         }
         private void Save_Click(object sender, EventArgs e)
         {
@@ -149,6 +155,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             LineNumberBox.ZoomFactor = ZoomBar.Value;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
+            currentRtb.KeyDown += CurrentRtb_KeyDown;
             syntaxhighlight();
         }
         public void createNewTabPage(string tabName)
@@ -163,6 +170,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             rtb.WordWrap = false;
             rtb.TextChanged += currentRtb_TextChanged;
             rtb.VScroll += CurrentRtb_VScroll;
+            rtb.KeyDown += CurrentRtb_KeyDown;
             TabPage newTab = new TabPage();
             tabControl1.Controls.Add(newTab);
             newTab.Controls.Add(rtb);
@@ -245,6 +253,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 tabControl1.SelectedTab.Text += '*';
             }
+
         }
         private void CurrentRtb_VScroll(object sender, EventArgs e)
         {
@@ -510,7 +519,80 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-     
+        public void UpdateIndentLevel()
+        {
+            RichTextBox buffer = new RichTextBox();
+            buffer.Rtf = currentRtb.Rtf;            
+            int index = buffer.GetFirstCharIndexOfCurrentLine();
+            int lineIndex = buffer.GetLineFromCharIndex(index);
+            string line = buffer.Lines[lineIndex];
+            for (int i = 0; i < keywords.Length; i++)
+            {
+                if (checkKeyword(keywords[i], line))
+                {
+                    tablevel++;
+                    break;
+                }
+            }
+            for (int i = 0; i < keywords1.Length; i++)
+            {
+                if (checkKeyword(keywords1[i], line))
+                {
+                    if (tablevel <= 0) break;
+                    buffer.Lines[lineIndex] = getIndentSpace(tablevel - 1) + buffer.Lines[lineIndex].TrimStart();
+                    break;
+                }
+            }
+            for (int i = 0; i < keywords2.Length; i++)
+            {
+                if (checkKeyword(keywords2[i], line))
+                {
+                    tablevel--;
+                    buffer.Lines[lineIndex] = getIndentSpace(tablevel) + buffer.Lines[lineIndex].TrimStart();
+                    break;
+                }
+            }
+            currentRtb.Rtf = buffer.Rtf;
 
+        }
+        public string getIndentSpace(int tablevel)
+        {
+            string spaces = "";
+            for(int i = 0; i < tablevel; i++)
+            {
+                spaces += "\t";
+            }
+            return spaces;
+        }
+        public bool checkKeyword(string keyword, string line)
+        {
+            if (StringExtension.Contains(line, keyword) == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private void CurrentRtb_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                UpdateIndentLevel();
+                implementAutoIndent();
+            }
+        }
+        private void implementAutoIndent()
+        {
+            if (currentRtb.Text == "") return;
+
+            int index = currentRtb.GetFirstCharIndexOfCurrentLine();
+            int lineIndex = currentRtb.GetLineFromCharIndex(index) + 1;
+            currentRtb.Text += "\n";
+            currentRtb.Lines[lineIndex] += getIndentSpace(tablevel);
+
+
+        }
     }
 }

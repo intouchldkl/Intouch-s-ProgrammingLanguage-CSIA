@@ -506,7 +506,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 9), keyword1) == true)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 8), "Const ");
+                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 8), "Public Const ");
+                        declarelines.Add(IBASICcode[i]);
+                        IBASICcode[i] = "";
                     }
                 };
             }
