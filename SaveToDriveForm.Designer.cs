@@ -82,6 +82,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "txt";
+            // 
             // SaveToDriveForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

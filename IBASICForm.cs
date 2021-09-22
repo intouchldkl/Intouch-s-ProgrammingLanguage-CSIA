@@ -22,7 +22,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         static IBASICForm instance;
         private int lineNumber;
         ChromiumWebBrowser browser ;
-        private int tablevel = 1;
+        private int tablevel = 0;
         private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ", "Function ", "Procedure ", "Repeat " };
         private string[] keywords1 = new string[] { "ElseIf ", "Else " };
         private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until " };
@@ -38,6 +38,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             currentRtb.AcceptsTab = true;
             currentRtb.Dock = DockStyle.Fill;
+            currentRtb.SelectionIndent = 0;
             //To allow both scrollbars
             currentRtb.ScrollBars = RichTextBoxScrollBars.Both;
             // To allow horizontal scroll bar to work by unlimiting the wordwrap
@@ -45,7 +46,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.AcceptsTab = true;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
-            currentRtb.KeyDown += CurrentRtb_KeyDown;
+            currentRtb.KeyUp += CurrentRtb_KeyDown;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
             if(Directory.Exists("token.json") == true)
@@ -247,7 +248,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void currentRtb_TextChanged(object sender, EventArgs e)
         {            
                 AddLineNumbers();
-                syntaxhighlight();            
+               syntaxhighlight();            
             LineNumberBox.ZoomFactor = ZoomBar.Value;
             if(tabControl1.SelectedTab.Text.Last() != '*')
             {
@@ -288,9 +289,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void syntaxhighlight()
         {
             int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine();
+          
                 lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
-
-            if (currentRtb.Text == "")
+           // if (lineNumber < 0) lineNumber = 0;
+            if (currentRtb.Text == "" || currentRtb.Lines[lineNumber].Trim() == "")
             {
                 return;
             }
@@ -521,17 +523,17 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         public void UpdateIndentLevel()
         {
-            RichTextBox buffer = new RichTextBox();
-            buffer.Rtf = currentRtb.Rtf;            
-            int index = buffer.GetFirstCharIndexOfCurrentLine();
-            int lineIndex = buffer.GetLineFromCharIndex(index);
-            string line = buffer.Lines[lineIndex];
+                       
+            int index = currentRtb.GetFirstCharIndexOfCurrentLine();
+            int lineIndex = currentRtb.GetLineFromCharIndex(index)-1;
+            if (lineIndex < 0) lineIndex = 0;
+            string line = currentRtb.Lines[lineIndex];
             for (int i = 0; i < keywords.Length; i++)
             {
                 if (checkKeyword(keywords[i], line))
                 {
                     tablevel++;
-                    break;
+                    return;
                 }
             }
             for (int i = 0; i < keywords1.Length; i++)
@@ -539,8 +541,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                 if (checkKeyword(keywords1[i], line))
                 {
                     if (tablevel <= 0) break;
-                    buffer.Lines[lineIndex] = getIndentSpace(tablevel - 1) + buffer.Lines[lineIndex].TrimStart();
-                    break;
+                    currentRtb.Lines[lineIndex] = getIndentSpace(tablevel - 1) + currentRtb.Lines[lineIndex].TrimStart();
+                    return;
                 }
             }
             for (int i = 0; i < keywords2.Length; i++)
@@ -548,11 +550,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 if (checkKeyword(keywords2[i], line))
                 {
                     tablevel--;
-                    buffer.Lines[lineIndex] = getIndentSpace(tablevel) + buffer.Lines[lineIndex].TrimStart();
-                    break;
+                    currentRtb.Lines[lineIndex] = getIndentSpace(tablevel) + currentRtb.Lines[lineIndex].TrimStart();
+                    return;
                 }
             }
-            currentRtb.Rtf = buffer.Rtf;
+      
 
         }
         public string getIndentSpace(int tablevel)
@@ -560,24 +562,19 @@ namespace CS_IA_Ibasic_Intouch_Re
             string spaces = "";
             for(int i = 0; i < tablevel; i++)
             {
-                spaces += "\t";
+                spaces = spaces + "\t" ;
             }
             return spaces;
         }
         public bool checkKeyword(string keyword, string line)
         {
-            if (StringExtension.Contains(line, keyword) == true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+          
+            return StringExtension.Contains(line, keyword);
+          
         }
         private void CurrentRtb_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+             if (e.KeyCode == Keys.Enter)
             {
                 UpdateIndentLevel();
                 implementAutoIndent();
@@ -585,14 +582,21 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void implementAutoIndent()
         {
-            if (currentRtb.Text == "") return;
-
-            int index = currentRtb.GetFirstCharIndexOfCurrentLine();
-            int lineIndex = currentRtb.GetLineFromCharIndex(index) + 1;
-            currentRtb.Text += "\n";
-            currentRtb.Lines[lineIndex] += getIndentSpace(tablevel);
-
-
+        //    if (currentRtb.Text == "") return;
+            //     int index = currentRtb.SelectionStart;
+            //   int lineIndex = currentRtb.GetLineFromCharIndex(index);
+            //   currentRtb.Lines[lineIndex] += getIndentSpace(tablevel);
+            //   currentRtb.Select(currentRtb.Text.Length, 0);
+            //   currentRtb.AppendText("\n") ;
+        //    currentRtb.SelectionCharOffset = 0;
+             currentRtb.AppendText( getIndentSpace(tablevel));
+         //   currentRtb.SelectionCharOffset = 0;
+            //         currentRtb.Select(currentRtb.Text.Length, 0);
+            //     currentRtb.SelectionHangingIndent = 10;
+            // currentRtb.SelectionIndent = 10;
+            //  currentRtb.SelectionStart = currentRtb.TextLength;
+            // currentRtb.SelectionIndent = 10;
+            // currentRtb.AppendText("\b");
         }
     }
 }

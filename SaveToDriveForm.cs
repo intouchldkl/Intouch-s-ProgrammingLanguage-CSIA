@@ -15,6 +15,7 @@ namespace CS_IA_Ibasic_Intouch_Re
     {
         RichTextBox currentRtb;
         TabPage tabPage;
+        
         public SaveToDriveForm()
         {
             InitializeComponent();
@@ -28,6 +29,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 FileNameBox.Text = tabPage.Text;
             }
+
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -55,6 +57,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             CodeToBeSaved.Close();
             Close();
             tabPage.Text = saveFileDialog1.FileName;
+            
             GGDrive.Instance.Upload(saveFileDialog1.FileName+".txt", GGDrive.Instance.getIBASICfolderId());
         }
     }
