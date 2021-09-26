@@ -24,7 +24,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         ChromiumWebBrowser browser ;
         private int tablevel = 0;
         private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ", "Function ", "Procedure ", "Repeat " };
-        private string[] keywords1 = new string[] { "ElseIf ", "Else " };
+        private string[] keywords1 = new string[] { "ElseIf ", "Else" };
         private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until " };
         public IBASICForm()
         {
@@ -46,7 +46,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.AcceptsTab = true;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
-            currentRtb.KeyUp += CurrentRtb_KeyDown;
+            currentRtb.KeyUp += CurrentRtb_KeyUp;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
             if(Directory.Exists("token.json") == true)
@@ -100,7 +100,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
                 currentRtb.VScroll += CurrentRtb_VScroll;
-            currentRtb.KeyDown += CurrentRtb_KeyDown;
+            currentRtb.KeyDown += CurrentRtb_KeyUp;
 
 
         }
@@ -167,7 +167,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             LineNumberBox.ZoomFactor = ZoomBar.Value;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
-            currentRtb.KeyDown += CurrentRtb_KeyDown;
+            currentRtb.KeyDown += CurrentRtb_KeyUp;
             syntaxhighlight();
         }
         public void createNewTabPage(string tabName)
@@ -182,7 +182,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             rtb.WordWrap = false;
             rtb.TextChanged += currentRtb_TextChanged;
             rtb.VScroll += CurrentRtb_VScroll;
-            rtb.KeyDown += CurrentRtb_KeyDown;
+            rtb.KeyDown += CurrentRtb_KeyUp;
             TabPage newTab = new TabPage();
             tabControl1.Controls.Add(newTab);
             newTab.Controls.Add(rtb);
@@ -303,7 +303,7 @@ namespace CS_IA_Ibasic_Intouch_Re
           
                 lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
            // if (lineNumber < 0) lineNumber = 0;
-            if (currentRtb.Text == "" || currentRtb.Lines[lineNumber].Trim() == "")
+            if (currentRtb.Text == ""  || currentRtb.Lines[lineNumber] == null)
             {
                 return;
             }
@@ -387,8 +387,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.SelectionLength = originalLength;
             currentRtb.SelectionColor = originalColor;
         }
-        public void syntaxhighlightall(RichTextBox Rtb)
+     
+        public void syntaxhighlightall(RichTextBox textbox)
         {
+            RichTextBox Rtb = new RichTextBox();
+            Rtb.Rtf = textbox.Rtf;
             if (Rtb.Text == "")
             {
                 return;
@@ -467,7 +470,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 Rtb.SelectionLength = m.Length;
                 Rtb.SelectionColor = Color.Brown;
             }
-
+            textbox.Rtf = Rtb.Rtf;
         }
         private void initialliseAutoCompleteMenuItem()
         {
@@ -537,6 +540,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                        
             int index = currentRtb.GetFirstCharIndexOfCurrentLine();
             int lineIndex = currentRtb.GetLineFromCharIndex(index)-1;
+            string[] lines = currentRtb.Lines;
             if (lineIndex < 0) lineIndex = 0;
             string line = currentRtb.Lines[lineIndex];
             for (int i = 0; i < keywords.Length; i++)
@@ -551,8 +555,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (checkKeyword(keywords1[i], line))
                 {
-                    if (tablevel <= 0) break;
-                    currentRtb.Lines[lineIndex] = getIndentSpace(tablevel - 1) + currentRtb.Lines[lineIndex].TrimStart();
+                   
+                    lines[lineIndex] = currentRtb.Lines[lineIndex].Replace("\t", "");
+                    currentRtb.Lines = lines;
+                    syntaxhighlightall(currentRtb);
+                    currentRtb.Select(currentRtb.TextLength, 0);
                     return;
                 }
             }
@@ -560,8 +567,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (checkKeyword(keywords2[i], line))
                 {
+                    if (tablevel <= 0) break;
                     tablevel--;
-                    currentRtb.Lines[lineIndex] = getIndentSpace(tablevel) + currentRtb.Lines[lineIndex].TrimStart();
+                    lines[lineIndex] = currentRtb.Lines[lineIndex].Replace("\t", "");
+                    currentRtb.Lines = lines;
+                    syntaxhighlightall(currentRtb);
+                    currentRtb.Select(currentRtb.TextLength, 0);
                     return;
                 }
             }
@@ -583,31 +594,15 @@ namespace CS_IA_Ibasic_Intouch_Re
             return StringExtension.Contains(line, keyword);
           
         }
-        private void CurrentRtb_KeyDown(object sender, KeyEventArgs e)
+        private void CurrentRtb_KeyUp(object sender, KeyEventArgs e)
         {
-             if (e.KeyCode == Keys.Enter)
+            
+            if (e.KeyCode == Keys.Enter)
             {
                 UpdateIndentLevel();
-                implementAutoIndent();
+                currentRtb.AppendText(getIndentSpace(tablevel));
             }
         }
-        private void implementAutoIndent()
-        {
-        //    if (currentRtb.Text == "") return;
-            //     int index = currentRtb.SelectionStart;
-            //   int lineIndex = currentRtb.GetLineFromCharIndex(index);
-            //   currentRtb.Lines[lineIndex] += getIndentSpace(tablevel);
-            //   currentRtb.Select(currentRtb.Text.Length, 0);
-            //   currentRtb.AppendText("\n") ;
-        //    currentRtb.SelectionCharOffset = 0;
-             currentRtb.AppendText( getIndentSpace(tablevel));
-         //   currentRtb.SelectionCharOffset = 0;
-            //         currentRtb.Select(currentRtb.Text.Length, 0);
-            //     currentRtb.SelectionHangingIndent = 10;
-            // currentRtb.SelectionIndent = 10;
-            //  currentRtb.SelectionStart = currentRtb.TextLength;
-            // currentRtb.SelectionIndent = 10;
-            // currentRtb.AppendText("\b");
-        }
+    
     }
 }
