@@ -29,7 +29,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         public IBASICForm()
         {
             InitializeComponent();
-            browser = new ChromiumWebBrowser("https://inn607.wixsite.com/ibasictutorials-1 ");
+            browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
             browser.Dock = DockStyle.Fill;
             splitContainer2.Panel2.Controls.Add(browser);
             initialliseAutoCompleteMenuItem();
@@ -74,8 +74,19 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void ZoomBar_ValueChanged(object sender, EventArgs e)
         {
-            currentRtb.ZoomFactor = ZoomBar.Value;
-            LineNumberBox.ZoomFactor = ZoomBar.Value;
+
+            if (ZoomBar.Value <= 0 ) return;
+            if(ZoomBar.Value == 1)
+            {
+                currentRtb.ZoomFactor = ZoomBar.Value;
+                LineNumberBox.ZoomFactor = ZoomBar.Value ;
+            }
+            else
+            {
+                currentRtb.ZoomFactor = (float)((ZoomBar.Value-0.5));
+                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value-0.5);
+            }
+        
         }
         private void New_Click(object sender, EventArgs e)
         {
