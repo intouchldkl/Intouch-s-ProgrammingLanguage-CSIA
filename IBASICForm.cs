@@ -25,7 +25,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private int tablevel = 0;
         private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ", "Function ", "Procedure ", "Repeat " };
         private string[] keywords1 = new string[] { "ElseIf ", "Else" };
-        private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until " };
+        private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until ", "Next" };
         public IBASICForm()
         {
             InitializeComponent();
@@ -548,8 +548,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (checkKeyword(keywords[i], line))
                 {
-                    tablevel++;
-                    return;
+                    if(!StringExtension.Contains(line,"elseif"))
+                    {
+                        tablevel++;
+                        return;
+                    }
+                    
                 }
             }
             for (int i = 0; i < keywords1.Length; i++)
@@ -591,18 +595,19 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public bool checkKeyword(string keyword, string line)
         {
-          
-            return StringExtension.Contains(line, keyword);
+                if (keyword.Length > line.TrimStart().Length) return false;
+            return StringExtension.Contains(line.TrimStart().Substring(0, keyword.Length), keyword);
           
         }
         private void CurrentRtb_KeyUp(object sender, KeyEventArgs e)
         {
-            
-            if (e.KeyCode == Keys.Enter)
-            {
+
+            if (e.KeyCode == Keys.Enter )
+            {               
+                addVariableNames();
+                checkresetindent();
                 UpdateIndentLevel();
                 currentRtb.AppendText(getIndentSpace(tablevel));
-                addVariableNames();
             }
         }
         private void checkresetindent()
@@ -637,11 +642,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             int lineIndex = currentRtb.GetLineFromCharIndex(index) - 1;
             string[] lines = currentRtb.Lines;
             if (lineIndex < 0) lineIndex = 0;
+            string line = lines[lineIndex];
             if (lines[lineIndex] == "") return;
-            if (lines[lineIndex].Length < 1) return;
-            if(StringExtension.Contains(lines[lineIndex].Substring(0,8),"Declare "))
+            if (lines[lineIndex].Length < 8) return;
+            if(StringExtension.Contains(line.Substring(0,8),"Declare "))
             {
-                text = lines[lineIndex].Split(':');
+                text = line.Split(':');
                 varname = Regex.Replace(text[0], @"\b(?i)(Declare)\b", "");
                 autocompleteMenu1.AddItem(varname.Trim());
             }

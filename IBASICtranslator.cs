@@ -337,7 +337,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                             {
                                 if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 5), keyword2) == true)
                                 {
-                                    IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].Trim().Substring(0, 4), "Next ");
+                                    IBASICcode[z] = IBASICcode[z].Replace(IBASICcode[z].Trim(), "Next ");
                                 }
                                 break;
                             }
