@@ -265,6 +265,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 tabControl1.SelectedTab.Text += '*';
             }
+            checkresetindent();
 
         }
         private void CurrentRtb_VScroll(object sender, EventArgs e)
@@ -601,6 +602,48 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 UpdateIndentLevel();
                 currentRtb.AppendText(getIndentSpace(tablevel));
+                addVariableNames();
+            }
+        }
+        private void checkresetindent()
+        {
+            int temptablevel = 0;
+            string line = currentRtb.Text;
+            for (int i = 0; i < keywords.Length; i++)
+            {
+                if (checkKeyword(keywords[i], line))
+                {
+                    temptablevel++;
+                    return;
+                }
+            }
+          
+            for (int i = 0; i < keywords2.Length; i++)
+            {
+                if (checkKeyword(keywords2[i], line))
+                {
+                    if (temptablevel <= 0) break;
+                    temptablevel--;
+                                
+                }
+            }
+            tablevel = temptablevel;
+        }
+        private void addVariableNames()
+        {
+            string[] text;
+            string varname;
+            int index = currentRtb.GetFirstCharIndexOfCurrentLine();
+            int lineIndex = currentRtb.GetLineFromCharIndex(index) - 1;
+            string[] lines = currentRtb.Lines;
+            if (lineIndex < 0) lineIndex = 0;
+            if (lines[lineIndex] == "") return;
+            if (lines[lineIndex].Length < 1) return;
+            if(StringExtension.Contains(lines[lineIndex].Substring(0,8),"Declare "))
+            {
+                text = lines[lineIndex].Split(':');
+                varname = Regex.Replace(text[0], @"\b(?i)(Declare)\b", "");
+                autocompleteMenu1.AddItem(varname.Trim());
             }
         }
     
