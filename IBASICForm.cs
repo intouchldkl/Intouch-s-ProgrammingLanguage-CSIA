@@ -606,7 +606,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             if (e.KeyCode == Keys.Enter )
             {               
                 addVariableNames();
-                checkDeletedVarName();
                 checkresetindent();
                 UpdateIndentLevel();
                 currentRtb.AppendText(getIndentSpace(tablevel));
