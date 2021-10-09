@@ -12,11 +12,14 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using CefSharp.WinForms;
 using System.Drawing.Imaging;
-
+using System.Runtime.InteropServices;
 namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class IBASICForm : Form
     {
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
+        private const int WM_SETREDRAW = 11;
         // To keep track of where the current textBox is as the tab changes
         public  RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
@@ -49,6 +52,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.KeyUp += CurrentRtb_KeyUp;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            currentRtb.SelectAll();
+           currentRtb.SelectionTabs = new int[] { 40, 140, 240, 340,440,540,640,740,840,1040,1140 };
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
             if(Directory.Exists("token.json") == true)
             {
@@ -163,9 +168,17 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-            currentRtb.ZoomFactor = ZoomBar.Value;
             AddLineNumbers();
-            LineNumberBox.ZoomFactor = ZoomBar.Value;
+            if (ZoomBar.Value == 1)
+            {
+                currentRtb.ZoomFactor = ZoomBar.Value;
+                LineNumberBox.ZoomFactor = ZoomBar.Value;
+            }
+            else
+            {
+                currentRtb.ZoomFactor = (float)((ZoomBar.Value - 0.5));
+                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
+            }
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             syntaxhighlight();
@@ -194,8 +207,16 @@ namespace CS_IA_Ibasic_Intouch_Re
  
             ///Make sure the user see the new tab
             AddLineNumbers();
-            currentRtb.ZoomFactor = ZoomBar.Value;
-            LineNumberBox.ZoomFactor = ZoomBar.Value;
+            if (ZoomBar.Value == 1)
+            {
+                currentRtb.ZoomFactor = ZoomBar.Value;
+                LineNumberBox.ZoomFactor = ZoomBar.Value;
+            }
+            else
+            {
+                currentRtb.ZoomFactor = (float)((ZoomBar.Value - 0.5));
+                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
+            }
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
             checkresetindent();
    
@@ -212,8 +233,16 @@ namespace CS_IA_Ibasic_Intouch_Re
                 AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
                 currentRtb.VScroll += CurrentRtb_VScroll;
-                currentRtb.ZoomFactor = ZoomBar.Value;
-                LineNumberBox.ZoomFactor = ZoomBar.Value;
+                if (ZoomBar.Value == 1)
+                {
+                    currentRtb.ZoomFactor = ZoomBar.Value;
+                    LineNumberBox.ZoomFactor = ZoomBar.Value;
+                }
+                else
+                {
+                    currentRtb.ZoomFactor = (float)((ZoomBar.Value - 0.5));
+                    LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
+                }
             }
         }
         public int getWidth()
@@ -260,7 +289,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             LineNumberBox.SelectionAlignment = HorizontalAlignment.Center;
             LineNumberBox.Width = getWidth();
             LineNumberBox.Text = buffer.Text;
-            LineNumberBox.ZoomFactor = ZoomBar.Value;
+            if (ZoomBar.Value == 1)
+            {
+                LineNumberBox.ZoomFactor = ZoomBar.Value;
+            }
+            else
+            {
+                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
+            }
         }
 
         private void currentRtb_TextChanged(object sender, EventArgs e)
@@ -273,7 +309,19 @@ namespace CS_IA_Ibasic_Intouch_Re
                 tabControl1.SelectedTab.Text += '*';
             }
             checkresetindent();
-
+            currentRtb.SuspendLayout();
+            if (ZoomBar.Value <= 0) return;
+            if (ZoomBar.Value == 1)
+            {
+                currentRtb.ZoomFactor = ZoomBar.Value;
+                LineNumberBox.ZoomFactor = ZoomBar.Value;
+            }
+            else
+            {
+                currentRtb.ZoomFactor = (float)((ZoomBar.Value - 0.5));
+                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
+            }
+            currentRtb.ResumeLayout();
         }
         private void CurrentRtb_VScroll(object sender, EventArgs e)
         {
@@ -545,7 +593,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         public void UpdateIndentLevel()
         {
-                       
+                      
             int index = currentRtb.GetFirstCharIndexOfCurrentLine();
             int lineIndex = currentRtb.GetLineFromCharIndex(index)-1;
             string[] lines = currentRtb.Lines;
@@ -568,11 +616,17 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (checkKeyword(keywords1[i], line))
                 {
-                   
+                    SendMessage(Handle, WM_SETREDRAW, false, 0);
                     lines[lineIndex] = getIndentSpace(tablevel-1) + currentRtb.Lines[lineIndex].Replace("\t", "");
-                    currentRtb.Lines = lines;
+                    currentRtb.Lines = lines;                   
                     syntaxhighlightall(currentRtb);
-                    currentRtb.Select(currentRtb.TextLength, 0);
+                    if (ZoomBar.Value > 1)
+                    {
+                        currentRtb.ZoomFactor = (float)(ZoomBar.Value - 0.49);
+                    }
+                    currentRtb.Select(currentRtb.TextLength, 0);                                       
+                    SendMessage(Handle, WM_SETREDRAW, true, 0);
+                    Refresh();
                     return;
                 }
             }
@@ -580,12 +634,20 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (checkKeyword(keywords2[i], line))
                 {
-                   // if (tablevel <= 0) break;
-                 //   tablevel--;
+                    // if (tablevel <= 0) break;
+                    //   tablevel--;
+                    SendMessage(Handle, WM_SETREDRAW, false, 0);
                     lines[lineIndex] = getIndentSpace(tablevel) + currentRtb.Lines[lineIndex].Replace("\t", "");
                     currentRtb.Lines = lines;
                     syntaxhighlightall(currentRtb);
+                    if(ZoomBar.Value > 1)
+                    {
+                        currentRtb.ZoomFactor = (float)(ZoomBar.Value - 0.49);
+                    }
                     currentRtb.Select(currentRtb.TextLength, 0);
+                    
+                    SendMessage(Handle, WM_SETREDRAW, true, 0);
+                    Refresh();
                     return;
                 }
             }
@@ -617,6 +679,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                 UpdateIndentLevel();
                 checkresetindent();
                 currentRtb.AppendText(getIndentSpace(tablevel));
+
+
             }
         }
         private void checkresetindent()
