@@ -53,7 +53,13 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.KeyUp += CurrentRtb_KeyUp;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             currentRtb.SelectAll();
-           currentRtb.SelectionTabs = new int[] { 40, 140, 240, 340,440,540,640,740,840,1040,1140 };
+            int[] tabsize = new int[32];
+            int increment = 0;
+            for(int i = 0; i < 32; i++)
+            {
+                tabsize[i] = increment += 40;
+            }
+           currentRtb.SelectionTabs = tabsize;
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
             if(Directory.Exists("token.json") == true)
             {
@@ -204,7 +210,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             newTab.Text = tabName;
             tabControl1.SelectedTab = newTab;
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
- 
+            int[] tabsize = new int[32];
+            int increment = 0;
+            for (int i = 0; i < 32; i++)
+            {
+                tabsize[i] = increment += 40;
+            }
+            currentRtb.SelectionTabs = tabsize;
+
             ///Make sure the user see the new tab
             AddLineNumbers();
             if (ZoomBar.Value == 1)
