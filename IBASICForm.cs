@@ -26,6 +26,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ", "Function ", "Procedure ", "Repeat " };
         private string[] keywords1 = new string[] { "ElseIf ", "Else" };
         private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until ", "Next" };
+        private List<string> varnames = new List<string>();
         public IBASICForm()
         {
             InitializeComponent();
@@ -605,6 +606,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             if (e.KeyCode == Keys.Enter )
             {               
                 addVariableNames();
+                checkDeletedVarName();
                 checkresetindent();
                 UpdateIndentLevel();
                 currentRtb.AppendText(getIndentSpace(tablevel));
@@ -649,8 +651,33 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 text = line.Split(':');
                 varname = Regex.Replace(text[0], @"\b(?i)(Declare)\b", "");
-                autocompleteMenu1.AddItem(varname.Trim());
+                if (!varnames.Contains(varname.Trim()))
+                {
+                    autocompleteMenu1.AddItem(varname.Trim());
+                    varnames.Add(varname.Trim());
+                }
+             
             }
+        }
+        private void checkDeletedVarName()
+        {
+            string Text = currentRtb.Text;
+            foreach(string varname in varnames)
+            {
+                if (!StringExtension.Contains(currentRtb.Text,"Declare " + varname))
+                {
+                     for(int i = 47; i < autocompleteMenu1.Items.Length; i++)
+                    {
+                        if(autocompleteMenu1.Items[i] == varname)
+                        {
+                            autocompleteMenu1.Items[i] = "";
+                            autocompleteMenu1.Update();
+                        }
+                    }
+                }
+            }
+            
+
         }
     
     }

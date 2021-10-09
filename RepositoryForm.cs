@@ -70,7 +70,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if(FileName.Contains(".txt") == true)
                 {
-                    FileName = FileName.Replace(".txt", "");
+                    FileName = FileName.Remove(FileName.Length - 4);
                 }
                 string time = version.createdTime.ToString();
                 var row = new string[] { "Version " + i, time };
@@ -93,7 +93,13 @@ namespace CS_IA_Ibasic_Intouch_Re
             GGDriveFile GFlie = (GGDriveFile)VersionListView.SelectedItems[0].Tag;
             string fileId = GFlie.Id;
             openFileDialog1.FileName = GGDrive.Instance.DownloadGoogleFile(fileId);
-            IBASICForm.Instance.createNewTabPage(openFileDialog1.FileName);
+            string tabname = openFileDialog1.FileName;
+            if (tabname.Contains(".txt") == true)
+            {
+                tabname = tabname.Remove(tabname.Length - 4);
+                
+            }
+            IBASICForm.Instance.createNewTabPage(tabname);
             currentRtb = IBASICForm.Instance.getCurrentRtb();
             tabPage = IBASICForm.Instance.getCurrentTabpage();
             using (StreamReader sr = new StreamReader(openFileDialog1.FileName))
