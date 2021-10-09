@@ -101,8 +101,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
                 currentRtb.VScroll += CurrentRtb_VScroll;
-            currentRtb.KeyDown += CurrentRtb_KeyUp;
-
+            checkresetindent();
+            UpdateIndentLevel();
 
         }
         private void Save_Click(object sender, EventArgs e)
@@ -168,8 +168,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             LineNumberBox.ZoomFactor = ZoomBar.Value;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
-            currentRtb.KeyDown += CurrentRtb_KeyUp;
             syntaxhighlight();
+            checkresetindent();
+ 
         }
         public void createNewTabPage(string tabName)
         {
@@ -183,19 +184,24 @@ namespace CS_IA_Ibasic_Intouch_Re
             rtb.WordWrap = false;
             rtb.TextChanged += currentRtb_TextChanged;
             rtb.VScroll += CurrentRtb_VScroll;
-            rtb.KeyDown += CurrentRtb_KeyUp;
+            rtb.KeyUp += CurrentRtb_KeyUp;
             TabPage newTab = new TabPage();
             tabControl1.Controls.Add(newTab);
             newTab.Controls.Add(rtb);
             newTab.Text = tabName;
             tabControl1.SelectedTab = newTab;
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+ 
             ///Make sure the user see the new tab
             AddLineNumbers();
             currentRtb.ZoomFactor = ZoomBar.Value;
             LineNumberBox.ZoomFactor = ZoomBar.Value;
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
+            checkresetindent();
+   
         }
+
+       
 
         private void CloseTabBut_Click(object sender, EventArgs e)
         {
@@ -544,6 +550,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             int lineIndex = currentRtb.GetLineFromCharIndex(index)-1;
             string[] lines = currentRtb.Lines;
             if (lineIndex < 0) lineIndex = 0;
+            if (currentRtb.Lines.Length <= 0) return;
             string line = currentRtb.Lines[lineIndex];
             for (int i = 0; i < keywords.Length; i++)
             {
@@ -551,7 +558,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if(!StringExtension.Contains(line,"elseif"))
                     {
-                        tablevel++;
+                      //  tablevel++;
                         return;
                     }
                     
@@ -562,7 +569,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 if (checkKeyword(keywords1[i], line))
                 {
                    
-                    lines[lineIndex] = currentRtb.Lines[lineIndex].Replace("\t", "");
+                    lines[lineIndex] = getIndentSpace(tablevel-1) + currentRtb.Lines[lineIndex].Replace("\t", "");
                     currentRtb.Lines = lines;
                     syntaxhighlightall(currentRtb);
                     currentRtb.Select(currentRtb.TextLength, 0);
@@ -573,9 +580,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (checkKeyword(keywords2[i], line))
                 {
-                    if (tablevel <= 0) break;
-                    tablevel--;
-                    lines[lineIndex] = currentRtb.Lines[lineIndex].Replace("\t", "");
+                   // if (tablevel <= 0) break;
+                 //   tablevel--;
+                    lines[lineIndex] = getIndentSpace(tablevel) + currentRtb.Lines[lineIndex].Replace("\t", "");
                     currentRtb.Lines = lines;
                     syntaxhighlightall(currentRtb);
                     currentRtb.Select(currentRtb.TextLength, 0);
@@ -603,35 +610,42 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void CurrentRtb_KeyUp(object sender, KeyEventArgs e)
         {
 
-            if (e.KeyCode == Keys.Enter )
+             if (e.KeyCode == Keys.Enter )
             {               
                 addVariableNames();
                 checkresetindent();
                 UpdateIndentLevel();
+                checkresetindent();
                 currentRtb.AppendText(getIndentSpace(tablevel));
             }
         }
         private void checkresetindent()
         {
             int temptablevel = 0;
-            string line = currentRtb.Text;
-            for (int i = 0; i < keywords.Length; i++)
+           
+            for (int z = 0; z < currentRtb.Lines.Count(); z++)
             {
-                if (checkKeyword(keywords[i], line))
+                string line = currentRtb.Lines[z];
+               
+                for (int i = 0; i < keywords.Length; i++)
                 {
-                    temptablevel++;
-                    return;
+                    if (checkKeyword(keywords[i], line))
+                    {
+                        temptablevel++;
+                        break;
+                    }
                 }
-            }
-          
-            for (int i = 0; i < keywords2.Length; i++)
-            {
-                if (checkKeyword(keywords2[i], line))
+                for (int i = 0; i < keywords2.Length; i++)
                 {
-                    if (temptablevel <= 0) break;
-                    temptablevel--;
-                                
+                    if (checkKeyword(keywords2[i], line))
+                    {
+                        if (temptablevel <= 0) break;
+                        temptablevel--;
+                        break;
+                    }
                 }
+
+
             }
             tablevel = temptablevel;
         }
