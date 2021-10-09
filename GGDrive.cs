@@ -249,7 +249,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 foreach (var file in files)
                 {
-                    if(file.Name == "IBASIC--FOLDER")
+                    if(file.Name == "IBASIC-FOLDER")
                     {
                         IBASICfolderid = file.Id;
                         return true;
