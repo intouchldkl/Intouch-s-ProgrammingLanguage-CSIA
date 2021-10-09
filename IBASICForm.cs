@@ -30,6 +30,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string[] keywords1 = new string[] { "ElseIf ", "Else" };
         private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until ", "Next" };
         private List<string> varnames = new List<string>();
+        private int[] tabsize = new int[32];
         public IBASICForm()
         {
             InitializeComponent();
@@ -53,11 +54,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.KeyUp += CurrentRtb_KeyUp;
             currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             currentRtb.SelectAll();
-            int[] tabsize = new int[32];
             int increment = 0;
             for(int i = 0; i < 32; i++)
             {
-                tabsize[i] = increment += 40;
+                tabsize[i] = increment += 20;
             }
            currentRtb.SelectionTabs = tabsize;
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
@@ -210,12 +210,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             newTab.Text = tabName;
             tabControl1.SelectedTab = newTab;
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-            int[] tabsize = new int[32];
-            int increment = 0;
-            for (int i = 0; i < 32; i++)
-            {
-                tabsize[i] = increment += 40;
-            }
             currentRtb.SelectionTabs = tabsize;
 
             ///Make sure the user see the new tab
@@ -613,18 +607,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             if (lineIndex < 0) lineIndex = 0;
             if (currentRtb.Lines.Length <= 0) return;
             string line = currentRtb.Lines[lineIndex];
-            for (int i = 0; i < keywords.Length; i++)
-            {
-                if (checkKeyword(keywords[i], line))
-                {
-                    if(!StringExtension.Contains(line,"elseif"))
-                    {
-                      //  tablevel++;
-                        return;
-                    }
-                    
-                }
-            }
+           
             for (int i = 0; i < keywords1.Length; i++)
             {
                 if (checkKeyword(keywords1[i], line))
@@ -690,7 +673,6 @@ namespace CS_IA_Ibasic_Intouch_Re
                 addVariableNames();
                 checkresetindent();
                 UpdateIndentLevel();
-                checkresetindent();
                 currentRtb.AppendText(getIndentSpace(tablevel));
 
 
