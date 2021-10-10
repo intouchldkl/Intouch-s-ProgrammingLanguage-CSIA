@@ -98,7 +98,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 currentRtb.ZoomFactor = (float)((ZoomBar.Value-0.5));
                 LineNumberBox.ZoomFactor = (float)(ZoomBar.Value-0.5);
             }
-        
+            AddLineNumbers();
         }
         private void New_Click(object sender, EventArgs e)
         {

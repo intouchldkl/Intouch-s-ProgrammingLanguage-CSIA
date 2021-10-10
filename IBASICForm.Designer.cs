@@ -316,6 +316,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "IBASICForm";
             this.Text = "IBASIC";
             this.menuStrip1.ResumeLayout(false);
