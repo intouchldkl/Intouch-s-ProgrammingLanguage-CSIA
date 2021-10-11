@@ -51,11 +51,13 @@ namespace CS_IA_Ibasic_Intouch_Re
                 ContextMenuHandler MenuHandler = new ContextMenuHandler();
             };
 
-           // RenderOptions.SetBitmapScalingMode(browser, BitmapScalingMode.HighQuality);
+            
             InitializeComponent();
-         //   browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
+         //   RenderOptions.SetBitmapScalingMode(, BitmapScalingMode.HighQuality);
+             //  browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
             browser.Dock = DockStyle.Fill;
-            splitContainer2.Panel2.Controls.Add(browser);
+          splitContainer2.Panel2.Controls.Add(browser);
+         
             initialliseAutoCompleteMenuItem();
             RichTextBox RTB = new RichTextBox();
             tabPage1.Controls.Add(RTB);
@@ -492,7 +494,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             MatchCollection typeMatches = Regex.Matches(Rtb.Text, types);
 
             // getting comments (inline or multiline)
-            string comments = @"\/.+?$";
+            string comments = @"\//.+?$";
             MatchCollection commentMatches = Regex.Matches(Rtb.Text, comments, RegexOptions.Multiline);
 
             // getting strings
