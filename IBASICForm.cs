@@ -13,6 +13,11 @@ using System.Diagnostics;
 using CefSharp.WinForms;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using CefSharp;
+using CefSharp.Handler;
+using System.Windows.Media;
+using Color = System.Drawing.Color;
+
 namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class IBASICForm : Form
@@ -33,8 +38,22 @@ namespace CS_IA_Ibasic_Intouch_Re
         private int[] tabsize = new int[32];
         public IBASICForm()
         {
-            InitializeComponent();
+            CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
+            var settings = new CefSettings
+            {
+                CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "CefSharp\\Cache")
+            };
+            settings.CefCommandLineArgs.Add("enable-media-stream", "1");
             browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
+            {
+                //RequestHandler = webApiResourceHandler,
+                ContextMenuHandler MenuHandler = new ContextMenuHandler();
+            };
+
+           // RenderOptions.SetBitmapScalingMode(browser, BitmapScalingMode.HighQuality);
+            InitializeComponent();
+         //   browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
             browser.Dock = DockStyle.Fill;
             splitContainer2.Panel2.Controls.Add(browser);
             initialliseAutoCompleteMenuItem();
@@ -394,7 +413,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // saving the original caret position + forecolor
             int originalIndex = currentRtb.SelectionStart;
             int originalLength = currentRtb.SelectionLength;
-            Color originalColor = Color.Black;
+            System.Drawing.Color originalColor = System.Drawing.Color.Black;
             // removes any previous highlighting (so modified words won't remain highlighted)
             currentRtb.SelectionStart = cursorPosition;
             currentRtb.SelectionLength = currentRtb.Lines[lineNumber].Length;
