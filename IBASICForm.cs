@@ -28,12 +28,12 @@ namespace CS_IA_Ibasic_Intouch_Re
         // To keep track of where the current textBox is as the tab changes
         public  RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
-        private int lineNumber;
+        
         ChromiumWebBrowser browser ;
         private int tablevel = 0;
         private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ", "Function ", "Procedure ", "Repeat " };
         private string[] keywords1 = new string[] { "ElseIf ", "Else" };
-        private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until ", "Next" };
+        private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until ", "Next " };
         private List<string> varnames = new List<string>();
         private int[] tabsize = new int[32];
         public IBASICForm()
@@ -54,7 +54,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             
             InitializeComponent();
          //   RenderOptions.SetBitmapScalingMode(, BitmapScalingMode.HighQuality);
-             //  browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
+               browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
             browser.Dock = DockStyle.Fill;
           splitContainer2.Panel2.Controls.Add(browser);
          
@@ -383,9 +383,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void syntaxhighlight()
         {
+            SendMessage(Handle, WM_SETREDRAW, false, 0);
             int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine();
           
-                lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
+              int  lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
            // if (lineNumber < 0) lineNumber = 0;
             if (currentRtb.Text == ""  || currentRtb.Lines[lineNumber] == null)
             {
@@ -470,6 +471,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.SelectionStart = originalIndex;
             currentRtb.SelectionLength = originalLength;
             currentRtb.SelectionColor = originalColor;
+            SendMessage(Handle, WM_SETREDRAW, true, 0);
+            Refresh();
         }
      
         public void syntaxhighlightall(RichTextBox textbox)
@@ -625,6 +628,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             int index = currentRtb.GetFirstCharIndexOfCurrentLine();
             int lineIndex = currentRtb.GetLineFromCharIndex(index)-1;
             string[] lines = currentRtb.Lines;
+            int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
             if (lineIndex < 0) lineIndex = 0;
             if (currentRtb.Lines.Length <= 0) return;
             string line = currentRtb.Lines[lineIndex];
@@ -635,13 +639,14 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     SendMessage(Handle, WM_SETREDRAW, false, 0);
                     lines[lineIndex] = getIndentSpace(tablevel-1) + currentRtb.Lines[lineIndex].Replace("\t", "");
-                    currentRtb.Lines = lines;                   
+                    currentRtb.Lines = lines;
+                    int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
                     syntaxhighlightall(currentRtb);
                     if (ZoomBar.Value > 1)
                     {
                         currentRtb.ZoomFactor = (float)(ZoomBar.Value - 0.49);
                     }
-                    currentRtb.Select(currentRtb.TextLength, 0);                                       
+                    currentRtb.Select(charindex, 0);
                     SendMessage(Handle, WM_SETREDRAW, true, 0);
                     Refresh();
                     return;
@@ -656,13 +661,14 @@ namespace CS_IA_Ibasic_Intouch_Re
                     SendMessage(Handle, WM_SETREDRAW, false, 0);
                     lines[lineIndex] = getIndentSpace(tablevel) + currentRtb.Lines[lineIndex].Replace("\t", "");
                     currentRtb.Lines = lines;
+                    int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
                     syntaxhighlightall(currentRtb);
                     if(ZoomBar.Value > 1)
                     {
                         currentRtb.ZoomFactor = (float)(ZoomBar.Value - 0.49);
                     }
-                    currentRtb.Select(currentRtb.TextLength, 0);
-                    
+                    currentRtb.Select(charindex, 0);
+
                     SendMessage(Handle, WM_SETREDRAW, true, 0);
                     Refresh();
                     return;
@@ -690,11 +696,26 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
 
              if (e.KeyCode == Keys.Enter )
-            {               
+            {
+                SendMessage(Handle, WM_SETREDRAW, false, 0);
                 addVariableNames();
                 checkresetindent();
                 UpdateIndentLevel();
-                currentRtb.AppendText(getIndentSpace(tablevel));
+                checkresetindent();
+               int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
+                if(currentRtb.Lines[lineNumber] == "")
+                {                   
+                    string[] lines = currentRtb.Lines;
+                    lines[lineNumber] = getIndentSpace(tablevel);                    
+                    currentRtb.Lines = lines;
+                    int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
+                    syntaxhighlightall(currentRtb);
+                    currentRtb.Select(charindex, 0);
+                   
+                }
+                SendMessage(Handle, WM_SETREDRAW, true, 0);
+                Refresh();
+
 
 
             }
@@ -702,11 +723,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void checkresetindent()
         {
             int temptablevel = 0;
-           
-            for (int z = 0; z < currentRtb.Lines.Count(); z++)
+            int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
+            for (int z = 0; z < lineNumber; z++)
             {
                 string line = currentRtb.Lines[z];
-               
+
                 for (int i = 0; i < keywords.Length; i++)
                 {
                     if (checkKeyword(keywords[i], line))
@@ -724,11 +745,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                         break;
                     }
                 }
-
-
             }
             tablevel = temptablevel;
         }
+       
         private void addVariableNames()
         {
             string[] text;
