@@ -142,14 +142,37 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
      
             FilesResource.GetRequest request = Service.Files.Get(fileId);
-           var getrequest =  Service.Files.Export(fileId, ".txt");
+            
             string FileName = request.Execute().Name;
-         //   var filestream = new FileStream(FileName, FileMode.Create, FileAccess.Write);
-            MemoryStream stream1 = new MemoryStream();         
-        //    request.Download(stream1);
-            request.DownloadAsync(stream1);
-       //     getrequest.DownloadAsync(filestream);
-        //    filestream.Close();
+         
+            MemoryStream stream1 = new MemoryStream();
+            request.MediaDownloader.ProgressChanged += (IDownloadProgress progress) =>
+            {
+                switch (progress.Status)
+                {
+                    case DownloadStatus.Downloading:
+                        {
+                            break;
+                        }
+                    case DownloadStatus.Completed:
+                        {
+                            using (var filestream = new FileStream(FileName, FileMode.Create, FileAccess.Write))
+                            {
+                                stream1.WriteTo(filestream);
+                            }
+                            break;
+                        }
+                    case DownloadStatus.Failed:
+                        {
+                            break;
+                        }
+
+                }
+            };
+            
+          
+            request.Download(stream1);
+            //    filestream.Close();
             return FileName;
         }
 

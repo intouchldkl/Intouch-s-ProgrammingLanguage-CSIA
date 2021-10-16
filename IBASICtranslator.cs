@@ -533,7 +533,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (IBASICcode[i].Contains(keyword1) == true)
                 {
-                    IBASICcode[i] = IBASICcode[i].Replace(keyword1, "'");
+                    // IBASICcode[i] = IBASICcode[i].Replace(keyword1, "'");
+                    string[] stringSeparators = new string[] { keyword1 };
+                    string[] splitstring = IBASICcode[i].Split(stringSeparators, StringSplitOptions.None);
+                    IBASICcode[i] = splitstring[0];
                 }
             }
         }
@@ -816,6 +819,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         
         public void TranslateAll()
         {
+            Tcomment();
             TdataType();
             TtrueNfalse();
             TvarDeclaration();
@@ -835,8 +839,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             Trandomfunc();
             Tmod();
             Tcallprocedure();
-            Tcasestatement();
-            Tcomment();
+            Tcasestatement();           
             Tfunction();
             Tprocedure();
             if (errormessages != null)

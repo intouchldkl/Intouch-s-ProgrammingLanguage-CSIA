@@ -328,7 +328,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void syntaxhighlight()
         {
-            // SendMessage(Handle, WM_SETREDRAW, false, 0);
+            
 
             int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine();
 
@@ -338,6 +338,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 return;
             }
+            SendMessage(Handle, WM_SETREDRAW, false, 0);
             // getting keywords from the text
             string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Bkeywords);
@@ -418,8 +419,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         currentRtb.SelectionLength = originalLength;
           currentRtb.SelectionColor = originalColor;
 
-            //  SendMessage(Handle, WM_SETREDRAW, true, 0);
-            //   Refresh();
+              SendMessage(Handle, WM_SETREDRAW, true, 0);
+               Refresh();
         }
 
         public void syntaxhighlightall(RichTextBox textbox)
@@ -722,14 +723,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             
             zoomfactor = LineNumberBox.ZoomFactor;
-            float zoom = zoomfactor;
             if (e.KeyCode == Keys.Enter )
             {
                 int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
-                int charindex = 0;
                 addVariableNames();
-                checkresetindent();
-               
+                checkresetindent();             
                 if (currentRtb.Lines[lineNumber] == "")
                 {
                     try
@@ -743,9 +741,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                         linesOfCurrentrtb[lineNumber] = getIndentSpace(tablevel);
                         currentRtb.Lines = linesOfCurrentrtb;
                         syntaxhighlightall(currentRtb);
-                        currentRtb.ZoomFactor = (float)(LineNumberBox.ZoomFactor+0.0000001);
+                        currentRtb.ZoomFactor = (float)(zoomfactor+0.0000001);
                         currentRtb.Select(currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length, 0);
-                        // Perform your painting / updates...
                     }
                     finally
                     {
