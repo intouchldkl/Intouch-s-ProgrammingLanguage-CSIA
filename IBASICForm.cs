@@ -17,6 +17,7 @@ using CefSharp;
 using CefSharp.Handler;
 using System.Windows.Media;
 using Color = System.Drawing.Color;
+using System.Threading;
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
@@ -26,10 +27,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
         private const int WM_SETREDRAW = 11;
         // To keep track of where the current textBox is as the tab changes
-        public  RichTextBox currentRtb = new RichTextBox();
+        public RichTextBox currentRtb = new RichTextBox();
         static IBASICForm instance;
-        
-        ChromiumWebBrowser browser ;
+        private float zoomfactor;
+        ChromiumWebBrowser browser;
         private int tablevel = 0;
         private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ", "Function ", "Procedure ", "Repeat " };
         private string[] keywords1 = new string[] { "ElseIf ", "Else" };
@@ -51,13 +52,13 @@ namespace CS_IA_Ibasic_Intouch_Re
                 ContextMenuHandler MenuHandler = new ContextMenuHandler();
             };
 
-            
+
             InitializeComponent();
-         //   RenderOptions.SetBitmapScalingMode(, BitmapScalingMode.HighQuality);
-               browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
+            //   RenderOptions.SetBitmapScalingMode(, BitmapScalingMode.HighQuality);
+            browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
             browser.Dock = DockStyle.Fill;
-          splitContainer2.Panel2.Controls.Add(browser);
-         
+            splitContainer2.Panel2.Controls.Add(browser);
+
             initialliseAutoCompleteMenuItem();
             RichTextBox RTB = new RichTextBox();
             tabPage1.Controls.Add(RTB);
@@ -73,20 +74,21 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.KeyUp += CurrentRtb_KeyUp;
-            currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F,FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            currentRtb.MouseWheel += CurrentRtb_mouse;
+            currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             currentRtb.SelectAll();
             int increment = 0;
-            for(int i = 0; i < 32; i++)
+            for (int i = 0; i < 32; i++)
             {
                 tabsize[i] = increment += 20;
             }
-           currentRtb.SelectionTabs = tabsize;
+            currentRtb.SelectionTabs = tabsize;
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
-            if(Directory.Exists("token.json") == true)
+            if (Directory.Exists("token.json") == true)
             {
                 LOGIN.Text = "LOGOUT";
             }
-            if(isLogin() == true)
+            if (isLogin() == true)
             {
                 PUBLISH.Enabled = true;
             }
@@ -105,22 +107,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             return currentRtb;
         }
-        private void ZoomBar_ValueChanged(object sender, EventArgs e)
-        {
 
-            if (ZoomBar.Value <= 0 ) return;
-            if(ZoomBar.Value == 1)
-            {
-                currentRtb.ZoomFactor = ZoomBar.Value;
-                LineNumberBox.ZoomFactor = ZoomBar.Value ;
-            }
-            else
-            {
-                currentRtb.ZoomFactor = (float)((ZoomBar.Value-0.5));
-                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value-0.5);
-            }
-            AddLineNumbers();
-        }
         private void New_Click(object sender, EventArgs e)
         {
             createNewTabPage("Untitled");
@@ -131,10 +118,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             OpenForm openForm = new OpenForm();
             openForm.Show();
             AddLineNumbers();
-                currentRtb.TextChanged += currentRtb_TextChanged;
-                currentRtb.VScroll += CurrentRtb_VScroll;
-            checkresetindent();
-            UpdateIndentLevel();
+            currentRtb.TextChanged += currentRtb_TextChanged;
+            currentRtb.VScroll += CurrentRtb_VScroll;
+
 
         }
         private void Save_Click(object sender, EventArgs e)
@@ -157,7 +143,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             SaveAsForm saveasform = new SaveAsForm();
             saveasform.Show();
 
-          
+
         }
         private void Undo_Click(object sender, EventArgs e)
         {
@@ -174,14 +160,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
             ///  currentRtb.Text = translator.Tcasestatement();
             translator.putinFormat();
-           /// currentRtb.Text = translator.getTranslatedcode();
-           if(translator.getIBASICerrormessages() == null)
+            /// currentRtb.Text = translator.getTranslatedcode();
+            if (translator.getIBASICerrormessages() == null)
             {
                 Compiler Icompiler = new Compiler(translator.getTranslatedcode());
                 Icompiler.launchEXE();
                 if (Icompiler.getErrorMessages() != null)
                 {
-                    ErrorMsgBox.Text =  Icompiler.getErrorMessages();
+                    ErrorMsgBox.Text = Icompiler.getErrorMessages();
                 }
             }
             else
@@ -189,31 +175,25 @@ namespace CS_IA_Ibasic_Intouch_Re
                 ErrorMsgBox.Text = translator.getIBASICerrormessages();
             }
 
-           
+
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
+            zoomfactor = LineNumberBox.ZoomFactor;
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             AddLineNumbers();
-            if (ZoomBar.Value == 1)
-            {
-                currentRtb.ZoomFactor = ZoomBar.Value;
-                LineNumberBox.ZoomFactor = ZoomBar.Value;
-            }
-            else
-            {
-                currentRtb.ZoomFactor = (float)((ZoomBar.Value - 0.5));
-                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
-            }
+            currentRtb.ZoomFactor = zoomfactor;
+            LineNumberBox.ZoomFactor = zoomfactor;
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
-            syntaxhighlight();
-            checkresetindent();
- 
+            syntaxhighlightall(currentRtb);
+
+
         }
         public void createNewTabPage(string tabName)
         {
+            zoomfactor = LineNumberBox.ZoomFactor;
             RichTextBox rtb = new RichTextBox();
             rtb.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             rtb.AcceptsTab = true;
@@ -232,45 +212,26 @@ namespace CS_IA_Ibasic_Intouch_Re
             tabControl1.SelectedTab = newTab;
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             currentRtb.SelectionTabs = tabsize;
-
-            ///Make sure the user see the new tab
             AddLineNumbers();
-            if (ZoomBar.Value == 1)
-            {
-                currentRtb.ZoomFactor = ZoomBar.Value;
-                LineNumberBox.ZoomFactor = ZoomBar.Value;
-            }
-            else
-            {
-                currentRtb.ZoomFactor = (float)((ZoomBar.Value - 0.5));
-                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
-            }
+            currentRtb.ZoomFactor = zoomfactor;
+            LineNumberBox.ZoomFactor = zoomfactor;
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
-            checkresetindent();
-   
+
+
         }
 
-       
+
 
         private void CloseTabBut_Click(object sender, EventArgs e)
         {
-            if( tabControl1.Controls.Count > 1)
+            if (tabControl1.Controls.Count > 1)
             {
                 tabControl1.Controls.Remove(tabControl1.SelectedTab);
                 currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
                 AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
                 currentRtb.VScroll += CurrentRtb_VScroll;
-                if (ZoomBar.Value == 1)
-                {
-                    currentRtb.ZoomFactor = ZoomBar.Value;
-                    LineNumberBox.ZoomFactor = ZoomBar.Value;
-                }
-                else
-                {
-                    currentRtb.ZoomFactor = (float)((ZoomBar.Value - 0.5));
-                    LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
-                }
+
             }
         }
         public int getWidth()
@@ -297,7 +258,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void AddLineNumbers()
         {
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
-            RichTextBox buffer = new RichTextBox();           
+            zoomfactor = LineNumberBox.ZoomFactor;
+            RichTextBox buffer = new RichTextBox();
             // create & set Point pt to (0,0)    
             Point pt = new Point(0, 0);
             // get First Index & First Line from richTextBox1    
@@ -307,7 +269,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             pt.X = ClientRectangle.Width;
             pt.Y = ClientRectangle.Height;
             // get Last Index & Last Line from richTextBox1    
-            int Last_Index =currentRtb.GetCharIndexFromPosition(pt);
+            int Last_Index = currentRtb.GetCharIndexFromPosition(pt);
             int Last_Line = currentRtb.GetLineFromCharIndex(Last_Index);
             //  add each line number to LineNumberTextBox upto last line    
             for (int i = First_Line; i <= Last_Line + 2; i++)
@@ -317,39 +279,22 @@ namespace CS_IA_Ibasic_Intouch_Re
             LineNumberBox.SelectionAlignment = HorizontalAlignment.Center;
             LineNumberBox.Width = getWidth();
             LineNumberBox.Text = buffer.Text;
-            if (ZoomBar.Value == 1)
-            {
-                LineNumberBox.ZoomFactor = ZoomBar.Value;
-            }
-            else
-            {
-                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
-            }
+            LineNumberBox.ZoomFactor = zoomfactor;
         }
 
         private void currentRtb_TextChanged(object sender, EventArgs e)
-        {            
-                AddLineNumbers();
-               syntaxhighlight();            
-            LineNumberBox.ZoomFactor = ZoomBar.Value;
-            if(tabControl1.SelectedTab.Text.Last() != '*')
+        {
+            AddLineNumbers();
+            syntaxhighlight();
+            zoomfactor = LineNumberBox.ZoomFactor;
+            if (tabControl1.SelectedTab.Text.Last() != '*')
             {
                 tabControl1.SelectedTab.Text += '*';
             }
-            checkresetindent();
-            currentRtb.SuspendLayout();
-            if (ZoomBar.Value <= 0) return;
-            if (ZoomBar.Value == 1)
-            {
-                currentRtb.ZoomFactor = ZoomBar.Value;
-                LineNumberBox.ZoomFactor = ZoomBar.Value;
-            }
-            else
-            {
-                currentRtb.ZoomFactor = (float)((ZoomBar.Value - 0.5));
-                LineNumberBox.ZoomFactor = (float)(ZoomBar.Value - 0.5);
-            }
-            currentRtb.ResumeLayout();
+
+            LineNumberBox.ZoomFactor = zoomfactor;
+            currentRtb.ZoomFactor = zoomfactor;
+
         }
         private void CurrentRtb_VScroll(object sender, EventArgs e)
         {
@@ -358,21 +303,21 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         private void LOGIN_Click(object sender, EventArgs e)
         {
-              if(LOGIN.Text == "LOGIN")
-                {
+            if (LOGIN.Text == "LOGIN")
+            {
                 GGDrive.Instance.Authentication();
                 PUBLISH.Enabled = true;
                 LOGIN.Text = "LOGOUT";
-                MessageBox.Show("YOU ARE LOGGED IN TO YOUR CURRENT GMAIL","IBASIC");              
-                }
+                MessageBox.Show("YOU ARE LOGGED IN TO YOUR CURRENT GMAIL", "IBASIC");
+            }
             else
-            {            
+            {
                 GGDrive.Instance.logout();
                 PUBLISH.Enabled = false;
                 LOGIN.Text = "LOGIN";
-                MessageBox.Show("YOU ARE LOGGED OUT!","IBASIC");
+                MessageBox.Show("YOU ARE LOGGED OUT!", "IBASIC");
             }
-          
+
 
         }
 
@@ -383,12 +328,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void syntaxhighlight()
         {
-            SendMessage(Handle, WM_SETREDRAW, false, 0);
+            // SendMessage(Handle, WM_SETREDRAW, false, 0);
+
             int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine();
-          
-              int  lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
-           // if (lineNumber < 0) lineNumber = 0;
-            if (currentRtb.Text == ""  || currentRtb.Lines[lineNumber] == null)
+
+            int lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
+            // if (lineNumber < 0) lineNumber = 0;
+            if (currentRtb.Text == "" || currentRtb.Lines[lineNumber] == null)
             {
                 return;
             }
@@ -406,7 +352,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             MatchCollection typeMatches = Regex.Matches(currentRtb.Lines[lineNumber], types);
 
             // getting comments (inline or multiline)
-            string comments = @"\/.+?$";
+            string comments = @"\//.+?$";
             MatchCollection commentMatches = Regex.Matches(currentRtb.Lines[lineNumber], comments, RegexOptions.Multiline);
 
             // getting strings
@@ -425,8 +371,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             foreach (Match m in BkeywordMatches)
             {
                 currentRtb.SelectionStart = m.Index + cursorPosition;
-                currentRtb.SelectionLength = m.Length ;
-                currentRtb.SelectionColor = Color.Blue ;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Blue;
             }
             foreach (Match m in GkeywordMatches)
             {
@@ -468,13 +414,14 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
             // restoring the original colors, for further writing
-            currentRtb.SelectionStart = originalIndex;
-            currentRtb.SelectionLength = originalLength;
-            currentRtb.SelectionColor = originalColor;
-            SendMessage(Handle, WM_SETREDRAW, true, 0);
-            Refresh();
+          currentRtb.SelectionStart = originalIndex;
+        currentRtb.SelectionLength = originalLength;
+          currentRtb.SelectionColor = originalColor;
+
+            //  SendMessage(Handle, WM_SETREDRAW, true, 0);
+            //   Refresh();
         }
-     
+
         public void syntaxhighlightall(RichTextBox textbox)
         {
             RichTextBox Rtb = new RichTextBox();
@@ -515,13 +462,13 @@ namespace CS_IA_Ibasic_Intouch_Re
             // scanning...
             foreach (Match m in BkeywordMatches)
             {
-                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionStart = m.Index;
                 Rtb.SelectionLength = m.Length;
                 Rtb.SelectionColor = Color.Blue;
             }
             foreach (Match m in GkeywordMatches)
             {
-                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionStart = m.Index;
                 Rtb.SelectionLength = m.Length;
                 Rtb.SelectionColor = Color.DarkCyan;
             }
@@ -533,31 +480,115 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             foreach (Match m in YkeywordMatches)
             {
-                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionStart = m.Index;
                 Rtb.SelectionLength = m.Length;
                 Rtb.SelectionColor = Color.DarkGoldenrod;
             }
 
             foreach (Match m in typeMatches)
             {
-                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionStart = m.Index;
                 Rtb.SelectionLength = m.Length;
                 Rtb.SelectionColor = Color.Orange;
             }
             foreach (Match m in commentMatches)
             {
-                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionStart = m.Index;
                 Rtb.SelectionLength = m.Length;
                 Rtb.SelectionColor = Color.Green;
             }
 
             foreach (Match m in stringMatches)
             {
-                Rtb.SelectionStart = m.Index ;
+                Rtb.SelectionStart = m.Index;
                 Rtb.SelectionLength = m.Length;
                 Rtb.SelectionColor = Color.Brown;
             }
             textbox.Rtf = Rtb.Rtf;
+        }
+        public void syntaxhighlightall()
+        {
+            
+            if (currentRtb.Text == "")
+            {
+                return;
+            }
+            // getting keywords from the text
+            string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
+            MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Text, Bkeywords);
+            string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
+            MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Text, Gkeywords);
+            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
+            MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Text, Pkeywords);
+            string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|ROUND|CONVERTTOSTRING|GETRANDOMNUMBER)\b";
+            MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Text, Ykeywords);
+            // getting types/classes from the text 
+            string types = @"\b(?i)(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
+            MatchCollection typeMatches = Regex.Matches(currentRtb.Text, types);
+
+            // getting comments (inline or multiline)
+            string comments = @"\//.+?$";
+            MatchCollection commentMatches = Regex.Matches(currentRtb.Text, comments, RegexOptions.Multiline);
+
+            // getting strings
+            string strings = "\".+?\"";
+            MatchCollection stringMatches = Regex.Matches(currentRtb.Text, strings);
+
+            // saving the original caret position + forecolor
+            int originalIndex = currentRtb.SelectionStart;
+            int originalLength = currentRtb.SelectionLength;
+            Color originalColor = Color.Black;
+            // removes any previous highlighting (so modified words won't remain highlighted)
+            currentRtb.SelectionStart = 0;
+            currentRtb.SelectionLength = currentRtb.Text.Length;
+            currentRtb.SelectionColor = originalColor;
+            // scanning...
+            foreach (Match m in BkeywordMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Blue;
+            }
+            foreach (Match m in GkeywordMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.DarkCyan;
+            }
+            foreach (Match m in PkeywordMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Purple;
+            }
+            foreach (Match m in YkeywordMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.DarkGoldenrod;
+            }
+
+            foreach (Match m in typeMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Orange;
+            }
+            foreach (Match m in commentMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Green;
+            }
+
+            foreach (Match m in stringMatches)
+            {
+                currentRtb.SelectionStart = m.Index;
+                currentRtb.SelectionLength = m.Length;
+                currentRtb.SelectionColor = Color.Brown;
+            }
+      
+
         }
         private void initialliseAutoCompleteMenuItem()
         {
@@ -624,7 +655,8 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         public void UpdateIndentLevel()
         {
-                      
+
+            zoomfactor = LineNumberBox.ZoomFactor;
             int index = currentRtb.GetFirstCharIndexOfCurrentLine();
             int lineIndex = currentRtb.GetLineFromCharIndex(index)-1;
             string[] lines = currentRtb.Lines;
@@ -642,11 +674,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                     currentRtb.Lines = lines;
                     int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
                     syntaxhighlightall(currentRtb);
-                    if (ZoomBar.Value > 1)
-                    {
-                        currentRtb.ZoomFactor = (float)(ZoomBar.Value - 0.49);
-                    }
                     currentRtb.Select(charindex, 0);
+                    currentRtb.ZoomFactor = zoomfactor;
                     SendMessage(Handle, WM_SETREDRAW, true, 0);
                     Refresh();
                     return;
@@ -663,18 +692,15 @@ namespace CS_IA_Ibasic_Intouch_Re
                     currentRtb.Lines = lines;
                     int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
                     syntaxhighlightall(currentRtb);
-                    if(ZoomBar.Value > 1)
-                    {
-                        currentRtb.ZoomFactor = (float)(ZoomBar.Value - 0.49);
-                    }
+                    Thread.Sleep(200);
                     currentRtb.Select(charindex, 0);
-
+                    currentRtb.ZoomFactor = zoomfactor;
                     SendMessage(Handle, WM_SETREDRAW, true, 0);
                     Refresh();
                     return;
                 }
             }
-      
+        
 
         }
         public string getIndentSpace(int tablevel)
@@ -694,30 +720,43 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         private void CurrentRtb_KeyUp(object sender, KeyEventArgs e)
         {
-
-             if (e.KeyCode == Keys.Enter )
+            
+            zoomfactor = LineNumberBox.ZoomFactor;
+            float zoom = zoomfactor;
+            if (e.KeyCode == Keys.Enter )
             {
-                SendMessage(Handle, WM_SETREDRAW, false, 0);
+                int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
+                int charindex = 0;
                 addVariableNames();
                 checkresetindent();
-                UpdateIndentLevel();
-                checkresetindent();
-               int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
-                if(currentRtb.Lines[lineNumber] == "")
-                {                   
-                    string[] lines = currentRtb.Lines;
-                    lines[lineNumber] = getIndentSpace(tablevel);                    
-                    currentRtb.Lines = lines;
-                    int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
-                    syntaxhighlightall(currentRtb);
-                    currentRtb.Select(charindex, 0);
+               
+                if (currentRtb.Lines[lineNumber] == "")
+                {
+                    try
+                    {
+                        // Lock Window...
+                        string[] linesOfCurrentrtb;
+                        LockWindowUpdate(Handle);
+                        UpdateIndentLevel();
+                        checkresetindent();
+                        linesOfCurrentrtb = currentRtb.Lines;
+                        linesOfCurrentrtb[lineNumber] = getIndentSpace(tablevel);
+                        currentRtb.Lines = linesOfCurrentrtb;
+                        syntaxhighlightall(currentRtb);
+                        currentRtb.ZoomFactor = (float)(LineNumberBox.ZoomFactor+0.0000001);
+                        currentRtb.Select(currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length, 0);
+                        // Perform your painting / updates...
+                    }
+                    finally
+                    {
+                        // Release the lock...
+                        LockWindowUpdate(IntPtr.Zero);
+                    }
+
                    
+                    
+                    
                 }
-                SendMessage(Handle, WM_SETREDRAW, true, 0);
-                Refresh();
-
-
-
             }
         }
         private void checkresetindent()
@@ -748,8 +787,19 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             tablevel = temptablevel;
         }
-       
-        private void addVariableNames()
+        private void CurrentRtb_mouse(object sender, MouseEventArgs e)
+        {
+            if (  e.Delta > 0)
+            {
+                LineNumberBox.ZoomFactor = currentRtb.ZoomFactor;
+            }
+            else
+            {
+                LineNumberBox.ZoomFactor = currentRtb.ZoomFactor;
+            }
+        }
+
+            private void addVariableNames()
         {
             string[] text;
             string varname;
@@ -792,6 +842,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             
 
         }
+        [DllImport("user32.dll")]
+        private static extern long LockWindowUpdate(IntPtr Handle);
+
+
     
     }
 }

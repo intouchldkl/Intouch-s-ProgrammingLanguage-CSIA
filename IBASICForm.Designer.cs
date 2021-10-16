@@ -51,14 +51,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.ErrorMsgLabel = new System.Windows.Forms.Label();
             this.ErrorMsgBox = new System.Windows.Forms.RichTextBox();
-            this.ZoomBar = new System.Windows.Forms.TrackBar();
             this.CloseTabBut = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.autocompleteMenu1 = new AutocompleteMenuNS.AutocompleteMenu();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ZoomBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -212,7 +210,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.ErrorMsgLabel.AutoSize = true;
             this.ErrorMsgLabel.BackColor = System.Drawing.Color.LightSlateGray;
             this.ErrorMsgLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ErrorMsgLabel.Location = new System.Drawing.Point(23, 33);
+            this.ErrorMsgLabel.Location = new System.Drawing.Point(23, 19);
             this.ErrorMsgLabel.Name = "ErrorMsgLabel";
             this.ErrorMsgLabel.Size = new System.Drawing.Size(122, 13);
             this.ErrorMsgLabel.TabIndex = 5;
@@ -223,26 +221,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.ErrorMsgBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.autocompleteMenu1.SetAutocompleteMenu(this.ErrorMsgBox, null);
             this.ErrorMsgBox.ForeColor = System.Drawing.Color.DarkRed;
-            this.ErrorMsgBox.Location = new System.Drawing.Point(26, 61);
+            this.ErrorMsgBox.Location = new System.Drawing.Point(26, 46);
             this.ErrorMsgBox.Name = "ErrorMsgBox";
             this.ErrorMsgBox.ReadOnly = true;
-            this.ErrorMsgBox.Size = new System.Drawing.Size(377, 80);
+            this.ErrorMsgBox.Size = new System.Drawing.Size(377, 95);
             this.ErrorMsgBox.TabIndex = 4;
             this.ErrorMsgBox.Text = "";
-            // 
-            // ZoomBar
-            // 
-            this.ZoomBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ZoomBar.BackColor = System.Drawing.Color.LightSlateGray;
-            this.ZoomBar.Location = new System.Drawing.Point(228, 12);
-            this.ZoomBar.Maximum = 6;
-            this.ZoomBar.Minimum = 1;
-            this.ZoomBar.Name = "ZoomBar";
-            this.ZoomBar.Size = new System.Drawing.Size(171, 45);
-            this.ZoomBar.TabIndex = 3;
-            this.ZoomBar.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.ZoomBar.Value = 1;
-            this.ZoomBar.ValueChanged += new System.EventHandler(this.ZoomBar_ValueChanged);
             // 
             // CloseTabBut
             // 
@@ -273,7 +257,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.ZoomBar);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgBox);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgLabel);
             this.splitContainer1.Panel2MinSize = 135;
@@ -322,7 +305,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ZoomBar)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
@@ -357,7 +339,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private Button CloseTabBut;
         private Label ErrorMsgLabel;
         private RichTextBox ErrorMsgBox;
-        private TrackBar ZoomBar;
         private SplitContainer splitContainer1;
         private SplitContainer splitContainer2;
         private AutocompleteMenuNS.AutocompleteMenu autocompleteMenu1;

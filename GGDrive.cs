@@ -142,9 +142,14 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
      
             FilesResource.GetRequest request = Service.Files.Get(fileId);
+           var getrequest =  Service.Files.Export(fileId, ".txt");
             string FileName = request.Execute().Name;
+         //   var filestream = new FileStream(FileName, FileMode.Create, FileAccess.Write);
             MemoryStream stream1 = new MemoryStream();         
-            request.Download(stream1);
+        //    request.Download(stream1);
+            request.DownloadAsync(stream1);
+       //     getrequest.DownloadAsync(filestream);
+        //    filestream.Close();
             return FileName;
         }
 
