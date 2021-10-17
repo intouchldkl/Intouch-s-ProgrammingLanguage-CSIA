@@ -693,7 +693,6 @@ namespace CS_IA_Ibasic_Intouch_Re
                     currentRtb.Lines = lines;
                     int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
                     syntaxhighlightall(currentRtb);
-                    Thread.Sleep(200);
                     currentRtb.Select(charindex, 0);
                     currentRtb.ZoomFactor = zoomfactor;
                     SendMessage(Handle, WM_SETREDRAW, true, 0);
