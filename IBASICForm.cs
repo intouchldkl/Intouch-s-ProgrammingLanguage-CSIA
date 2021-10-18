@@ -32,9 +32,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         private float zoomfactor;
         ChromiumWebBrowser browser;
         private int tablevel = 0;
-        private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ", "Function ", "Procedure ", "Repeat " };
+        private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ",
+                                                    "Function ", "Procedure ", "Repeat " };
         private string[] keywords1 = new string[] { "ElseIf ", "Else" };
-        private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", "EndFunction", "EndProcedure", "Until ", "Next " };
+        private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", 
+                                                    "EndFunction", "EndProcedure", "Until ", "Next " };
         private List<string> varnames = new List<string>();
         private int[] tabsize = new int[32];
         public IBASICForm()
@@ -48,17 +50,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             settings.CefCommandLineArgs.Add("enable-media-stream", "1");
             browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
             {
-                //RequestHandler = webApiResourceHandler,
                 ContextMenuHandler MenuHandler = new ContextMenuHandler();
             };
-
-
             InitializeComponent();
-            //   RenderOptions.SetBitmapScalingMode(, BitmapScalingMode.HighQuality);
-            browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
+            browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");          
             browser.Dock = DockStyle.Fill;
             splitContainer2.Panel2.Controls.Add(browser);
-
             initialliseAutoCompleteMenuItem();
             RichTextBox RTB = new RichTextBox();
             tabPage1.Controls.Add(RTB);
@@ -80,7 +77,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             int increment = 0;
             for (int i = 0; i < 32; i++)
             {
-                tabsize[i] = increment += 20;
+                tabsize[i] = increment += 20; //set value to the tabsize to 20 increments
             }
             currentRtb.SelectionTabs = tabsize;
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
@@ -142,8 +139,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             SaveAsForm saveasform = new SaveAsForm();
             saveasform.Show();
-
-
         }
         private void Undo_Click(object sender, EventArgs e)
         {
@@ -157,10 +152,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         private void Run_Click(object sender, EventArgs e)
         {
             ErrorMsgBox.Clear();
-            IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
-            ///  currentRtb.Text = translator.Tcasestatement();
+            IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);      
             translator.putinFormat();
-            /// currentRtb.Text = translator.getTranslatedcode();
             if (translator.getIBASICerrormessages() == null)
             {
                 Compiler Icompiler = new Compiler(translator.getTranslatedcode());
@@ -205,6 +198,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             rtb.TextChanged += currentRtb_TextChanged;
             rtb.VScroll += CurrentRtb_VScroll;
             rtb.KeyUp += CurrentRtb_KeyUp;
+            rtb.MouseWheel += CurrentRtb_mouse;
             TabPage newTab = new TabPage();
             tabControl1.Controls.Add(newTab);
             newTab.Controls.Add(rtb);
@@ -344,7 +338,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Bkeywords);
             string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
             MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Gkeywords);
-            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
+            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE|RETURNS|RETURN)\b";
             MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Pkeywords);
             string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|ROUND|CONVERTTOSTRING|GETRANDOMNUMBER)\b";
             MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Ykeywords);
@@ -436,7 +430,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             MatchCollection BkeywordMatches = Regex.Matches(Rtb.Text, Bkeywords);
             string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
             MatchCollection GkeywordMatches = Regex.Matches(Rtb.Text, Gkeywords);
-            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
+            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE|RETURNS|RETURN)\b";
             MatchCollection PkeywordMatches = Regex.Matches(Rtb.Text, Pkeywords);
             string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|ROUND|CONVERTTOSTRING|GETRANDOMNUMBER)\b";
             MatchCollection YkeywordMatches = Regex.Matches(Rtb.Text, Ykeywords);
@@ -507,90 +501,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             textbox.Rtf = Rtb.Rtf;
         }
-        public void syntaxhighlightall()
-        {
-            
-            if (currentRtb.Text == "")
-            {
-                return;
-            }
-            // getting keywords from the text
-            string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
-            MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Text, Bkeywords);
-            string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
-            MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Text, Gkeywords);
-            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE)\b";
-            MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Text, Pkeywords);
-            string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|ROUND|CONVERTTOSTRING|GETRANDOMNUMBER)\b";
-            MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Text, Ykeywords);
-            // getting types/classes from the text 
-            string types = @"\b(?i)(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
-            MatchCollection typeMatches = Regex.Matches(currentRtb.Text, types);
-
-            // getting comments (inline or multiline)
-            string comments = @"\//.+?$";
-            MatchCollection commentMatches = Regex.Matches(currentRtb.Text, comments, RegexOptions.Multiline);
-
-            // getting strings
-            string strings = "\".+?\"";
-            MatchCollection stringMatches = Regex.Matches(currentRtb.Text, strings);
-
-            // saving the original caret position + forecolor
-            int originalIndex = currentRtb.SelectionStart;
-            int originalLength = currentRtb.SelectionLength;
-            Color originalColor = Color.Black;
-            // removes any previous highlighting (so modified words won't remain highlighted)
-            currentRtb.SelectionStart = 0;
-            currentRtb.SelectionLength = currentRtb.Text.Length;
-            currentRtb.SelectionColor = originalColor;
-            // scanning...
-            foreach (Match m in BkeywordMatches)
-            {
-                currentRtb.SelectionStart = m.Index;
-                currentRtb.SelectionLength = m.Length;
-                currentRtb.SelectionColor = Color.Blue;
-            }
-            foreach (Match m in GkeywordMatches)
-            {
-                currentRtb.SelectionStart = m.Index;
-                currentRtb.SelectionLength = m.Length;
-                currentRtb.SelectionColor = Color.DarkCyan;
-            }
-            foreach (Match m in PkeywordMatches)
-            {
-                currentRtb.SelectionStart = m.Index;
-                currentRtb.SelectionLength = m.Length;
-                currentRtb.SelectionColor = Color.Purple;
-            }
-            foreach (Match m in YkeywordMatches)
-            {
-                currentRtb.SelectionStart = m.Index;
-                currentRtb.SelectionLength = m.Length;
-                currentRtb.SelectionColor = Color.DarkGoldenrod;
-            }
-
-            foreach (Match m in typeMatches)
-            {
-                currentRtb.SelectionStart = m.Index;
-                currentRtb.SelectionLength = m.Length;
-                currentRtb.SelectionColor = Color.Orange;
-            }
-            foreach (Match m in commentMatches)
-            {
-                currentRtb.SelectionStart = m.Index;
-                currentRtb.SelectionLength = m.Length;
-                currentRtb.SelectionColor = Color.Green;
-            }
-
-            foreach (Match m in stringMatches)
-            {
-                currentRtb.SelectionStart = m.Index;
-                currentRtb.SelectionLength = m.Length;
-                currentRtb.SelectionColor = Color.Brown;
-            }
-      
-
-        }
+     
         private void initialliseAutoCompleteMenuItem()
         {
             autocompleteMenu1.AddItem("OUTPUT ");

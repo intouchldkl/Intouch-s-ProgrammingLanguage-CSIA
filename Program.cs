@@ -17,9 +17,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(IBASICForm.Instance);
-
-            
+            Application.Run(IBASICForm.Instance);            
         }
     }
 }

@@ -345,41 +345,40 @@ namespace CS_IA_Ibasic_Intouch_Re
         public List<GGDriveFile> getDisplayFileNames()
         {
             GGDriveFile[] AllDriveFiles = retrieveFile();
-            var List = new List<GGDriveFile>();
+            List<GGDriveFile> FileNamesList = new List<GGDriveFile>();
             bool ValidName = true;
-            List.Add(AllDriveFiles[0]);
+            FileNamesList.Add(AllDriveFiles[0]);
             for(int i = 1; i < AllDriveFiles.Length; i++)
             {
-                for(int z = 0; z < List.Count; z++)
+                for(int z = 0; z < FileNamesList.Count; z++)
                 {
-                    if(AllDriveFiles[i].Name == List[z].Name)
+                    if(AllDriveFiles[i].Name == FileNamesList[z].Name)
                     {
                         ValidName = false;
                     }
                 }
                 if(ValidName == true)
                 {
-                    List.Add(AllDriveFiles[i]);
+                    FileNamesList.Add(AllDriveFiles[i]);
                 }
                 ValidName = true;
             }
-            return List;
+            return FileNamesList;
 
         }
 
         public List<GGDriveFile> getVersionFiles(string Name)
         {
-            GGDriveFile[] AllDriveFiles = retrieveFile();
-            ///GGDriveFile[] VersionFiles = new GGDriveFile[AllDriveFiles.Length];
-            var List = new List<GGDriveFile>();
-            for(int i = 0; i < AllDriveFiles.Length; i++)
+            GGDriveFile[] AllDriveFiles = retrieveFile(); 
+            List<GGDriveFile> VersionFilesList = new List<GGDriveFile>();
+            for(int i = 0; i < AllDriveFiles.Length; i++) 
             {
-                if(AllDriveFiles[i].Name == Name)
+                if(AllDriveFiles[i].Name == Name)  //Check if the name matches
                 {
-                    List.Add(AllDriveFiles[i]);
+                    VersionFilesList.Add(AllDriveFiles[i]); // If so then add the file to the list
                 }
             }
-            return List;
+            return VersionFilesList;
         }
         public string getIBASICfolderId()
         {

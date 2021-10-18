@@ -128,8 +128,6 @@ namespace CS_IA_Ibasic_Intouch_Re
                     {
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Public ");
                         string line = IBASICcode[i];
-
-  
                         if (IBASICcode[i].Contains(keyword2) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
@@ -139,15 +137,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                         else
                         {
                             errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because ':' is missing ");
-                        }
-
-              
+                        }             
                     }
-
-
-
-                }
-                
+                }               
             }
         }
 
@@ -158,7 +150,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             string keyword = "DECLARE ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
-
                 ///get rid of all the spaces
                 string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
                 if (StringExtension.Contains(arraycheck, "ARRAY[") == true && StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword) == true)
@@ -167,7 +158,6 @@ namespace CS_IA_Ibasic_Intouch_Re
                     ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
                     if (line.Substring(7, 1) == " " && IBASICcode[i].Contains(",") == false)
                     {
-
                         string therest = line.Substring(7);
                         if (StringExtension.Contains(therest,"OF") == true && therest.Contains("]") == true)
                         {
@@ -178,34 +168,22 @@ namespace CS_IA_Ibasic_Intouch_Re
                                 if (variablearray.Length == 3)
                                 {
                                     string variableName = variablearray[0];
-                                    string[] indexandtype = variablearray[2].Split(']');
-                                    string type = indexandtype[1];
-                                    string[] types = new string[2];
-                                    if (therest.Contains("OF") == true)
+                                    string[] indexandtype = Regex.Split(variablearray[2], @"(?i)[]of]+");
+                                    if (indexandtype.Length == 2 && indexandtype[1] != "")
                                     {
-                                         types = type.Split('F');
-                                    }
-                                    else if(therest.Contains("Of") == true || therest.Contains("of") == true)
-                                    {
-                                         types = type.Split('f');
-                                    }
-                                    if (types.Length == 2 && types[1] != "")
-                                    {
-                                        types[1] = types[1].Trim();
+                                        indexandtype[1] = indexandtype[1].Trim();
                                         bool IsThereIndex = int.TryParse(indexandtype[0], out int index);
                                         if (IsThereIndex == true)
                                         {
-                                            IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + types[1];
+                                            IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + indexandtype[1];
                                             arrayvar.Add(variableName);
-                                            string globaldeclare = "Public " + variableName + "()" + " As " + types[1];
-                                            declarelines.Add(globaldeclare);
-                                      
+                                            string globaldeclare = "Public " + variableName + "()" + " As " + indexandtype[1];
+                                            declarelines.Add(globaldeclare);                                     
                                         }
                                         else
                                         {
                                             errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because an idex is missing");
                                         }
-
                                     }
                                 }
                             }
@@ -255,15 +233,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                                         string[] index2andtype = variablearray[3].Split(']');
                                         string type = index2andtype[1];
                                         string[] types = new string[2];
-                                        if (therest.Contains("OF") == true)
-                                        {
-                                            types = type.Split('F');
-                                        }
-                                        else if (therest.Contains("Of") == true || therest.Contains("of") == true)
-                                        {
-                                            types = type.Split('f');
-                                        }
-                                        if (types.Length == 2 && types[1] != "")
+                                    types = Regex.Split(type, @"(?i)[f]+");
+                                    if (types.Length == 2 && types[1] != "")
                                         {
 
                                         string index2 = index2andtype[0];
@@ -692,7 +663,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                         }
                         else
                         {
-                            errormessages.Add("Line " + (i + 1) + " 'RETURNS' is expected, A function must return value");
+                            errormessages.Add("Line " + (i + 1) + " 'RETURNS' is expected, Return data type must be specified");
                         }
                         ///Loop until ENDFUNCTION is found
                         for (int z = i; z < IBASICcode.Length; z++)
@@ -701,10 +672,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                             {
                                 IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(RETURN)\b", textinfo.ToTitleCase(keyword3));
                             }
-
-
-                            if (StringExtension.Contains(IBASICcode[z], keyword3) == true)
-                            {
+                         
                                 if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 11), keyword2) == true)
                                 {
                                     IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(ENDFUNCTION)\b", "End Function");
@@ -713,7 +681,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                     //Stop the process when ENDFUNCTION is found
                                     break;
                                 }
-                            }
+                            
                             if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)
                             {
                                 errormessages.Add(" ENDFUNCTION is expected somewhere");
@@ -804,7 +772,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void Tchar()
         {
             string pattern = "\'.+?\'";
-            char qm = '"';
             for (int i = 0; i < IBASICcode.Length;i++)
             {
                 MatchCollection stringMatches = Regex.Matches(IBASICcode[i], pattern);
@@ -854,17 +821,16 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             Translatedcode = Header;
             TranslateAll();
-            foreach(string l in declarelines)
+            foreach(string line in declarelines)
             {
-                Translatedcode = Translatedcode + l + "\n";
+                Translatedcode = Translatedcode + line + "\n";
             }
             Translatedcode = Translatedcode + submain;
             foreach (string line in IBASICcode)
             {
                 Translatedcode = Translatedcode + "\n" + line;
             }
-            char qm = '"';
-            Translatedcode = Translatedcode + "\n"  + "Console.WriteLine(" + qm + endmsg + qm + ")";
+            Translatedcode = Translatedcode + "\n"  + "Console.WriteLine(" + "\"" + endmsg + "\"" + ")";
             Translatedcode = Translatedcode + "\n" + "Console.ReadKey()";
             Translatedcode = Translatedcode + "\n" + endSubMain;
             Translatedcode = Translatedcode + "\n" + VBdivfunction;
