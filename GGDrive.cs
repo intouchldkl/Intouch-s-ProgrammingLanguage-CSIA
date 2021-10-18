@@ -228,12 +228,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             ///Make sure it gets id,name,version and createdTime
             listRequest.Fields = "nextPageToken, files(id, name,version,createdTime)";
             ///Make sure it retrieves from the right folder
-            listRequest.Q = listRequest.Q = ("(" + "'" + IBASICfolderid + "'" + " in parents" + ")" + "");
+            listRequest.Q = ("(" + "'" + IBASICfolderid + "'" + " in parents" + ")" + "");
             listRequest.PageSize = 100;
             var result = listRequest.Execute();
             // List files.
             IList<Google.Apis.Drive.v3.Data.File> files = result.Files;
-
             GGDriveFile[] driveFiles = new GGDriveFile[files.Count];
             while (files != null && files.Count > 0)
             {
