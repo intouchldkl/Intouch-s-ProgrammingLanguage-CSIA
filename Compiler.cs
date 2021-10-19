@@ -24,7 +24,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             parameters = new CompilerParameters();
 
         }
-
+        /// <summary>
+        /// Compile VB code and output in EXE file
+        /// </summary>
         public void launchEXE()
         {
             Process myprocess = new Process();
@@ -32,22 +34,22 @@ namespace CS_IA_Ibasic_Intouch_Re
             ///Make sure to generate an EXE, not a DLL
             parameters.GenerateExecutable = true;
             parameters.OutputAssembly = output;
+            //Compile the code..
             results = codeprovider.CompileAssemblyFromSource(parameters, codeToCompile);
-            if (results.Errors.Count == 0)
+            if (results.Errors.Count == 0)//If there's no error then..
             {              
                 myprocess.StartInfo.FileName = output;
-                myprocess.Start();
-      
+                //Launch EXE file
+                myprocess.Start();      
             }
             else
             {
                 foreach (CompilerError CompErr in results.Errors)
                 {
+                    //Get only the relevant message
                     string[] VBmsg = CompErr.ErrorText.Split('.');
-
                     ErrorMessage = ErrorMessage + " VBcompile error:  may be because of " +
                          VBmsg[0] + "\n";
-
                 }
             }
 

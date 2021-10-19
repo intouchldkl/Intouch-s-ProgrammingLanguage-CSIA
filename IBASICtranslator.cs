@@ -143,7 +143,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-
+        /// <summary>
+        /// Translate IBASIC array declaration to VB
+        /// </summary>
         public void TarrayDeclaration()
         {
             string line = "";
@@ -152,31 +154,37 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 ///get rid of all the spaces
                 string arraycheck = string.Concat(IBASICcode[i].Where(c => !Char.IsWhiteSpace(c)));
-                if (StringExtension.Contains(arraycheck, "ARRAY[") == true && StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword) == true)
+                if (StringExtension.Contains(arraycheck, "ARRAY[") == true 
+                    && StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword) == true)
                 {
                     line = IBASICcode[i].Trim();
                     ///This if statement makes sure "DECLARE" is not part of a variable name and isa array declaration
                     if (line.Substring(7, 1) == " " && IBASICcode[i].Contains(",") == false)
                     {
+                        //Get rid of the word "Declare" as it's already checked out
                         string therest = line.Substring(7);
                         if (StringExtension.Contains(therest,"OF") == true && therest.Contains("]") == true)
                         {
                             therest = string.Concat(therest.Where(c => !Char.IsWhiteSpace(c)));
                             if (therest.Contains(":") == true)
                             {
+                                //Split the variable name from the rest of its properties
                                 string[] variablearray = therest.Split(':');
                                 if (variablearray.Length == 3)
                                 {
                                     string variableName = variablearray[0];
+                                    //Split to get index and data type
                                     string[] indexandtype = Regex.Split(variablearray[2], @"(?i)[]of]+");
                                     if (indexandtype.Length == 2 && indexandtype[1] != "")
                                     {
                                         indexandtype[1] = indexandtype[1].Trim();
+                                        //Check if the index is valid
                                         bool IsThereIndex = int.TryParse(indexandtype[0], out int index);
                                         if (IsThereIndex == true)
                                         {
+                                            //Put the parts back in VB syntax
                                             IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + indexandtype[1];
-                                            arrayvar.Add(variableName);
+                                            arrayvar.Add(variableName);// Add to list for later use in arraytranslation
                                             string globaldeclare = "Public " + variableName + "()" + " As " + indexandtype[1];
                                             declarelines.Add(globaldeclare);                                     
                                         }
@@ -639,8 +647,12 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Translate IBASIC function to VB
+        /// </summary>
         public void Tfunction()
         {
+            //All keywords
             string keyword1 = "FUNCTION ";
             string keyword2 = "ENDFUNCTION";
             string keyword3 = "RETURN ";
@@ -650,38 +662,47 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
                 {
+                    //Check if if the first word is keyword1
                     if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 9), keyword1) == true)
                     {
+                        //Translate keyword1
                         IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 8), "Function");
+                        //Repeat the process for other keyword
                         if (IBASICcode[i].Contains(keyword4) == true)
                         {
                             IBASICcode[i] = IBASICcode[i].Replace(keyword4, " As ");
                         }
                         if (StringExtension.Contains(IBASICcode[i], keyword5) == true)
                         {
+                            //Use regex (?i) means case insensitive
                             IBASICcode[i] = Regex.Replace(IBASICcode[i], @"\b(?i)(RETURNS)\b", " As ");
                         }
                         else
                         {
                             errormessages.Add("Line " + (i + 1) + " 'RETURNS' is expected, Return data type must be specified");
                         }
-                        ///Loop until ENDFUNCTION is found
+                        //When the declaration line is checked out
+                        //Loop until ENDFUNCTION is found
                         for (int z = i; z < IBASICcode.Length; z++)
                         {
+                            //Check and translate
                             if (StringExtension.Contains(IBASICcode[z], keyword3) == true)
                             {
                                 IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(RETURN)\b", textinfo.ToTitleCase(keyword3));
                             }
-                         
+                                //When keyword2 is found means the function has been closed
                                 if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 11), keyword2) == true)
                                 {
                                     IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(ENDFUNCTION)\b", "End Function");
+                                    //Store the line in a list
                                     IBfunctionsNsub.Add(IBASICcode[z]);
+                                    //Remove the line from the main body
                                     IBASICcode[z] = "";
                                     //Stop the process when ENDFUNCTION is found
                                     break;
                                 }
-                            
+                            //If it reaches the end and keyword2 is still not found
+                            //then add an error message
                             if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)
                             {
                                 errormessages.Add(" ENDFUNCTION is expected somewhere");
@@ -783,7 +804,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-        
+        /// <summary>
+        /// Call all translation methods
+        /// </summary>
         public void TranslateAll()
         {
             Tcomment();
@@ -817,19 +840,28 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Translate IBASIC code and put it in VB format
+        /// </summary>
         public void putinFormat()
         {
+            //Put in Imports System and  Module Program
             Translatedcode = Header;
-            TranslateAll();
+            //Call all the IBASIC-VB translation methods
+            TranslateAll(); 
+            //Put in all the variable declarations
             foreach(string line in declarelines)
             {
                 Translatedcode = Translatedcode + line + "\n";
             }
+            //Put in Sub Main(args As String())
             Translatedcode = Translatedcode + submain;
+            //Put in all the main translated code
             foreach (string line in IBASICcode)
             {
                 Translatedcode = Translatedcode + "\n" + line;
             }
+            //Put all the built-in functions
             Translatedcode = Translatedcode + "\n"  + "Console.WriteLine(" + "\"" + endmsg + "\"" + ")";
             Translatedcode = Translatedcode + "\n" + "Console.ReadKey()";
             Translatedcode = Translatedcode + "\n" + endSubMain;
@@ -845,10 +877,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             Translatedcode = Translatedcode + "\n" + VBConvertToStringFunction;
             Translatedcode = Translatedcode + "\n" + VBConvertToStringFunction2;
             Translatedcode = Translatedcode + "\n" + VBConvertToStringFunction3;
+            //Put in user-written functions or procedures
             foreach (string line in IBfunctionsNsub)
             {
                 Translatedcode = Translatedcode + "\n" + line;
             }
+            //Put in end module
             Translatedcode = Translatedcode + "\n" + endModule;
         }
         public string getTranslatedcode()

@@ -340,36 +340,52 @@ namespace CS_IA_Ibasic_Intouch_Re
             
             return false;
         }
-
+        /// <summary>
+        /// Get the files with unique names
+        /// </summary>
+        /// <returns></returns>
         public List<GGDriveFile> getDisplayFileNames()
         {
-            GGDriveFile[] AllDriveFiles = retrieveFile();
+            //Get all files from IBASIC folder
+            GGDriveFile[] AllDriveFiles = retrieveFile(); 
             List<GGDriveFile> FileNamesList = new List<GGDriveFile>();
-            bool ValidName = true;
+            //Act as determiner if the file has unique name
+            bool ValidName = true; 
+            //Add the first file to the list
             FileNamesList.Add(AllDriveFiles[0]);
+            //Loop through all drive files
             for(int i = 1; i < AllDriveFiles.Length; i++)
             {
+                //Loop through the current FileNamesList
                 for(int z = 0; z < FileNamesList.Count; z++)
                 {
+                    //Check if there's any duplicate names
                     if(AllDriveFiles[i].Name == FileNamesList[z].Name)
                     {
                         ValidName = false;
                     }
                 }
+                //If there's no duplicate then add to the list
                 if(ValidName == true)
                 {
                     FileNamesList.Add(AllDriveFiles[i]);
                 }
+                //Reset to default for the next loop
                 ValidName = true;
             }
             return FileNamesList;
 
         }
-
+        /// <summary>
+        /// Get all the version files(Files with the same name)
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <returns></returns>
         public List<GGDriveFile> getVersionFiles(string Name)
         {
             GGDriveFile[] AllDriveFiles = retrieveFile(); 
             List<GGDriveFile> VersionFilesList = new List<GGDriveFile>();
+            //Loop through all the files from IBASIC folder
             for(int i = 0; i < AllDriveFiles.Length; i++) 
             {
                 if(AllDriveFiles[i].Name == Name)  //Check if the name matches

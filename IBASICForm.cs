@@ -23,6 +23,14 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public partial class IBASICForm : Form
     {
+        /// <summary>
+        /// Freeze the screen
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <param name="wMsg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
         private const int WM_SETREDRAW = 11;
@@ -57,17 +65,18 @@ namespace CS_IA_Ibasic_Intouch_Re
             browser.Dock = DockStyle.Fill;
             splitContainer2.Panel2.Controls.Add(browser);
             initialliseAutoCompleteMenuItem();
+            //Initialise the richtextbox and its properties
             RichTextBox RTB = new RichTextBox();
-            tabPage1.Controls.Add(RTB);
+            tabPage1.Controls.Add(RTB); //Add the rtb to the tab control
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
             currentRtb.AcceptsTab = true;
-            currentRtb.Dock = DockStyle.Fill;
-            currentRtb.SelectionIndent = 0;
+            currentRtb.Dock = DockStyle.Fill; //Make sure the rtb filled the given area
             //To allow both scrollbars
             currentRtb.ScrollBars = RichTextBoxScrollBars.Both;
             // To allow horizontal scroll bar to work by unlimiting the wordwrap
             currentRtb.WordWrap = false;
             currentRtb.AcceptsTab = true;
+            //Assign all the event handlers
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.KeyUp += CurrentRtb_KeyUp;
@@ -79,7 +88,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 tabsize[i] = increment += 20; //set value to the tabsize to 20 increments
             }
-            currentRtb.SelectionTabs = tabsize;
+            currentRtb.SelectionTabs = tabsize; // Assign new value to the tab size
             autocompleteMenu1.SetAutocompleteMenu(currentRtb, autocompleteMenu1);
             if (Directory.Exists("token.json") == true)
             {
@@ -92,6 +101,9 @@ namespace CS_IA_Ibasic_Intouch_Re
 
 
         }
+        /// <summary>
+        /// Initialise a singleton pattern
+        /// </summary>
         public static IBASICForm Instance
         {
             get { return instance ?? (instance = new IBASICForm()); }
@@ -135,10 +147,16 @@ namespace CS_IA_Ibasic_Intouch_Re
                 SAVEAS.PerformClick();
             }
         }
+        /// <summary>
+        /// Invoked when the SaveAs button is clicked and display SaveAsForm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveAs_Click(object sender, EventArgs e)
         {
+            //Create a new SaveAsForm object
             SaveAsForm saveasform = new SaveAsForm();
-            saveasform.Show();
+            saveasform.Show(); //Display the form
         }
         private void Undo_Click(object sender, EventArgs e)
         {
@@ -149,26 +167,36 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             currentRtb.Redo();
         }
+        /// <summary>
+        /// Invoked the run button is clicked and will translate and 
+        /// compile the code from current richtextbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Run_Click(object sender, EventArgs e)
         {
-            ErrorMsgBox.Clear();
-            IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);      
+            //Clear the ErrorMsgBox to avoid confusion from the old error messages
+            ErrorMsgBox.Clear(); 
+            IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
+            //Translate IBASIC code and put in the correct VB format
             translator.putinFormat();
-            if (translator.getIBASICerrormessages() == null)
+            if (translator.getIBASICerrormessages() == null)//no error message then..
             {
                 Compiler Icompiler = new Compiler(translator.getTranslatedcode());
+                //Launch the compiled result
                 Icompiler.launchEXE();
-                if (Icompiler.getErrorMessages() != null)
+                if (Icompiler.getErrorMessages() != null)//If there is internal error
                 {
+                    //Send the error messages to ErrorMsgBox
                     ErrorMsgBox.Text = Icompiler.getErrorMessages();
                 }
             }
             else
             {
+                //If there's error message from the translator then
+                //Send the error message to the ErrorMsgBox
                 ErrorMsgBox.Text = translator.getIBASICerrormessages();
             }
-
-
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
@@ -564,56 +592,70 @@ namespace CS_IA_Ibasic_Intouch_Re
                 return false;
             }
         }
-
+        /// <summary>
+        /// Update the position of keywords
+        /// </summary>
         public void UpdateIndentLevel()
         {
-
+            //Set the value of current zoomfactor
             zoomfactor = LineNumberBox.ZoomFactor;
+            //Retrieve the current linenumber of the rtb
             int index = currentRtb.GetFirstCharIndexOfCurrentLine();
             int lineIndex = currentRtb.GetLineFromCharIndex(index)-1;
             string[] lines = currentRtb.Lines;
             int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
+            //If there is no line then return
             if (lineIndex < 0) lineIndex = 0;
             if (currentRtb.Lines.Length <= 0) return;
             string line = currentRtb.Lines[lineIndex];
-           
+            //Loop to check first type of keywords eg Elseif
             for (int i = 0; i < keywords1.Length; i++)
             {
                 if (checkKeyword(keywords1[i], line))
                 {
+                    //Send the message to win32 to freeze the screen
                     SendMessage(Handle, WM_SETREDRAW, false, 0);
+                    //Proceed to reset the position
                     lines[lineIndex] = getIndentSpace(tablevel-1) + currentRtb.Lines[lineIndex].Replace("\t", "");
                     currentRtb.Lines = lines;
+                    //Give the rtb all its properties back
                     int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
                     syntaxhighlightall(currentRtb);
                     currentRtb.Select(charindex, 0);
                     currentRtb.ZoomFactor = zoomfactor;
+                    //Unfreeze the screen
                     SendMessage(Handle, WM_SETREDRAW, true, 0);
                     Refresh();
                     return;
                 }
             }
+            //Loop to check another type of keywords2 eg EndIf
             for (int i = 0; i < keywords2.Length; i++)
             {
                 if (checkKeyword(keywords2[i], line))
                 {
-                    // if (tablevel <= 0) break;
-                    //   tablevel--;
+                    //Send the message to win32 to freeze the screen
                     SendMessage(Handle, WM_SETREDRAW, false, 0);
+                    //Proceed to reset the position
                     lines[lineIndex] = getIndentSpace(tablevel) + currentRtb.Lines[lineIndex].Replace("\t", "");
                     currentRtb.Lines = lines;
+                    //Give the rtb all its properties back
                     int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
                     syntaxhighlightall(currentRtb);
                     currentRtb.Select(charindex, 0);
                     currentRtb.ZoomFactor = zoomfactor;
+                    //Unfreeze the screen
                     SendMessage(Handle, WM_SETREDRAW, true, 0);
                     Refresh();
                     return;
                 }
             }
-        
-
         }
+        /// <summary>
+        /// Retrives the space given by tablevel
+        /// </summary>
+        /// <param name="tablevel"></param>
+        /// <returns></returns> spaces
         public string getIndentSpace(int tablevel)
         {
             string spaces = "";
@@ -623,62 +665,80 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             return spaces;
         }
+        /// <summary>
+        /// Check if keyword matches
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>True or False
         public bool checkKeyword(string keyword, string line)
         {
                 if (keyword.Length > line.TrimStart().Length) return false;
             return StringExtension.Contains(line.TrimStart().Substring(0, keyword.Length), keyword);
           
         }
+        /// <summary>
+        /// Implement auto indentation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CurrentRtb_KeyUp(object sender, KeyEventArgs e)
         {
-            
+          //Set the value of zoomfactor
             zoomfactor = LineNumberBox.ZoomFactor;
-            if (e.KeyCode == Keys.Enter )
+            if (e.KeyCode == Keys.Enter ) //When enter key is pressed
             {
+                //Get the linenumber
                 int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
+                //Add variable names to intelisense
                 addVariableNames();
-                checkresetindent();             
-                if (currentRtb.Lines[lineNumber] == "")
+                //Check the indentlevel
+                checkindent();             
+                if (currentRtb.Lines[lineNumber] == "")//If it's a new line
                 {
                     try
                     {
-                        // Lock Window...
                         string[] linesOfCurrentrtb;
+                        // Lock Window...
                         LockWindowUpdate(Handle);
-                        UpdateIndentLevel();
-                        checkresetindent();
-                        linesOfCurrentrtb = currentRtb.Lines;
+                        UpdateIndentLevel();//Reset position of Keywords1&2
+                        checkindent();//Check Indentlevel again
+                        linesOfCurrentrtb = currentRtb.Lines;//Store to a temp array to prevent runtime interface issue
+                        //Implement identation
                         linesOfCurrentrtb[lineNumber] = getIndentSpace(tablevel);
+                        //Give all its properties back
                         currentRtb.Lines = linesOfCurrentrtb;
                         syntaxhighlightall(currentRtb);
                         currentRtb.ZoomFactor = (float)(zoomfactor+0.0000001);
+                        //Put the cursor back on the appropriate position
                         currentRtb.Select(currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length, 0);
                     }
                     finally
                     {
                         // Release the lock...
                         LockWindowUpdate(IntPtr.Zero);
-                    }
-
-                   
-                    
-                    
+                    }                   
                 }
             }
         }
-        private void checkresetindent()
+        /// <summary>
+        /// Check the indent level from the first line 
+        /// to the line where the cursor is
+        /// </summary>
+        private void checkindent()
         {
             int temptablevel = 0;
+            //Get the current line number
             int lineNumber = currentRtb.GetLineFromCharIndex(currentRtb.GetFirstCharIndexOfCurrentLine());
+            //Loop from the first line to current line
             for (int z = 0; z < lineNumber; z++)
             {
                 string line = currentRtb.Lines[z];
-
                 for (int i = 0; i < keywords.Length; i++)
                 {
                     if (checkKeyword(keywords[i], line))
                     {
-                        temptablevel++;
+                        temptablevel++;//Increment tablevel if keywords are found
                         break;
                     }
                 }
@@ -686,12 +746,13 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     if (checkKeyword(keywords2[i], line))
                     {
-                        if (temptablevel <= 0) break;
-                        temptablevel--;
+                        if (temptablevel <= 0) break;//Tablevel cant be less than 0
+                        temptablevel--;//Decrement tablevel if keywords are found
                         break;
                     }
                 }
             }
+            //Assign value to tablevel
             tablevel = temptablevel;
         }
         private void CurrentRtb_mouse(object sender, MouseEventArgs e)
