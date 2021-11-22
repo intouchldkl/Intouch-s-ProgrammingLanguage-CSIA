@@ -35,11 +35,15 @@ namespace CS_IA_Ibasic_Intouch_Re
         private const string VBConvertToStringFunction2 = "Function CONVERTTOSTRING(s As Boolean)" + "\n" + "Return s.ToString" + "\n" + "End Function";
         private const string VBConvertToStringFunction3 = "Function CONVERTTOSTRING(s As Double)" + "\n" + "Return s.ToString" + "\n" + "End Function";
         private List<string> declarelines = new List<string>();
-       
-
-        public IBASICtranslator(string[] IBASICcode)
+        private bool isLocal;
+        /// <summary>
+        /// Constructor for IBASICtranslator class
+        /// </summary>
+        /// <param name="IBASICcode"></param>
+        public IBASICtranslator(string[] IBASICcode, bool IsLocal)
         {
             this.IBASICcode = IBASICcode;
+            this.isLocal = IsLocal;
         }
         public void Toutput()
         {
@@ -126,18 +130,34 @@ namespace CS_IA_Ibasic_Intouch_Re
                     ///This if statement makes sure "DECLARE" is not part of a variable name and its not array declaration
                     if (StringExtension.compare(IBASICcode[i].TrimStart().Substring(0, 8), keyword) == true && StringExtension.Contains(arraycheck,"ARRAY[") == false)
                     {
-                        IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Public ");
-                        string line = IBASICcode[i];
-                        if (IBASICcode[i].Contains(keyword2) == true)
+                        if (isLocal == false)
                         {
-                            IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
-                            declarelines.Add(IBASICcode[i]);
-                            IBASICcode[i] = "";
+                            IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Public ");
+                            string line = IBASICcode[i];
+                            if (IBASICcode[i].Contains(keyword2) == true)
+                            {
+                                IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
+                                declarelines.Add(IBASICcode[i]);
+                                IBASICcode[i] = "";
+                            }
+                            else
+                            {
+                                errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because ':' is missing ");
+                            }
                         }
                         else
                         {
-                            errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because ':' is missing ");
-                        }             
+                            IBASICcode[i] = IBASICcode[i].Replace(IBASICcode[i].TrimStart().Substring(0, 7), "Dim ");
+
+                            if (IBASICcode[i].Contains(keyword2) == true)
+                            {
+                                IBASICcode[i] = IBASICcode[i].Replace(keyword2, " As ");
+                            }
+                            else
+                            {
+                                errormessages.Add("Line " + (i + 1) + " : Syntax error : Could be because ':' is missing ");
+                            }
+                        }
                     }
                 }               
             }
@@ -185,24 +205,34 @@ namespace CS_IA_Ibasic_Intouch_Re
                                             //Put the parts back in VB syntax
                                             IBASICcode[i] = "Dim " + variableName + "(" + index + ")" + " As " + indexandtype[1];
                                             arrayvar.Add(variableName);// Add to list for later use in arraytranslation
-                                            string globaldeclare = "Public " + variableName + "()" + " As " + indexandtype[1];
-                                            declarelines.Add(globaldeclare);                                     
+                                            if(isLocal == false)
+                                            {
+                                                string globaldeclare = "Public " + variableName + "()" + " As " + indexandtype[1];
+                                                declarelines.Add(globaldeclare);
+                                            }
+                                                                                 
                                         }
                                         else
                                         {
-                                            errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because an idex is missing");
+                                            //Invalid array index
+                                            errormessages.Add("Line " + (i + 1) + 
+                                                " : Syntax error: could be because an idex is missing");
                                         }
                                     }
                                 }
                             }
                             else
                             {
-                                errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because ':' is missing");
+                                //Missing ":"
+                                errormessages.Add("Line " + (i + 1) +
+                                    " : Syntax error: could be because ':' is missing");
                             }
                         }
                         else
                         {
-                            errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because 'OF' or ']' is missing");
+                            //Missing "OF" or "]"
+                            errormessages.Add("Line " + (i + 1) + 
+                                " : Syntax error: could be because 'OF' or ']' is missing");
                         }
                     }
 
@@ -248,14 +278,12 @@ namespace CS_IA_Ibasic_Intouch_Re
                                         string index2 = index2andtype[0];
                                                 IBASICcode[i] = "Dim " + variableName + "(" + index1 + ", " + index2 + ")" + " As " + types[1];
                                                 arrayvar.Add(variableName);
-                                        string globaldeclare = "Public " + variableName + "(1000,1000)" + " As " + types[1];
-                                        declarelines.Add(globaldeclare);
-
-                                        //        else
-                                        //     {
-                                        //           errormessages.Add("Line " + (i + 1) + " : Syntax error: could be because there is an index missing");
-                                        //       }
-
+                                        if(isLocal == false)
+                                        {
+                                            string globaldeclare = "Public " + variableName + "(1000,1000)" + " As " + types[1];
+                                            declarelines.Add(globaldeclare);
+                                        }
+                                        
                                     }
                                         else
                                         {
@@ -679,7 +707,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                         }
                         else
                         {
-                            errormessages.Add("Line " + (i + 1) + " 'RETURNS' is expected, Return data type must be specified");
+                            errormessages.Add("Line " + (i + 1) + 
+                                " 'RETURNS' is expected, Return data type must be specified");
                         }
                         //When the declaration line is checked out
                         //Loop until ENDFUNCTION is found
@@ -690,17 +719,17 @@ namespace CS_IA_Ibasic_Intouch_Re
                             {
                                 IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(RETURN)\b", textinfo.ToTitleCase(keyword3));
                             }
-                                //When keyword2 is found means the function has been closed
-                                if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 11), keyword2) == true)
-                                {
-                                    IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(ENDFUNCTION)\b", "End Function");
-                                    //Store the line in a list
-                                    IBfunctionsNsub.Add(IBASICcode[z]);
-                                    //Remove the line from the main body
-                                    IBASICcode[z] = "";
-                                    //Stop the process when ENDFUNCTION is found
-                                    break;
-                                }
+                            //When keyword2 is found means the function has been closed
+                            if (StringExtension.compare(IBASICcode[z].TrimStart().Substring(0, 11), keyword2) == true)
+                            {
+                                 IBASICcode[z] = Regex.Replace(IBASICcode[z], @"\b(?i)(ENDFUNCTION)\b", "End Function");
+                                 //Store the line in a list
+                                 IBfunctionsNsub.Add(IBASICcode[z]);
+                                 //Remove the line from the main body
+                                 IBASICcode[z] = "";
+                                 //Stop the process when ENDFUNCTION is found
+                                 break;
+                            }
                             //If it reaches the end and keyword2 is still not found
                             //then add an error message
                             if (z == (IBASICcode.Length - 1) && StringExtension.Contains(IBASICcode[z], keyword2) == false)

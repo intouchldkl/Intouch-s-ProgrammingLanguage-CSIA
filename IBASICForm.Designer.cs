@@ -55,6 +55,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.autocompleteMenu1 = new AutocompleteMenuNS.AutocompleteMenu();
+            this.VarSettingBut = new CS_IA_Ibasic_Intouch_Re.CustomButton();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -257,6 +258,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.VarSettingBut);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgBox);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgLabel);
             this.splitContainer1.Panel2MinSize = 135;
@@ -288,6 +290,22 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.autocompleteMenu1.ImageList = null;
             this.autocompleteMenu1.Items = new string[0];
             this.autocompleteMenu1.TargetControlWrapper = null;
+            // 
+            // VarSettingBut
+            // 
+            this.VarSettingBut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VarSettingBut.BackColor = System.Drawing.Color.Cornsilk;
+            this.VarSettingBut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.VarSettingBut.Font = new System.Drawing.Font("Tahoma", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VarSettingBut.GlowColor = System.Drawing.Color.Gold;
+            this.VarSettingBut.Location = new System.Drawing.Point(193, 3);
+            this.VarSettingBut.Name = "VarSettingBut";
+            this.VarSettingBut.Size = new System.Drawing.Size(144, 34);
+            this.VarSettingBut.TabIndex = 6;
+            this.VarSettingBut.Text = "Local Mode";
+            this.VarSettingBut.UseCompatibleTextRendering = true;
+            this.VarSettingBut.UseVisualStyleBackColor = true;
+            this.VarSettingBut.Click += new System.EventHandler(this.VarSettingBut_Click);
             // 
             // IBASICForm
             // 
@@ -342,5 +360,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private SplitContainer splitContainer1;
         private SplitContainer splitContainer2;
         private AutocompleteMenuNS.AutocompleteMenu autocompleteMenu1;
+        private CustomButton VarSettingBut;
     }
 }

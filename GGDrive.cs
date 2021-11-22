@@ -343,7 +343,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// <summary>
         /// Get the files with unique names
         /// </summary>
-        /// <returns></returns>
+        /// <returns></returns>List of GGDriveFile with unique names
         public List<GGDriveFile> getDisplayFileNames()
         {
             //Get all files from IBASIC folder
@@ -380,7 +380,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// Get all the version files(Files with the same name)
         /// </summary>
         /// <param name="Name"></param>
-        /// <returns></returns>
+        /// <returns></returns> A list of GGDriveFile with the same names
         public List<GGDriveFile> getVersionFiles(string Name)
         {
             GGDriveFile[] AllDriveFiles = retrieveFile(); 

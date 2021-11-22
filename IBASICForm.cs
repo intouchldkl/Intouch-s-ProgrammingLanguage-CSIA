@@ -47,6 +47,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                                                     "EndFunction", "EndProcedure", "Until ", "Next " };
         private List<string> varnames = new List<string>();
         private int[] tabsize = new int[32];
+        private bool IsLocal = true;
         public IBASICForm()
         {
             CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
@@ -61,9 +62,12 @@ namespace CS_IA_Ibasic_Intouch_Re
                 ContextMenuHandler MenuHandler = new ContextMenuHandler();
             };
             InitializeComponent();
-            browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");          
-            browser.Dock = DockStyle.Fill;
-            splitContainer2.Panel2.Controls.Add(browser);
+            //Create a ChromiumWebBrowser object and pass in my web page's URL
+            browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ")
+            {
+                Dock = DockStyle.Fill//Set Dock to fill so it covers the entire area
+            };
+            splitContainer2.Panel2.Controls.Add(browser);//Add the webpage to the area allocated
             initialliseAutoCompleteMenuItem();
             //Initialise the richtextbox and its properties
             RichTextBox RTB = new RichTextBox();
@@ -81,10 +85,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.VScroll += CurrentRtb_VScroll;
             currentRtb.KeyUp += CurrentRtb_KeyUp;
             currentRtb.MouseWheel += CurrentRtb_mouse;
-            currentRtb.Font = new Font("Microsoft Sans Serif", 9.5F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            currentRtb.Font = new Font("Microsoft Sans Serif", 
+                9.5F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             currentRtb.SelectAll();
             int increment = 0;
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 32; i++)//Loop to 32 because tabsize can only have 32 elements
             {
                 tabsize[i] = increment += 20; //set value to the tabsize to 20 increments
             }
@@ -129,8 +134,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             AddLineNumbers();
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
-
-
         }
         private void Save_Click(object sender, EventArgs e)
         {
@@ -177,7 +180,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             //Clear the ErrorMsgBox to avoid confusion from the old error messages
             ErrorMsgBox.Clear(); 
-            IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
+            IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines, IsLocal);
             //Translate IBASIC code and put in the correct VB format
             translator.putinFormat();
             if (translator.getIBASICerrormessages() == null)//no error message then..
@@ -619,7 +622,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                     lines[lineIndex] = getIndentSpace(tablevel-1) + currentRtb.Lines[lineIndex].Replace("\t", "");
                     currentRtb.Lines = lines;
                     //Give the rtb all its properties back
-                    int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length;
+                    int charindex = currentRtb.GetFirstCharIndexFromLine(lineNumber) 
+                        + currentRtb.Lines[lineNumber].Length;
                     syntaxhighlightall(currentRtb);
                     currentRtb.Select(charindex, 0);
                     currentRtb.ZoomFactor = zoomfactor;
@@ -654,14 +658,14 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// <summary>
         /// Retrives the space given by tablevel
         /// </summary>
-        /// <param name="tablevel"></param>
+        /// <param name="tablevel"></param> Current tab level
         /// <returns></returns> spaces
         public string getIndentSpace(int tablevel)
         {
             string spaces = "";
-            for(int i = 0; i < tablevel; i++)
+            for(int i = 0; i < tablevel; i++)// Loops til the tab level
             {
-                spaces = spaces + "\t" ;
+                spaces = spaces + "\t" ;//Add spaces until it reaches the tablevel
             }
             return spaces;
         }
@@ -711,7 +715,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                         syntaxhighlightall(currentRtb);
                         currentRtb.ZoomFactor = (float)(zoomfactor+0.0000001);
                         //Put the cursor back on the appropriate position
-                        currentRtb.Select(currentRtb.GetFirstCharIndexFromLine(lineNumber) + currentRtb.Lines[lineNumber].Length, 0);
+                        currentRtb.Select(currentRtb.GetFirstCharIndexFromLine(lineNumber)
+                            + currentRtb.Lines[lineNumber].Length, 0);
                     }
                     finally
                     {
@@ -813,7 +818,24 @@ namespace CS_IA_Ibasic_Intouch_Re
         [DllImport("user32.dll")]
         private static extern long LockWindowUpdate(IntPtr Handle);
 
-
-    
+        private void VarSettingBut_Click(object sender, EventArgs e)
+        {
+            
+            if( VarSettingBut.Text == "Local Mode")
+            { 
+                VarSettingBut.BackColor = Color.LightGreen;
+                VarSettingBut.GlowColor = Color.Green;
+                VarSettingBut.Text = "Global Mode";
+                IsLocal = false;
+            }
+            else if (VarSettingBut.Text == "Global Mode")
+            {
+                VarSettingBut.Text = "Local Mode";
+                VarSettingBut.BackColor = Color.Cornsilk;
+                VarSettingBut.GlowColor = Color.Gold;
+                IsLocal = true;
+            }
+        }
     }
+
 }

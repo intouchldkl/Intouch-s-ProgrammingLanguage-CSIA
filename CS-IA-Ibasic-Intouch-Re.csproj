@@ -123,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compiler.cs" />
+    <Compile Include="customButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GGDrive.cs" />
     <Compile Include="GGDriveFile.cs" />
     <Compile Include="IBASICForm.cs">
