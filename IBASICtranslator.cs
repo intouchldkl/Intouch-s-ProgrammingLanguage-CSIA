@@ -13,8 +13,8 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string[] IBASICcode;
         private string Translatedcode;
         private string errmsg;
-        TextInfo textinfo = new CultureInfo("en-Uk", false).TextInfo;
-        private List<string> arrayvar = new List<string>();
+        TextInfo textinfo = new CultureInfo(0x040A, false).TextInfo;
+        private List<string> arrayvar = new List<string>(); 
         private List<string> IBfunctionsNsub = new List<string>();
         private List<string> errormessages = new List<string>();
         private const string VBdivfunction = "Function DIV(i As Integer, z As Integer)" + "\n" + " Return Math.Floor(i / z)" + "\n" + "End Function";
