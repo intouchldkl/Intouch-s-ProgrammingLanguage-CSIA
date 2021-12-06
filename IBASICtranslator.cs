@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -36,18 +37,27 @@ namespace CS_IA_Ibasic_Intouch_Re
         private const string VBConvertToStringFunction3 = "Function CONVERTTOSTRING(s As Double)" + "\n" + "Return s.ToString" + "\n" + "End Function";
         private List<string> declarelines = new List<string>();
         private bool isLocal;
+        private string[] keywords;
+       
         /// <summary>
         /// Constructor for IBASICtranslator class
         /// </summary>
         /// <param name="IBASICcode"></param>
-        public IBASICtranslator(string[] IBASICcode, bool IsLocal)
+        public IBASICtranslator(string[] IBASICcode)
         {
             this.IBASICcode = IBASICcode;
-            this.isLocal = IsLocal;
+            if (File.Exists(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\Syntax.txt"))
+            {
+                StreamReader sr = new StreamReader(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\Syntax.txt");
+                keywords = sr.ReadToEnd().Split(',');
+            }
+            if(keywords[38] == "IsLocalTrue")
+            {
+                isLocal = true;
+            }
         }
-        public void Toutput()
+        public void Toutput(string keyword)
         {
-            string keyword = "OUTPUT ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i] ,keyword) == true)
@@ -62,9 +72,8 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
-        public void Toutputline()
+        public void Toutputline(string keyword)
         {
-            string keyword = "OUTPUTLINE ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword) == true)
@@ -79,9 +88,8 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
-        public void Tclearoutput()
+        public void Tclearoutput(string keyword)
         {
-            string keyword = "CLEAROUTPUT";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword) == true)
@@ -94,10 +102,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-        public void Tinput()
+        public void Tinput(string keyword)
         {
             string line = "";
-            string keyword = "INPUT";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i],"INPUT ") == true )
@@ -118,9 +125,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-        public void TvarDeclaration()
+        public void TvarDeclaration(string keyword)
         {
-            string keyword = "DECLARE ";
             string keyword2 = ":";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
@@ -166,10 +172,9 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// <summary>
         /// Translate IBASIC array declaration to VB
         /// </summary>
-        public void TarrayDeclaration()
+        public void TarrayDeclaration(string keyword)
         {
             string line = "";
-            string keyword = "DECLARE ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 ///get rid of all the spaces
@@ -240,10 +245,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-        public void T2dArrayDeclaration()
+        public void T2dArrayDeclaration(string keyword)
         {
             string line = "";
-            string keyword = "DECLARE ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
 
@@ -312,12 +316,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-        public void TForloop()
+        public void TForloop(string keyword1,string keyword2,string keyword3,string keyword4)
         {
-            string keyword1 = "FOR ";
-            string keyword2 = "NEXT ";
-            string keyword3 = " TO ";
-            string keyword4 = " STEP ";
+    
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
@@ -358,15 +359,10 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
-        public void TIfstatement()
+        public void TIfstatement(string keyword1,string keyword2, string keyword3,
+            string keyword4,string keyword5, string keyword6, string keyword7)
         {
-            string keyword1 = "IF ";
-            string keyword2 = "ENDIF";
-            string keyword3 = "ELSEIF ";
-            string keyword4 = "ELSE";
-            string keyword5 = " THEN";
-            string keyword6 = "AND";
-            string keyword7 = "OR";
+
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
@@ -433,11 +429,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-        public void Twhileloop()
+        public void Twhileloop(string keyword1,string keyword2,string keyword3)
         {
-            string keyword1 = "WHILE ";
-            string keyword2 = "ENDWHILE";
-            string keyword3 = " DO";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
@@ -504,9 +497,8 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
-        public void TconstantDeclaration()
+        public void TconstantDeclaration(string keyword1)
         {
-            string keyword1 = "CONSTANT ";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
@@ -547,9 +539,8 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-        public void TdataType()
+        public void TdataType(string[] keywords)
         {
-            string[] keywords = { "INTEGER", "REAL", "BOOLEAN", "CHAR", "STRING" };
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 foreach(string keyword in keywords)
@@ -614,13 +605,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-        public void Tcasestatement()
+        public void Tcasestatement(string keyword1,string keyword2,string keyword3,string keyword5)
         {
-            string keyword1 = "CASE OF ";
-            string keyword2 = "CASE ";
-            string keyword3 = "OTHERWISE ";
             string keyword4 = ":";
-            string keyword5 = "ENDCASE";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
@@ -678,14 +665,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// <summary>
         /// Translate IBASIC function to VB
         /// </summary>
-        public void Tfunction()
+        public void Tfunction(string keyword1,string keyword2,string keyword3,string keyword5)
         {
             //All keywords
-            string keyword1 = "FUNCTION ";
-            string keyword2 = "ENDFUNCTION";
-            string keyword3 = "RETURN ";
             string keyword4 = ":";
-            string keyword5 = "RETURNS";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword1) == true)
@@ -745,10 +728,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-        public void Tprocedure()
+        public void Tprocedure(string keyword1, string keyword2)
         {
-            string keyword1 = "PROCEDURE ";
-            string keyword2 = "ENDPROCEDURE";
+
             string keyword3 = ":";
             for (int i = 0; i < IBASICcode.Length; i++)
             {
@@ -786,9 +768,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-        public void Tcallprocedure()
+        public void Tcallprocedure(string keyword)
         {
-            string keyword = "CALL ";
+
             for (int i = 0; i < IBASICcode.Length; i++)
             {
                 if (StringExtension.Contains(IBASICcode[i], keyword) == true)
@@ -839,28 +821,28 @@ namespace CS_IA_Ibasic_Intouch_Re
         public void TranslateAll()
         {
             Tcomment();
-            TdataType();
+            TdataType(getDataTypes());
             TtrueNfalse();
-            TvarDeclaration();
-            TarrayDeclaration();
-            T2dArrayDeclaration();
-            TconstantDeclaration();
+            TvarDeclaration(keywords[3]);
+            TarrayDeclaration(keywords[3]);
+            T2dArrayDeclaration(keywords[3]);
+            TconstantDeclaration(keywords[37]);
             Tchar();
             Tarrays();
-            Toutput();
-            Toutputline();
-            Tclearoutput();
-            Tinput();
-            TIfstatement();
-            Twhileloop();
-            TForloop();
+            Toutput(keywords[0]);
+            Toutputline(keywords[1]);
+            Tclearoutput(keywords[36]);
+            Tinput(keywords[2]);
+            TIfstatement(keywords[17], keywords[21], keywords[20], keywords[19], keywords[18], keywords[25], keywords[26]);
+            Twhileloop(keywords[14], keywords[16], keywords[15]);
+            TForloop(keywords[11], keywords[13], keywords[12], keywords[22]);
             TrepeatUntil();
             Trandomfunc();
             Tmod();
-            Tcallprocedure();
-            Tcasestatement();           
-            Tfunction();
-            Tprocedure();
+            Tcallprocedure(keywords[35]);
+            Tcasestatement(keywords[23], keywords[24], keywords[27], keywords[28]);           
+            Tfunction(keywords[29], keywords[32], keywords[31], keywords[30]);
+            Tprocedure(keywords[33], keywords[34]);
             if (errormessages != null)
             {
                 foreach (string msg in errormessages)
@@ -922,6 +904,15 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
 
             return errmsg;
+        }
+        private string[] getDataTypes()
+        {
+            string[] types = new string[5];
+            for(int i = 0; i < types.Length; i++)
+            {
+                types[i] = keywords[4 + i];
+            }
+            return types;
         }
 
        

@@ -40,27 +40,24 @@ namespace CS_IA_Ibasic_Intouch_Re
         private float zoomfactor;
         ChromiumWebBrowser browser;
         private int tablevel = 0;
-        private string[] keywords = new string[] { "If ", "For ", "While ", "Case Of ",
-                                                    "Function ", "Procedure ", "Repeat " };
+        private string[] Keywords;
+        private string[] keywords;
         private string[] keywords1 = new string[] { "ElseIf ", "Else" };
-        private string[] keywords2 = new string[] { "EndIf", "EndWhile", "EndCase", 
-                                                    "EndFunction", "EndProcedure", "Until ", "Next " };
+        private string[] keywords2;
         private List<string> varnames = new List<string>();
         private int[] tabsize = new int[32];
-        private bool IsLocal = true;
+
         public IBASICForm()
         {
-            CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
-            var settings = new CefSettings
+            if (File.Exists(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\Syntax.txt"))
             {
-                CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "CefSharp\\Cache")
-            };
-            settings.CefCommandLineArgs.Add("enable-media-stream", "1");
-            browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ");
-            {
-                ContextMenuHandler MenuHandler = new ContextMenuHandler();
-            };
+                StreamReader sr = new StreamReader(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\Syntax.txt");
+                Keywords = sr.ReadToEnd().Split(',');
+            }
+             keywords = new string[] { "If ", "For ", "While ", "Case Of ",
+                                                    Keywords[29], Keywords[33], "Repeat " };
+            keywords2 = new string[] { "EndIf", "EndWhile", "EndCase",
+                                                    Keywords[32], Keywords[34], "Until ", "Next " };
             InitializeComponent();
             //Create a ChromiumWebBrowser object and pass in my web page's URL
             browser = new ChromiumWebBrowser("https://sites.google.com/view/ibasic-tutorials/home?authuser=1 ")
@@ -180,7 +177,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             //Clear the ErrorMsgBox to avoid confusion from the old error messages
             ErrorMsgBox.Clear(); 
-            IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines, IsLocal);
+            IBASICtranslator translator = new IBASICtranslator(currentRtb.Lines);
             //Translate IBASIC code and put in the correct VB format
             translator.putinFormat();
             if (translator.getIBASICerrormessages() == null)//no error message then..
@@ -457,7 +454,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 return;
             }
             // getting keywords from the text
-            string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
+            string Bkeywords = @"\b(?i)(DECLARE|CONSTANT|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(Rtb.Text, Bkeywords);
             string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
             MatchCollection GkeywordMatches = Regex.Matches(Rtb.Text, Gkeywords);
@@ -535,42 +532,10 @@ namespace CS_IA_Ibasic_Intouch_Re
      
         private void initialliseAutoCompleteMenuItem()
         {
-            autocompleteMenu1.AddItem("OUTPUT ");
-            autocompleteMenu1.AddItem("OUTPUTLINE ");
-            autocompleteMenu1.AddItem("INPUT ");
-            autocompleteMenu1.AddItem("DECLARE ");
-            autocompleteMenu1.AddItem("STRING");
-            autocompleteMenu1.AddItem("INTEGER");
-            autocompleteMenu1.AddItem("CHAR");
-            autocompleteMenu1.AddItem("REAL");
-            autocompleteMenu1.AddItem("BOOLEAN");
-            autocompleteMenu1.AddItem("TRUE");
-            autocompleteMenu1.AddItem("FALSE");
-            autocompleteMenu1.AddItem("FOR ");
-            autocompleteMenu1.AddItem("TO ");
-            autocompleteMenu1.AddItem("NEXT ");
-            autocompleteMenu1.AddItem("WHILE ");
-            autocompleteMenu1.AddItem("DO");
-            autocompleteMenu1.AddItem("ENDWHILE");
-            autocompleteMenu1.AddItem("IF ");
-            autocompleteMenu1.AddItem("THEN");
-            autocompleteMenu1.AddItem("ELSE");
-            autocompleteMenu1.AddItem("ELSEIF");
-            autocompleteMenu1.AddItem("ENDIF");
-            autocompleteMenu1.AddItem("STEP");
-            autocompleteMenu1.AddItem("CASE OF ");
-            autocompleteMenu1.AddItem("CASE ");
-            autocompleteMenu1.AddItem("AND ");
-            autocompleteMenu1.AddItem("OR ");
-            autocompleteMenu1.AddItem("OTHERWISE ");
-            autocompleteMenu1.AddItem("ENDCASE ");
-            autocompleteMenu1.AddItem("FUNCTION ");
-            autocompleteMenu1.AddItem("RETURNS ");
-            autocompleteMenu1.AddItem("RETURN ");
-            autocompleteMenu1.AddItem("ENDFUNCTION");
-            autocompleteMenu1.AddItem("PROCEDURE ");
-            autocompleteMenu1.AddItem("ENDPROCEDURE");
-            autocompleteMenu1.AddItem("CALL");
+            for (int i = 0; i < Keywords.Length; i++)
+            {
+                autocompleteMenu1.AddItem(Keywords[i]);
+            }
             autocompleteMenu1.AddItem("MOD()");
             autocompleteMenu1.AddItem("DIV()");
             autocompleteMenu1.AddItem("UCASE()");
@@ -581,7 +546,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             autocompleteMenu1.AddItem("GETRANDOMNUMBER()");
             autocompleteMenu1.AddItem("ARRAY[]");
             autocompleteMenu1.AddItem("CONVERTTOSTRING()");
-            autocompleteMenu1.AddItem("CLEAROUTPUT");
+           
         }
 
         public bool isLogin()
@@ -818,24 +783,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         [DllImport("user32.dll")]
         private static extern long LockWindowUpdate(IntPtr Handle);
 
-        private void VarSettingBut_Click(object sender, EventArgs e)
-        {
-            
-            if( VarSettingBut.Text == "Local Mode")
-            { 
-                VarSettingBut.BackColor = Color.LightGreen;
-                VarSettingBut.GlowColor = Color.Green;
-                VarSettingBut.Text = "Global Mode";
-                IsLocal = false;
-            }
-            else if (VarSettingBut.Text == "Global Mode")
-            {
-                VarSettingBut.Text = "Local Mode";
-                VarSettingBut.BackColor = Color.Cornsilk;
-                VarSettingBut.GlowColor = Color.Gold;
-                IsLocal = true;
-            }
-        }
+       
     }
 
 }
