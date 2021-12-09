@@ -165,6 +165,7 @@
       <DependentUpon>SaveToDriveForm.cs</DependentUpon>
     </Compile>
     <Compile Include="StringExtension.cs" />
+    <Compile Include="XMLdata.cs" />
     <EmbeddedResource Include="IBASICForm.resx">
       <DependentUpon>IBASICForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -221,7 +222,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Syntax.txt" />
+    <Content Include="XMLsyntax.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

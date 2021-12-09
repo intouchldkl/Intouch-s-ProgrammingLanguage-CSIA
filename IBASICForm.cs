@@ -18,6 +18,8 @@ using CefSharp.Handler;
 using System.Windows.Media;
 using Color = System.Drawing.Color;
 using System.Threading;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace CS_IA_Ibasic_Intouch_Re
 {
@@ -40,7 +42,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private float zoomfactor;
         ChromiumWebBrowser browser;
         private int tablevel = 0;
-        private string[] Keywords;
+        private List<string> Keywords;
         private string[] keywords;
         private string[] keywords1 = new string[] { "ElseIf ", "Else" };
         private string[] keywords2;
@@ -49,12 +51,19 @@ namespace CS_IA_Ibasic_Intouch_Re
 
         public IBASICForm()
         {
-            if (File.Exists(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\Syntax.txt"))
+            if (File.Exists(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\XMLsyntax.xml"))
             {
-                StreamReader sr = new StreamReader(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\Syntax.txt");
-                Keywords = sr.ReadToEnd().Split(',');
+                XmlSerializer ser = new XmlSerializer(typeof(XMLdata.Syntax));
+                XMLdata.Syntax syntax = new XMLdata.Syntax();
+                using (XmlReader reader = XmlReader.Create(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\XMLsyntax.xml"))
+                {
+                    syntax = (XMLdata.Syntax)ser.Deserialize(reader);
+                }
+                Keywords = syntax.Array.Item;
+           
+
             }
-             keywords = new string[] { "If ", "For ", "While ", "Case Of ",
+            keywords = new string[] { "If ", "For ", "While ", "Case Of ",
                                                     Keywords[29], Keywords[33], "Repeat " };
             keywords2 = new string[] { "EndIf", "EndWhile", "EndCase",
                                                     Keywords[32], Keywords[34], "Until ", "Next " };
@@ -532,7 +541,7 @@ namespace CS_IA_Ibasic_Intouch_Re
      
         private void initialliseAutoCompleteMenuItem()
         {
-            for (int i = 0; i < Keywords.Length; i++)
+            for (int i = 0; i < Keywords.Count; i++)
             {
                 autocompleteMenu1.AddItem(Keywords[i]);
             }

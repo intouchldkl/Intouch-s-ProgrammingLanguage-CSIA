@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Syntax>
+	<array
+	name ="keywords">
+		<item>OUTPUT </item>
+		<item>OUTPUTLINE </item>
+		<item>INPUT </item>
+		<item>DECLARE </item>
+		<item>STRING</item>
+		<item>INTEGER</item>
+		<item>CHAR</item>
+		<item>REAL</item>
+		<item>BOOLEAN</item>
+		<item>TRUE</item>
+		<item>FALSE</item>
+		<item>FOR </item>
+		<item>TO </item>
+		<item>NEXT </item>
+		<item>WHILE </item>
+		<item>DO</item>
+		<item>ENDWHILE</item>
+		<item>IF </item>
+		<item>THEN</item>
+		<item>ELSE</item>
+		<item>ELSEIF </item>
+		<item>ENDIF</item>
+		<item>STEP</item>
+		<item>CASE OF </item>
+		<item>CASE </item>
+		<item>AND </item>
+		<item>OR </item>
+		<item>OTHERWISE </item>
+		<item>ENDCASE </item>
+		<item>FUNCTION </item>
+		<item>RETURNS </item>
+		<item>RETURN </item>
+		<item>ENDFUNCTION</item>
+		<item>PROCEDURE </item>
+		<item>ENDPROCEDURE</item>
+		<item>CALL</item>
+		<item>CLEAROUTPUT</item>
+		<item>CONSTANT</item>
+		<item>REPEAT</item>
+		<item>UNTIL </item>
+	</array>
+	<isLocal>True</isLocal>
+</Syntax>
