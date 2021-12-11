@@ -216,8 +216,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             request.Fields = "id";
             var file = request.Execute();
             Publishfolderid = file.Id;
-
-
         }
 
         public GGDriveFile[] retrieveFile()

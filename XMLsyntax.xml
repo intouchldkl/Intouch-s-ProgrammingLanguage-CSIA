@@ -43,5 +43,5 @@
 		<item>REPEAT</item>
 		<item>UNTIL </item>
 	</array>
-	<isLocal>True</isLocal>
+	<isLocal>False</isLocal>
 </Syntax>
