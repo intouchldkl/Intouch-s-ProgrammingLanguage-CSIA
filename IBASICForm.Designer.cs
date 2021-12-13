@@ -56,6 +56,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.autocompleteMenu1 = new AutocompleteMenuNS.AutocompleteMenu();
             this.FormatButton = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -65,6 +66,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -173,12 +175,15 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.LineNumberBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.autocompleteMenu1.SetAutocompleteMenu(this.LineNumberBox, null);
-            this.LineNumberBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LineNumberBox.Location = new System.Drawing.Point(3, 25);
+            this.LineNumberBox.BackColor = System.Drawing.Color.LightSlateGray;
+            this.LineNumberBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LineNumberBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LineNumberBox.ForeColor = System.Drawing.SystemColors.InactiveCaption;
+            this.LineNumberBox.Location = new System.Drawing.Point(0, 26);
             this.LineNumberBox.Name = "LineNumberBox";
             this.LineNumberBox.ReadOnly = true;
             this.LineNumberBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.LineNumberBox.Size = new System.Drawing.Size(30, 379);
+            this.LineNumberBox.Size = new System.Drawing.Size(42, 378);
             this.LineNumberBox.TabIndex = 2;
             this.LineNumberBox.Text = "";
             // 
@@ -233,7 +238,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             this.CloseTabBut.ImageKey = "closeIcon.png";
             this.CloseTabBut.ImageList = this.imageList1;
-            this.CloseTabBut.Location = new System.Drawing.Point(3, 3);
+            this.CloseTabBut.Location = new System.Drawing.Point(12, 4);
             this.CloseTabBut.Name = "CloseTabBut";
             this.CloseTabBut.Size = new System.Drawing.Size(30, 23);
             this.CloseTabBut.TabIndex = 6;
@@ -258,7 +263,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.FormatButton);
+            this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgBox);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgLabel);
             this.splitContainer1.Panel2MinSize = 135;
@@ -293,14 +298,29 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // FormatButton
             // 
+            this.FormatButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.FormatButton.AutoSize = true;
             this.FormatButton.BackColor = System.Drawing.Color.Azure;
-            this.FormatButton.Location = new System.Drawing.Point(295, 8);
+            this.FormatButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.FormatButton.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.FormatButton.Location = new System.Drawing.Point(3, 0);
             this.FormatButton.Name = "FormatButton";
-            this.FormatButton.Size = new System.Drawing.Size(75, 23);
+            this.FormatButton.Size = new System.Drawing.Size(139, 37);
             this.FormatButton.TabIndex = 6;
             this.FormatButton.Text = "FORMAT";
             this.FormatButton.UseVisualStyleBackColor = false;
             this.FormatButton.Click += new System.EventHandler(this.FormatButton_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.FormatButton);
+            this.panel1.Location = new System.Drawing.Point(250, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(142, 37);
+            this.panel1.TabIndex = 7;
             // 
             // IBASICForm
             // 
@@ -326,6 +346,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.splitContainer2.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -356,5 +378,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private SplitContainer splitContainer2;
         private AutocompleteMenuNS.AutocompleteMenu autocompleteMenu1;
         private Button FormatButton;
+        private Panel panel1;
     }
 }

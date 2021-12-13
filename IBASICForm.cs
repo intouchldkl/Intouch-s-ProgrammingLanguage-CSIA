@@ -303,12 +303,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             int Last_Index = currentRtb.GetCharIndexFromPosition(pt);
             int Last_Line = currentRtb.GetLineFromCharIndex(Last_Index);
             //  add each line number to LineNumberTextBox upto last line    
-            for (int i = First_Line; i <= Last_Line + 2; i++)
+            for (int i = First_Line; i <= Last_Line + 1; i++)
             {
                 buffer.Text += i + 1 + "\n";
             }
-            LineNumberBox.SelectionAlignment = HorizontalAlignment.Center;
-            LineNumberBox.Width = getWidth();
+            LineNumberBox.SelectionAlignment = HorizontalAlignment.Right;
+         //   LineNumberBox.Width = getWidth();
             LineNumberBox.Text = buffer.Text;
             LineNumberBox.ZoomFactor = zoomfactor;
         }
