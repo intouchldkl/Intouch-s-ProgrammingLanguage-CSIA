@@ -48,7 +48,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     //Get only the relevant message
                     string[] VBmsg = CompErr.ErrorText.Split('.');
-                    ErrorMessage = ErrorMessage + " VBcompile error:  may be because of " +
+                    ErrorMessage = ErrorMessage + " VBcompile error: " +
                          VBmsg[0] + "\n";
                 }
             }

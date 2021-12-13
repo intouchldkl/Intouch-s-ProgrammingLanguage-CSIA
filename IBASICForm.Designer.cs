@@ -55,7 +55,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.autocompleteMenu1 = new AutocompleteMenuNS.AutocompleteMenu();
-
+            this.FormatButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -258,7 +258,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // splitContainer1.Panel2
             // 
-
+            this.splitContainer1.Panel2.Controls.Add(this.FormatButton);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgBox);
             this.splitContainer1.Panel2.Controls.Add(this.ErrorMsgLabel);
             this.splitContainer1.Panel2MinSize = 135;
@@ -290,7 +290,17 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.autocompleteMenu1.ImageList = null;
             this.autocompleteMenu1.Items = new string[0];
             this.autocompleteMenu1.TargetControlWrapper = null;
-
+            // 
+            // FormatButton
+            // 
+            this.FormatButton.BackColor = System.Drawing.Color.Azure;
+            this.FormatButton.Location = new System.Drawing.Point(295, 8);
+            this.FormatButton.Name = "FormatButton";
+            this.FormatButton.Size = new System.Drawing.Size(75, 23);
+            this.FormatButton.TabIndex = 6;
+            this.FormatButton.Text = "FORMAT";
+            this.FormatButton.UseVisualStyleBackColor = false;
+            this.FormatButton.Click += new System.EventHandler(this.FormatButton_Click);
             // 
             // IBASICForm
             // 
@@ -345,6 +355,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private SplitContainer splitContainer1;
         private SplitContainer splitContainer2;
         private AutocompleteMenuNS.AutocompleteMenu autocompleteMenu1;
-
+        private Button FormatButton;
     }
 }
