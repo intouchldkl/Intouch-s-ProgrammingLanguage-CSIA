@@ -48,7 +48,10 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string[] keywords2;
         private List<string> varnames = new List<string>();
         private int[] tabsize = new int[32];
-
+        private string Bkeywords =  "\\" + "b(?i)(";
+        private string Gkeywords = "\\" + "b(?i)(";
+        private string Pkeywords = "\\" + "b(?i)(";
+        private string types = "\\" + "b(?i)(";
         public IBASICForm()
         {
             if (File.Exists(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\XMLsyntax.xml"))
@@ -109,8 +112,42 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 PUBLISH.Enabled = true;
             }
-
-
+            // getting keywords from the text
+            for (int i = 9; i < 28; i++)
+            {
+                Bkeywords += Keywords[i].Trim() + "|";
+            }
+            Bkeywords +=  Keywords[3].Trim() + "|" + Keywords[38].Trim() + "|" + Keywords[39].Trim() + "|" + Keywords[37].Trim() + "|" + ":)" +"\\b" ;
+            for (int i = 0; i < 3; i++)
+            {
+                Gkeywords += Keywords[i].Trim() + "|";
+            }
+            Gkeywords += Keywords[36].Trim() + ")" + "\\b";
+            for (int i = 29; i < 36; i++)
+            {
+                if (i == 35)
+                {
+                    Pkeywords += Keywords[i].Trim();
+                }
+                else
+                {
+                    Pkeywords += Keywords[i].Trim() + "|";
+                }
+            }
+            Pkeywords += ")"+"\\b";
+            for (int i = 4; i < 9; i++)
+            {
+                if( i == 8)
+                {
+                    types += Keywords[i].Trim();
+                }
+                else
+                {
+                    types += Keywords[i].Trim() + "|";
+                }
+                
+            }
+            types += ")" + "\\b";
         }
         /// <summary>
         /// Initialise a singleton pattern
@@ -308,7 +345,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 buffer.Text += i + 1 + "\n";
             }
             LineNumberBox.SelectionAlignment = HorizontalAlignment.Right;
-         //   LineNumberBox.Width = getWidth();
+            //   LineNumberBox.Width = getWidth();
             LineNumberBox.Text = buffer.Text;
             LineNumberBox.ZoomFactor = zoomfactor;
         }
@@ -359,38 +396,26 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
         public void syntaxhighlight()
         {
-
-
-            int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine();
-
-            int lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition);
+            int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine() ;
+            int lineNumber = currentRtb.GetLineFromCharIndex(cursorPosition) ;
             // if (lineNumber < 0) lineNumber = 0;
             if (currentRtb.Text == "" || currentRtb.Lines[lineNumber] == null)
             {
                 return;
             }
             SendMessage(Handle, WM_SETREDRAW, false, 0);
-            // getting keywords from the text
-            string Bkeywords = @"\b(?i)(DECLARE|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Bkeywords);
-            string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
             MatchCollection GkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Gkeywords);
-            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE|RETURNS|RETURN)\b";
             MatchCollection PkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Pkeywords);
             string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|ROUND|CONVERTTOSTRING|GETRANDOMNUMBER)\b";
             MatchCollection YkeywordMatches = Regex.Matches(currentRtb.Lines[lineNumber], Ykeywords);
-            // getting types/classes from the text 
-            string types = @"\b(?i)(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
             MatchCollection typeMatches = Regex.Matches(currentRtb.Lines[lineNumber], types);
-
             // getting comments (inline or multiline)
             string comments = @"\//.+?$";
             MatchCollection commentMatches = Regex.Matches(currentRtb.Lines[lineNumber], comments, RegexOptions.Multiline);
-
             // getting strings
             string strings = "\".+?\"";
             MatchCollection stringMatches = Regex.Matches(currentRtb.Lines[lineNumber], strings);
-
             // saving the original caret position + forecolor
             int originalIndex = currentRtb.SelectionStart;
             int originalLength = currentRtb.SelectionLength;
@@ -462,17 +487,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 return;
             }
-            // getting keywords from the text
-            string Bkeywords = @"\b(?i)(DECLARE|CONSTANT|IF|ENDIF|THEN|ELSEIF|ELSE|FOR|TO|NEXT|WHILE|DO|ENDWHILE|REPEAT|UNTIL|CASE|OF|OTHERWISE|ENDCASE|:|AND|OR|STEP|TRUE|FALSE)\b";
             MatchCollection BkeywordMatches = Regex.Matches(Rtb.Text, Bkeywords);
-            string Gkeywords = @"\b(?i)(OUTPUT|INPUT|OUTPUTLINE|CLEAROUTPUT)\b";
             MatchCollection GkeywordMatches = Regex.Matches(Rtb.Text, Gkeywords);
-            string Pkeywords = @"\b(?i)(FUNCTION|ENDFUNCTION|CALL|PROCEDURE|ENDPROCEDURE|RETURNS|RETURN)\b";
             MatchCollection PkeywordMatches = Regex.Matches(Rtb.Text, Pkeywords);
             string Ykeywords = @"\b(MOD|DIV|LENGTH|SUBSTRING|UCASE|LCASE|ROUND|CONVERTTOSTRING|GETRANDOMNUMBER)\b";
             MatchCollection YkeywordMatches = Regex.Matches(Rtb.Text, Ykeywords);
             // getting types/classes from the text 
-            string types = @"\b(?i)(INTEGER|CHAR|STRING|REAL|BOOLEAN)\b";
             MatchCollection typeMatches = Regex.Matches(Rtb.Text, types);
 
             // getting comments (inline or multiline)
@@ -644,7 +664,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             for (int i = 0; i < keywords2.Length; i++)
             {
                 if (checkKeyword(keywords2[i], line))
-                { 
+                {
                     line = getIndentSpace(tablevel) + line.Replace("\t", "");
                     return line;
                 }
@@ -652,12 +672,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             return line;
         }
 
-            /// <summary>
-            /// Retrives the space given by tablevel
-            /// </summary>
-            /// <param name="tablevel"></param> Current tab level
-            /// <returns></returns> spaces
-            public string getIndentSpace(int tablevel)
+        /// <summary>
+        /// Retrives the space given by tablevel
+        /// </summary>
+        /// <param name="tablevel"></param> Current tab level
+        /// <returns></returns> spaces
+        public string getIndentSpace(int tablevel)
         {
             string spaces = "";
             for (int i = 0; i < tablevel; i++)// Loops til the tab level
@@ -822,11 +842,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             linesOfCurrentrtb = currentRtb.Lines;//Store to a temp array to prevent runtime interface issue
             foreach (string line in currentRtb.Lines)
             {
-                if (i < currentRtb.Lines.Length-1)
+                if (i < currentRtb.Lines.Length - 1)
                 {
-                    checkindent(i+1);
+                    checkindent(i + 1);
                     linesOfCurrentrtb[i] = UpdateIndentLevel(linesOfCurrentrtb[i]);//Reset position of Keywords1&2
-                    checkindent(i+1 );//Check Indentlevel again                
+                    checkindent(i + 1);//Check Indentlevel again                
                     //Implement identation
                     linesOfCurrentrtb[i + 1] = linesOfCurrentrtb[i + 1].TrimStart();
                     linesOfCurrentrtb[i + 1] = getIndentSpace(tablevel) + linesOfCurrentrtb[i + 1];
