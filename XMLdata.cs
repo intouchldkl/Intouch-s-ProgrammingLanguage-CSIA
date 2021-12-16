@@ -9,6 +9,9 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public class XMLdata
     {
+		/// <summary>
+		/// Class for command words retrieved from XML file
+		/// </summary>
 		[XmlRoot(ElementName = "CommandWords")]
 		public class CommandWords
 		{
@@ -17,7 +20,9 @@ namespace CS_IA_Ibasic_Intouch_Re
 			[XmlAttribute(AttributeName = "name")]
 			public string Name { get; set; }
 		}
-
+		/// <summary>
+		/// Class for syntax from XML file
+		/// </summary>
 		[XmlRoot(ElementName = "Syntax")]
 		public class Syntax
 		{

@@ -23,12 +23,20 @@ namespace CS_IA_Ibasic_Intouch_Re
                 DriveButton.Enabled = true;
             }
         }
-
+        /// <summary>
+        /// Open local drive
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LocalDButton_Click(object sender, EventArgs e)
         {
             openFileFromLocalD();
         }
-
+        /// <summary>
+        /// Open repository form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DriveButton_Click(object sender, EventArgs e)
         {
             RepositoryForm repos = new RepositoryForm();
@@ -36,6 +44,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             repos.Show();
             
         }
+        /// <summary>
+        /// Open and read file from local drive to coding box
+        /// </summary>
         private void openFileFromLocalD()
         {
             // Open file 

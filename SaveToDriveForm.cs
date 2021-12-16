@@ -21,6 +21,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             InitializeComponent();
             this.currentRtb = IBASICForm.Instance.getCurrentRtb();
             this.tabPage = IBASICForm.Instance.getCurrentTabpage();
+            // Remove * from an unsaved project
             if(tabPage.Text.Last() == '*')
             {
                 FileNameBox.Text = tabPage.Text.Remove(tabPage.Text.Length - 1);
@@ -31,7 +32,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
         }
-
+        /// <summary>
+        /// Save the file to IBASIC folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveButton_Click(object sender, EventArgs e)
         {
             if(FileNameBox.Text != "")
@@ -44,6 +49,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
           
         }
+        /// <summary>
+        /// Upload the text from coding box to IBASIC folder
+        /// </summary>
         private void saveFileToIBASICfolder()
         {
             if (GGDrive.Instance.checkForIBasicFolder() == false)
@@ -56,8 +64,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             CodeToBeSaved.Write(currentRtb.Text);
             CodeToBeSaved.Close();
             Close();
-            tabPage.Text = saveFileDialog1.FileName;
-            
+            tabPage.Text = saveFileDialog1.FileName;          
             GGDrive.Instance.Upload(saveFileDialog1.FileName+".txt", GGDrive.Instance.getIBASICfolderId());
         }
     }

@@ -54,6 +54,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         private string types = "\\" + "b(?i)(";
         public IBASICForm()
         {
+            //Get the syntax from XML file
             if (File.Exists(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\XMLsyntax.xml"))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(XMLdata.Syntax));
@@ -66,6 +67,7 @@ namespace CS_IA_Ibasic_Intouch_Re
 
 
             }
+            //Assign values to keywords for auto indentation algorithm
             keywords = new string[] { "If ", "For ", "While ", "Case Of ",
                                                     Keywords[29], Keywords[33], "Repeat " };
             keywords2 = new string[] { "EndIf", "EndWhile", "EndCase",
@@ -156,20 +158,36 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             get { return instance ?? (instance = new IBASICForm()); }
         }
+        /// <summary>
+        /// return current tabpage
+        /// </summary>
+        /// <returns></returns>current tabpage
         public TabPage getCurrentTabpage()
         {
             return tabControl1.SelectedTab;
         }
+        /// <summary>
+        /// return current rtb
+        /// </summary>
+        /// <returns></returns>current rtb
         public RichTextBox getCurrentRtb()
         {
             return currentRtb;
         }
-
+        /// <summary>
+        /// Create new tab
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void New_Click(object sender, EventArgs e)
         {
             createNewTabPage("Untitled");
         }
-
+        /// <summary>
+        /// open open form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Open_Click(object sender, EventArgs e)
         {
             OpenForm openForm = new OpenForm();
@@ -178,6 +196,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.TextChanged += currentRtb_TextChanged;
             currentRtb.VScroll += CurrentRtb_VScroll;
         }
+        /// <summary>
+        /// either automatically save file if its already been saved to locald or open saveAsForm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_Click(object sender, EventArgs e)
         {
             // Save file 
@@ -204,11 +227,20 @@ namespace CS_IA_Ibasic_Intouch_Re
             SaveAsForm saveasform = new SaveAsForm();
             saveasform.Show(); //Display the form
         }
+        /// <summary>
+        /// Undo last change on coding box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Undo_Click(object sender, EventArgs e)
         {
             currentRtb.Undo();
         }
-
+        /// <summary>
+        /// redo last change on coding box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Redo_Click(object sender, EventArgs e)
         {
             currentRtb.Redo();
@@ -244,7 +276,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 ErrorMsgBox.Text = translator.getIBASICerrormessages();
             }
         }
-
+        /// <summary>
+        /// Change content of coding box when new tab is selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
             zoomfactor = LineNumberBox.ZoomFactor;
@@ -258,6 +294,10 @@ namespace CS_IA_Ibasic_Intouch_Re
 
 
         }
+        /// <summary>
+        /// create a new tab page
+        /// </summary>
+        /// <param name="tabName"></param>
         public void createNewTabPage(string tabName)
         {
             zoomfactor = LineNumberBox.ZoomFactor;
@@ -287,9 +327,11 @@ namespace CS_IA_Ibasic_Intouch_Re
 
 
         }
-
-
-
+        /// <summary>
+        /// delete a tab
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CloseTabBut_Click(object sender, EventArgs e)
         {
             if (tabControl1.Controls.Count > 1)
@@ -302,27 +344,9 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
-        public int getWidth()
-        {
-            int w = 25;
-            // get total lines of currentRtb    
-            int line = currentRtb.Lines.Length;
-
-            if (line <= 99)
-            {
-                w = 20 + (int)currentRtb.Font.Size;
-            }
-            else if (line <= 999)
-            {
-                w = 30 + (int)currentRtb.Font.Size;
-            }
-            else
-            {
-                w = 50 + (int)currentRtb.Font.Size;
-            }
-
-            return w;
-        }
+       /// <summary>
+       /// Add line number algorithm
+       /// </summary>
         public void AddLineNumbers()
         {
             currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
@@ -349,7 +373,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             LineNumberBox.Text = buffer.Text;
             LineNumberBox.ZoomFactor = zoomfactor;
         }
-
+        /// <summary>
+        /// if text change add line number, perform syntax highlight *cause flickering here
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void currentRtb_TextChanged(object sender, EventArgs e)
         {
             AddLineNumbers();
@@ -364,11 +392,20 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.ZoomFactor = zoomfactor;
 
         }
+        /// <summary>
+        /// Change line number as the scrollbar is scrolled
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CurrentRtb_VScroll(object sender, EventArgs e)
         {
             AddLineNumbers();
         }
-
+        /// <summary>
+        /// Log the user in or out
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LOGIN_Click(object sender, EventArgs e)
         {
             if (LOGIN.Text == "LOGIN")
@@ -388,12 +425,19 @@ namespace CS_IA_Ibasic_Intouch_Re
 
 
         }
-
+        /// <summary>
+        /// Open pubish form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PUBLISH_Click(object sender, EventArgs e)
         {
             PublishForm publishForm = new PublishForm();
             publishForm.Show();
         }
+        /// <summary>
+        /// Use regex to perform syntax highlighting on the current line
+        /// </summary>
         public void syntaxhighlight()
         {
             int cursorPosition = currentRtb.GetFirstCharIndexOfCurrentLine() ;
@@ -478,7 +522,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             SendMessage(Handle, WM_SETREDRAW, true, 0);
             Refresh();
         }
-
+        /// <summary>
+        /// Use regex to perform syntax highlighting on all lines
+        /// </summary>
+        /// <param name="textbox"></param>
         public void syntaxhighlightall(RichTextBox textbox)
         {
             RichTextBox Rtb = new RichTextBox();
@@ -558,7 +605,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             textbox.Rtf = Rtb.Rtf;
         }
-
+        /// <summary>
+        /// Add keywords to auto comlete menu
+        /// </summary>
         private void initialliseAutoCompleteMenuItem()
         {
             for (int i = 0; i < Keywords.Count; i++)
@@ -577,7 +626,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             autocompleteMenu1.AddItem("CONVERTTOSTRING()");
 
         }
-
+        /// <summary>
+        /// Checj whether the user is logged in or not
+        /// </summary>
+        /// <returns></returns>
         public bool isLogin()
         {
             if (LOGIN.Text == "LOGOUT")
@@ -590,7 +642,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
         /// <summary>
-        /// Update the position of keywords
+        /// Update the position of keywords (affect tab level)
         /// </summary>
         public void UpdateIndentLevel(int index)
         {
@@ -648,6 +700,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Update the keyword position such as elseif and endif ( doesnt affect tab level)
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
         public string UpdateIndentLevel(string line)
         {
 
@@ -776,6 +833,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             //Assign value to tablevel
             tablevel = temptablevel;
         }
+        /// <summary>
+        /// To zoom in and out using ctrl and mousewheel 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CurrentRtb_mouse(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0)
@@ -787,7 +849,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 LineNumberBox.ZoomFactor = currentRtb.ZoomFactor;
             }
         }
-
+        /// <summary>
+        /// When a variable is declared add it to an autocomplete menu
+        /// </summary>
         private void addVariableNames()
         {
             string[] text;
@@ -811,6 +875,9 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
+        /// <summary>
+        /// If variable declaration is deleted then remove from the autocomplete menu (Incomplete)
+        /// </summary>
         private void checkDeletedVarName()
         {
             string Text = currentRtb.Text;
@@ -831,9 +898,17 @@ namespace CS_IA_Ibasic_Intouch_Re
 
 
         }
+        /// <summary>
+        /// Screen suspension
+        /// </summary>
+        /// <param name="Handle"></param>
+        /// <returns></returns>
         [DllImport("user32.dll")]
         private static extern long LockWindowUpdate(IntPtr Handle);
 
+        /// <summary>
+        /// Fix format indentation of the entire coding box
+        /// </summary>
         private void FixFormat()
         {
             LockWindowUpdate(Handle);
@@ -858,7 +933,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             currentRtb.ZoomFactor = (float)(zoomfactor + 0.0000001);
             LockWindowUpdate(IntPtr.Zero);
         }
-
+        /// <summary>
+        /// Perform fixing format
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormatButton_Click(object sender, EventArgs e)
         {
             FixFormat();

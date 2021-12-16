@@ -32,7 +32,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             
         }
-
+        /// <summary>
+        /// Take the screenshot of the output 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OutputBut_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -41,7 +45,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 needAutoOutput = false;
             }
         }
-
+        /// <summary>
+        /// Perform publish
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PublishBut_Click(object sender, EventArgs e)
         {
             if(FileNameBox.Text != "")
@@ -55,14 +63,17 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
            
         }
-
+        /// <summary>
+        /// Publish the screenshot of output to publish folder in drive and code to both publish and IBASIC folder
+        /// </summary>
         private void publishToGDrive()
         {
-
+            ///IF IBASIC folder doesnt exist then create one
             if (GGDrive.Instance.checkForIBasicFolder() == false)
             {
                 GGDrive.Instance.CreateIBASICFolder("IBASIC-FOLDER");
             }
+            ///IF PUBLISH folder doesnt exist then create one
             if (GGDrive.Instance.checkForPublishFolder() == false)
             {
                 GGDrive.Instance.CreatePublishFolder("IBASIC-FOLDER-PUBLISH");
@@ -73,6 +84,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             CodeToBeSaved.Write(currentRtb.Text);
             CodeToBeSaved.Close();
             tabPage.Text = saveFileDialog1.FileName;
+            //Add .txt to specify file type
             GGDrive.Instance.Upload(saveFileDialog1.FileName+".txt", GGDrive.Instance.getIBASICfolderId());
             GGDrive.Instance.Upload(saveFileDialog1.FileName+".txt", GGDrive.Instance.getPublishfolderId());
             if(needAutoOutput == false)

@@ -19,11 +19,11 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             InitializeComponent();
             GGDrive.Instance.Authentication();
-            displayAllFiles();
-        
-         
+            displayAllFiles();       
         }
-
+        /// <summary>
+        /// Get all the non duplicate file names from IBASIC folder and display them on a list view
+        /// </summary>
         public void displayAllFiles()
         {
             
@@ -42,7 +42,6 @@ namespace CS_IA_Ibasic_Intouch_Re
                         var LVI = new ListViewItem(fileName);
                         FilelistView.Items.Add(LVI);
                         LVI.Tag = FileName.Name;
-                 //       LVI.Tag = FileName.Id;
                     }
 
                 }
@@ -54,13 +53,19 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
 
      
-
+        /// <summary>
+        /// Display the version when the display file is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FilelistView_Click(object sender, EventArgs e)
         {
             VersionListView.Clear();
-            displayVersionFiles();
-            
+            displayVersionFiles();            
         }
+        /// <summary>
+        /// Get the number of duplicate files(version files) within the selected file name
+        /// </summary>
         private void displayVersionFiles()
         {
             string FileName = (string)FilelistView.SelectedItems[0].Tag ;
@@ -81,13 +86,19 @@ namespace CS_IA_Ibasic_Intouch_Re
                 VersionListView.Items.Add(LVI);
             }
         }
-
+        /// <summary>
+        /// Perform download file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void VersionListView_Click(object sender, EventArgs e)
         {
             downloadFile();
             Close();
         }
-
+        /// <summary>
+        /// download the file from the version file clicked and display on the coding box
+        /// </summary>
         private void downloadFile()
         {
             GGDriveFile GFlie = (GGDriveFile)VersionListView.SelectedItems[0].Tag;

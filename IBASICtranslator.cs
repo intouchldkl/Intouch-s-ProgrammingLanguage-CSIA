@@ -40,10 +40,6 @@ namespace CS_IA_Ibasic_Intouch_Re
         private List<string> declarelines = new List<string>();
         private bool isLocal;
         private List<string> keywords;
- 
-
-
-        public object XmlFileManager { get; private set; }
 
         /// <summary>
         /// Constructor for IBASICtranslator class
@@ -52,6 +48,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         public IBASICtranslator(string[] IBASICcode)
         {
             this.IBASICcode = IBASICcode;
+            //Read the XML file for the syntax
             if (File.Exists(@"C:\Users\ADMINS\Source\Repos\CS-IA-Ibasic-Intouch-Re\XMLsyntax.xml"))
             {
                 XmlSerializer ser = new XmlSerializer(typeof(XMLdata.Syntax));
@@ -74,6 +71,10 @@ namespace CS_IA_Ibasic_Intouch_Re
 
 
         }
+        /// <summary>
+        /// Translate output to console.write()
+        /// </summary>
+        /// <param name="keyword"></param>
         public void Toutput(string keyword)
         {
             for (int i = 0; i < IBASICcode.Length; i++)
@@ -90,6 +91,10 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
+        /// <summary>
+        /// Translate outputline to console.writeLine()
+        /// </summary>
+        /// <param name="keyword"></param>
         public void Toutputline(string keyword)
         {
             for (int i = 0; i < IBASICcode.Length; i++)
@@ -106,6 +111,10 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
+        /// <summary>
+        /// Translate clearoutput to console.clear()
+        /// </summary>
+        /// <param name="keyword"></param>
         public void Tclearoutput(string keyword)
         {
             for (int i = 0; i < IBASICcode.Length; i++)
@@ -120,6 +129,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Translate input to console.read()
+        /// </summary>
+        /// <param name="keyword"></param>
         public void Tinput(string keyword)
         {
             string line = "";
@@ -142,7 +155,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-
+        /// <summary>
+        /// Translate DECLARE var : type to either Dim var as type or public var as type
+        /// </summary>
+        /// <param name="keyword"></param>
         public void TvarDeclaration(string keyword)
         {
             string keyword2 = ":";
@@ -188,7 +204,7 @@ namespace CS_IA_Ibasic_Intouch_Re
         }
 
         /// <summary>
-        /// Translate IBASIC array declaration to VB
+        /// Translate IBASIC array declaration to either Dim array[index] as type or public array[index] as type
         /// </summary>
         public void TarrayDeclaration(string keyword)
         {
@@ -262,7 +278,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-
+        /// <summary>
+        /// Translate IBASIC 2darray declaration to either Dim array[index,index2] as type or public array[index,index2] as type
+        /// </summary>
+        /// <param name="keyword"></param>
         public void T2dArrayDeclaration(string keyword)
         {
             string line = "";
@@ -333,7 +352,13 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
-
+        /// <summary>
+        /// Translate for loop and keep track of whether there's is endloop if not then add an error message to the list
+        /// </summary>
+        /// <param name="keyword1"></param>for
+        /// <param name="keyword2"></param>endloop(next)
+        /// <param name="keyword3"></param>to
+        /// <param name="keyword4"></param>step
         public void TForloop(string keyword1, string keyword2, string keyword3, string keyword4)
         {
 
@@ -377,6 +402,16 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
+        /// <summary>
+        /// Translate if statement and keep track of whether there's endif
+        /// </summary>
+        /// <param name="keyword1"></param>if
+        /// <param name="keyword2"></param>endif
+        /// <param name="keyword3"></param>elseif
+        /// <param name="keyword4"></param>else
+        /// <param name="keyword5"></param>then
+        /// <param name="keyword6"></param>and
+        /// <param name="keyword7"></param>or
         public void TIfstatement(string keyword1, string keyword2, string keyword3,
             string keyword4, string keyword5, string keyword6, string keyword7)
         {
@@ -446,7 +481,12 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
-
+        /// <summary>
+        /// Translate IBASIC while loop to VB and keep track of whether theres endwhile
+        /// </summary>
+        /// <param name="keyword1"></param>While
+        /// <param name="keyword2"></param>Endwhile
+        /// <param name="keyword3"></param>Do
         public void Twhileloop(string keyword1, string keyword2, string keyword3)
         {
             for (int i = 0; i < IBASICcode.Length; i++)
@@ -483,6 +523,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Translate repeat until to VB and keep track whether theres until or not
+        /// </summary>
+        /// <param name="keyword1"></param>
+        /// <param name="keyword2"></param>
         public void TrepeatUntil(string keyword1,string keyword2)
         {
             for (int i = 0; i < IBASICcode.Length; i++)
@@ -513,6 +558,10 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             }
         }
+        /// <summary>
+        /// Transalte constant declaration from CONSTANT to public const
+        /// </summary>
+        /// <param name="keyword1"></param> CONSTANT
         public void TconstantDeclaration(string keyword1)
         {
             for (int i = 0; i < IBASICcode.Length; i++)
@@ -528,6 +577,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 };
             }
         }
+        /// <summary>
+        /// Translate from MOD( to MODULO(
+        /// </summary>
         public void Tmod()
         {
             string keyword1 = "MOD(";
@@ -541,6 +593,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Delete everything after //
+        /// </summary>
         public void Tcomment()
         {
             string keyword1 = "//";
@@ -548,13 +603,16 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 if (IBASICcode[i].Contains(keyword1) == true)
                 {
-                    // IBASICcode[i] = IBASICcode[i].Replace(keyword1, "'");
                     string[] stringSeparators = new string[] { keyword1 };
                     string[] splitstring = IBASICcode[i].Split(stringSeparators, StringSplitOptions.None);
                     IBASICcode[i] = splitstring[0];
                 }
             }
         }
+        /// <summary>
+        /// Translate data type
+        /// </summary>
+        /// <param name="keywords"></param>
         public void TdataType(string[] keywords)
         {
             for (int i = 0; i < IBASICcode.Length; i++)
@@ -574,6 +632,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
         }
+        /// <summary>
+        /// Translate from RANDOM() to Rnd()
+        /// </summary>
         public void Trandomfunc()
         {
             string keyword1 = "RANDOM()";
@@ -585,6 +646,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Change the [] of arrays to ()
+        /// </summary>
         public void Tarrays()
         {
             string keyword1 = "[";
@@ -621,6 +685,13 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Translate case statement to VB and keep track of whether theres endcase
+        /// </summary>
+        /// <param name="keyword1"></param>CASE OF
+        /// <param name="keyword2"></param>CASE
+        /// <param name="keyword3"></param>OTHERWISE
+        /// <param name="keyword5"></param>ENDCASE
         public void Tcasestatement(string keyword1, string keyword2, string keyword3, string keyword5)
         {
             string keyword4 = ":";
@@ -679,7 +750,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
         /// <summary>
-        /// Translate IBASIC function to VB
+        /// Translate IBASIC function to VB and put the function codes in a list and delete them from the main body of code
         /// </summary>
         public void Tfunction(string keyword1, string keyword2, string keyword3, string keyword5)
         {
@@ -744,6 +815,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Translate IBASIC procedure to VB and put the function codes in a list and delete them from the main body of code
+        /// </summary>
+        /// <param name="keyword1"></param>
+        /// <param name="keyword2"></param>
         public void Tprocedure(string keyword1, string keyword2)
         {
 
@@ -784,6 +860,10 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Translate CALL
+        /// </summary>
+        /// <param name="keyword"></param>
         public void Tcallprocedure(string keyword)
         {
 
@@ -799,6 +879,9 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
         }
+        /// <summary>
+        /// Translate true and false 
+        /// </summary>
         public void TtrueNfalse()
         {
             string keyword = "TRUE";
@@ -817,6 +900,9 @@ namespace CS_IA_Ibasic_Intouch_Re
                 }
             }
         }
+        /// <summary>
+        /// Translate char from char to '""c
+        /// </summary>
         public void Tchar()
         {
             string pattern = "\'.+?\'";
@@ -912,15 +998,27 @@ namespace CS_IA_Ibasic_Intouch_Re
             //Put in end module
             Translatedcode = Translatedcode + "\n" + endModule;
         }
+        /// <summary>
+        /// acessesor the translated code
+        /// </summary>
+        /// <returns></returns>translated code
         public string getTranslatedcode()
         {
             return Translatedcode;
         }
+        /// <summary>
+        /// Accessor to error message list
+        /// </summary>
+        /// <returns></returns>error message list
         public string getIBASICerrormessages()
         {
 
             return errmsg;
         }
+        /// <summary>
+        /// Get all the data type keywords
+        /// </summary>
+        /// <returns></returns>
         private string[] getDataTypes()
         {
             string[] types = new string[5];

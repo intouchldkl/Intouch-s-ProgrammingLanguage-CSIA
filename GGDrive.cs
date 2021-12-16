@@ -36,6 +36,9 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             get { return instance ?? (instance = new GGDrive()); }
         }
+        /// <summary>
+        /// Authenticate the user 
+        /// </summary>
         public void Authentication()
         {
             //Scopes for use with the Google Drive API
@@ -74,7 +77,12 @@ namespace CS_IA_Ibasic_Intouch_Re
             });
             Service.HttpClient.Timeout = TimeSpan.FromMinutes(100);
         }
-
+        /// <summary>
+        /// Add permission
+        /// </summary>
+        /// <param name="FileID"></param>
+        /// <param name="Type"></param>
+        /// <returns></returns>
         public Permission AddPermission(string FileID, string Type)
         {
             Permission newPermission = new Permission();
@@ -90,6 +98,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 throw new Exception("Request Permissions.Create failed.", ex);
             }
         }
+        /// <summary>
+        /// Get the mimetype of a file
+        /// </summary>
+        /// <param name="FileName"></param>
+        /// <returns></returns>
         public string GetMimeType(string FileName)
         {
             string mimeType = "application/unknown";
@@ -100,6 +113,12 @@ namespace CS_IA_Ibasic_Intouch_Re
                 mimeType = regKey.GetValue("Content Type").ToString();
             return mimeType;
         }
+        /// <summary>
+        /// Upload file to google drive folder
+        /// </summary>
+        /// <param name="FilePath"></param>
+        /// <param name="folderId"></param>
+        /// <returns></returns>
         public Google.Apis.Drive.v3.Data.File Upload(string FilePath,string folderId)
         {
             if (System.IO.File.Exists(FilePath))
@@ -137,7 +156,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
         }
 
-        //Download file from Google Drive by fileId.
+        /// <summary>
+        /// Download file from Google Drive by fileId.
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <returns></returns>
         public string DownloadGoogleFile(string fileId)
         {
      
@@ -191,6 +214,10 @@ namespace CS_IA_Ibasic_Intouch_Re
            /// }
            
         }
+        /// <summary>
+        /// Create a folder
+        /// </summary>
+        /// <param name="folderName"></param>
         public void CreateIBASICFolder(string folderName)
         {
             var fileMetadata = new Google.Apis.Drive.v3.Data.File()
@@ -205,6 +232,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             
 
         }
+        /// <summary>
+        /// create a publish folder
+        /// </summary>
+        /// <param name="folderName"></param>
         public void CreatePublishFolder(string folderName)
         {
             var fileMetadata = new Google.Apis.Drive.v3.Data.File()
@@ -217,7 +248,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             var file = request.Execute();
             Publishfolderid = file.Id;
         }
-
+        /// <summary>
+        /// Retrieve all file from google drive(IBASIC folder)
+        /// </summary>
+        /// <returns></returns>
         public GGDriveFile[] retrieveFile()
         {
             Authentication();
@@ -261,6 +295,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             return driveFiles;
         }
+        /// <summary>
+        /// Check if theres IBASIC folder
+        /// </summary>
+        /// <returns></returns>bool of whether there is IBASIC folder
         public bool checkForIBasicFolder()
         {
             ///Authentication();
@@ -299,6 +337,10 @@ namespace CS_IA_Ibasic_Intouch_Re
 
             return false;
         }
+        /// <summary>
+        ///  Check if theres publish folder
+        /// </summary>
+        /// <returns></returns>bool of whether there is publish folder
         public bool checkForPublishFolder()
         {
             ///Authentication();
@@ -393,10 +435,18 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
             return VersionFilesList;
         }
+        /// <summary>
+        /// Get IBASIC folder id
+        /// </summary>
+        /// <returns></returns>IBASIC folder id
         public string getIBASICfolderId()
         {
             return IBASICfolderid;
         }
+        /// <summary>
+        ///  get publish folder id
+        /// </summary>
+        /// <returns></returns>publish folder id
         public string getPublishfolderId()
         {
             return Publishfolderid;

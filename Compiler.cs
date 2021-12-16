@@ -54,6 +54,10 @@ namespace CS_IA_Ibasic_Intouch_Re
             }
 
         }
+        /// <summary>
+        /// Accessor to VB provided error messages
+        /// </summary>
+        /// <returns></returns>VB eror messages
         public string getErrorMessages()
         {
             return ErrorMessage;

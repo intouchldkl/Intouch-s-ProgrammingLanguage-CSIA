@@ -30,10 +30,13 @@ namespace CS_IA_Ibasic_Intouch_Re
         {
             savetoLocalD();
         }
-
+        /// <summary>
+        /// Save the text from coding box to local drive
+        /// </summary>
         private void savetoLocalD()
         {
-            if(tabpage.Text.Last() == '*')
+            // Remove * from an unsaved project
+            if (tabpage.Text.Last() == '*')
             {
                 saveFileDialog1.FileName = tabpage.Text.Remove(tabpage.Text.Length - 1);
             }
@@ -50,7 +53,11 @@ namespace CS_IA_Ibasic_Intouch_Re
                 Close();
             }
         }
-
+        /// <summary>
+        /// Open a SaveToDrive form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GDrivebut_Click(object sender, EventArgs e)
         {
             SaveToDriveForm SaveDriveForm = new SaveToDriveForm();
