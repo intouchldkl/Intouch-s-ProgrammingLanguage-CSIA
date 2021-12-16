@@ -53,20 +53,20 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.ErrorMsgBox = new System.Windows.Forms.RichTextBox();
             this.CloseTabBut = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.FormatButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.autocompleteMenu1 = new AutocompleteMenuNS.AutocompleteMenu();
-            this.FormatButton = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -212,7 +212,8 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // ErrorMsgLabel
             // 
-            this.ErrorMsgLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ErrorMsgLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.ErrorMsgLabel.AutoSize = true;
             this.ErrorMsgLabel.BackColor = System.Drawing.Color.LightSlateGray;
             this.ErrorMsgLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -224,8 +225,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             // 
             // ErrorMsgBox
             // 
-            this.ErrorMsgBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ErrorMsgBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.autocompleteMenu1.SetAutocompleteMenu(this.ErrorMsgBox, null);
+            this.ErrorMsgBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.ErrorMsgBox.ForeColor = System.Drawing.Color.DarkRed;
             this.ErrorMsgBox.Location = new System.Drawing.Point(26, 46);
             this.ErrorMsgBox.Name = "ErrorMsgBox";
@@ -271,6 +275,32 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.splitContainer1.SplitterDistance = 407;
             this.splitContainer1.TabIndex = 7;
             // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.FormatButton);
+            this.panel1.Location = new System.Drawing.Point(250, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(142, 37);
+            this.panel1.TabIndex = 7;
+            // 
+            // FormatButton
+            // 
+            this.FormatButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.FormatButton.AutoSize = true;
+            this.FormatButton.BackColor = System.Drawing.Color.Azure;
+            this.FormatButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.FormatButton.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.FormatButton.Location = new System.Drawing.Point(3, 0);
+            this.FormatButton.Name = "FormatButton";
+            this.FormatButton.Size = new System.Drawing.Size(139, 37);
+            this.FormatButton.TabIndex = 6;
+            this.FormatButton.Text = "FORMAT";
+            this.FormatButton.UseVisualStyleBackColor = false;
+            this.FormatButton.Click += new System.EventHandler(this.FormatButton_Click);
+            // 
             // splitContainer2
             // 
             this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -296,32 +326,6 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.autocompleteMenu1.Items = new string[0];
             this.autocompleteMenu1.TargetControlWrapper = null;
             // 
-            // FormatButton
-            // 
-            this.FormatButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.FormatButton.AutoSize = true;
-            this.FormatButton.BackColor = System.Drawing.Color.Azure;
-            this.FormatButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.FormatButton.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.FormatButton.Location = new System.Drawing.Point(3, 0);
-            this.FormatButton.Name = "FormatButton";
-            this.FormatButton.Size = new System.Drawing.Size(139, 37);
-            this.FormatButton.TabIndex = 6;
-            this.FormatButton.Text = "FORMAT";
-            this.FormatButton.UseVisualStyleBackColor = false;
-            this.FormatButton.Click += new System.EventHandler(this.FormatButton_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.FormatButton);
-            this.panel1.Location = new System.Drawing.Point(250, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(142, 37);
-            this.panel1.TabIndex = 7;
-            // 
             // IBASICForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -343,11 +347,11 @@ namespace CS_IA_Ibasic_Intouch_Re
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.splitContainer2.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

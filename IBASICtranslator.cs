@@ -60,7 +60,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     syntax = (XMLdata.Syntax)ser.Deserialize(reader);
                 }
-                keywords = syntax.Array.Item;
+                keywords = syntax.CommandWords.Item;
                 if (StringExtension.compare(syntax.IsLocal.ToString(), "True"))
                 {
                     isLocal = true;

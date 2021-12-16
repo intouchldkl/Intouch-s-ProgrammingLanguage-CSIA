@@ -62,7 +62,7 @@ namespace CS_IA_Ibasic_Intouch_Re
                 {
                     syntax = (XMLdata.Syntax)ser.Deserialize(reader);
                 }
-                Keywords = syntax.Array.Item;
+                Keywords = syntax.CommandWords.Item;
 
 
             }

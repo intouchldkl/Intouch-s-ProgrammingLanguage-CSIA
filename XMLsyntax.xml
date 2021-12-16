@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Syntax>
-	<array
+	<CommandWords
 	name ="keywords">
 		<item>OUTPUT </item>
 		<item>OUTPUTLINE </item>
@@ -42,6 +42,6 @@
 		<item>CONSTANT</item>
 		<item>REPEAT</item>
 		<item>UNTIL </item>
-	</array>
+	</CommandWords>
 	<isLocal>False</isLocal>
 </Syntax>

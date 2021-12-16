@@ -9,8 +9,8 @@ namespace CS_IA_Ibasic_Intouch_Re
 {
     public class XMLdata
     {
-		[XmlRoot(ElementName = "array")]
-		public class Array
+		[XmlRoot(ElementName = "CommandWords")]
+		public class CommandWords
 		{
 			[XmlElement(ElementName = "item")]
 			public List<string> Item { get; set; }
@@ -21,8 +21,8 @@ namespace CS_IA_Ibasic_Intouch_Re
 		[XmlRoot(ElementName = "Syntax")]
 		public class Syntax
 		{
-			[XmlElement(ElementName = "array")]
-			public Array Array { get; set; }
+			[XmlElement(ElementName = "CommandWords")]
+			public CommandWords CommandWords { get; set; }
 			[XmlElement(ElementName = "isLocal")]
 			public string IsLocal { get; set; }
 		}
