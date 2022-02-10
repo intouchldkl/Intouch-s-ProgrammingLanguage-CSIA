@@ -117,7 +117,7 @@ namespace CS_IA_Ibasic_Intouch_Re
             {
                 RichTextBox buffer = new RichTextBox();
                 currentRtb.Text = sr.ReadToEnd();
-                buffer.Rtf = currentRtb.Rtf;
+                buffer.Rtf = currentRtb.Rtf; //Using a buffer to prevent flickering
                 IBASICForm.Instance.syntaxhighlightall(buffer);
                 currentRtb.Rtf = buffer.Rtf;
                 sr.Close();

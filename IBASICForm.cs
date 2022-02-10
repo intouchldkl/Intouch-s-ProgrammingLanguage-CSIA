@@ -334,14 +334,15 @@ namespace CS_IA_Ibasic_Intouch_Re
         /// <param name="e"></param>
         private void CloseTabBut_Click(object sender, EventArgs e)
         {
+            //Make sure there's always at least 1 tab remaining
             if (tabControl1.Controls.Count > 1)
             {
                 tabControl1.Controls.Remove(tabControl1.SelectedTab);
                 currentRtb = (RichTextBox)tabControl1.SelectedTab.Controls[0];
+                // reset the linnumber and text on the rtb
                 AddLineNumbers();
                 currentRtb.TextChanged += currentRtb_TextChanged;
                 currentRtb.VScroll += CurrentRtb_VScroll;
-
             }
         }
        /// <summary>
